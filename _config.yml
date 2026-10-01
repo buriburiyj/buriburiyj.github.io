@@ -5,3 +5,8 @@ timezone: Asia/Seoul
 theme: minima
 author: Yune
 github_username: buriburiyj
+url: "https://buriburiyj.github.io"
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
