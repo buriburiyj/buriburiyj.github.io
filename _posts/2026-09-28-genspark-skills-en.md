@@ -35,7 +35,7 @@ Type `/` in the input box and search by the first letters (`/res`, `/tok`, `/fix
 2. Click **+ New Skill** → **Create for myself**.
 3. Paste the contents of a `SKILL.md` file from GitHub and ask Genspark to create the Skill.
 
-The Skill prompts are written in Korean. You can ask Genspark to translate them before creating the Skill.
+English versions are in [skills-en/](https://github.com/buriburiyj/genspark-skills-ko/tree/main/skills-en), and ready-to-upload `.skill` files are on the [Releases](https://github.com/buriburiyj/genspark-skills-ko/releases/latest) page.
 
 All files are here: [github.com/buriburiyj/genspark-skills-ko](https://github.com/buriburiyj/genspark-skills-ko)
 
