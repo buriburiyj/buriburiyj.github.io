@@ -20,4 +20,5 @@ I build small developer tools that make repetitive work easier, and I write abou
 
 ## Contact
 - GitHub: [github.com/buriburiyj](https://github.com/buriburiyj)
+- Velog: [velog.io/@yjun](https://velog.io/@yjun)
 - I prefer communicating by text (email, chat, GitHub issues).
