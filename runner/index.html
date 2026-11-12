@@ -345,6 +345,60 @@
     line-height: 1;
   }
   .result__v small { font-size: 0.45em; opacity: 0.6; margin-left: 1px; }
+  /* ───────── 명대사 컷인 ───────── */
+  .cutin {
+    position: absolute;
+    left: 0; right: 0;
+    top: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 16px;
+    background: linear-gradient(to bottom, rgba(4, 5, 13, 0), rgba(4, 5, 13, 0.82) 22%, rgba(4, 5, 13, 0.82) 78%, rgba(4, 5, 13, 0));
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .cutin.is-on { opacity: 1; transform: translateY(0); }
+  .cutin__who {
+    font-size: 10px;
+    letter-spacing: 0.34em;
+    color: var(--nr-crimson);
+    text-shadow: 0 0 12px rgba(255, 45, 85, 0.8);
+  }
+  .cutin__line {
+    font-size: clamp(15px, 4.4vw, 22px);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #f6f2ea;
+    text-align: center;
+    text-shadow: 0 0 22px rgba(255, 45, 85, 0.35), 0 2px 10px rgba(0, 0, 0, 0.9);
+    max-width: 92vw;
+  }
+  .quote {
+    margin: 0 0 15px;
+    padding: 11px 14px;
+    border-left: 2px solid rgba(255, 45, 85, 0.65);
+    background: rgba(255, 45, 85, 0.05);
+    border-radius: 4px 10px 10px 4px;
+    text-align: left;
+    display: grid;
+    gap: 6px;
+  }
+  .quote div { font-size: 11.5px; line-height: 1.5; color: rgba(246, 242, 234, 0.82); }
+  .quote b {
+    display: inline-block;
+    min-width: 26px;
+    color: var(--nr-amber);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+  }
+  .quote em { font-style: normal; color: #fff; }
+
   .badge-best {
     display: inline-block;
     margin: 0 0 12px;
@@ -387,6 +441,7 @@
   </div>
 
   <div class="hint" id="hint"></div>
+  <div class="cutin" id="cutin"><div class="cutin__who" id="cutinWho"></div><div class="cutin__line" id="cutinLine"></div></div>
   <div class="overlay" id="overlay"></div>
 </div>
 
@@ -724,6 +779,7 @@ window.addEventListener("error", function (ev) {
     bgTiles.far = makeTile("far");
     bgTiles.mid = makeTile("mid");
     bgTiles.near = makeTile("near");
+    buildSigns();
   }
 
   function seedRain() {
@@ -799,6 +855,7 @@ window.addEventListener("error", function (ev) {
   var keys = { left: false, right: false, dash: false };
   var flash = 0;
   var lastWind = 0;
+  var claw = 0;
 
   function screenToWorld(sx, sy) {
     return { x: cam.x + sx / scale, y: cam.y + sy / scale };
@@ -1082,8 +1139,17 @@ window.addEventListener("error", function (ev) {
     dashCd = DASH_CD;
     var dir = P.face || 1;
     if (rope.on) {
-      rope.len = Math.max(ROPE_MIN, rope.len - 52);
-      spawnSparks(rope.ax, rope.ay, 5, C.amber);
+      // 스윙 대시(탄환 돌진): 접선 방향으로 튀어나간다
+      var ux = P.x - rope.ax, uy = P.y - rope.ay;
+      var dd = Math.sqrt(ux * ux + uy * uy) || 1;
+      var tx = -uy / dd, ty = ux / dd;
+      var vt = P.vx * tx + P.vy * ty;
+      var s = Math.abs(vt) > 40 ? (vt > 0 ? 1 : -1) : dir;
+      P.vx += tx * s * 430;
+      P.vy += ty * s * 430;
+      rope.len = Math.max(ROPE_MIN, rope.len - 44);
+      spawnSparks(P.x, P.y - 30, 14, C.cyan);
+      addText(P.x, P.y - 86, "질주", C.cyan);
     } else {
       P.vx = dir * Math.max(Math.abs(P.vx) * 1.05, DASH_SPEED);
       P.vy = Math.min(P.vy, -130);
@@ -1105,7 +1171,7 @@ window.addEventListener("error", function (ev) {
     var dx = P.x - a.x, dy = P.y - a.y;
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
     rope.len = clamp(d, ROPE_MIN, ROPE_MAX);
-    rope.min = Math.max(ROPE_MIN, Math.min(rope.len * 0.7, rope.len - 70));
+    rope.min = Math.max(ROPE_MIN, Math.min(rope.len * 0.62, rope.len - 80));
     rope.born = T;
     if (P.jumps < 1) { P.jumps = 1; }
     // 지면에서 걸면 사슬이 몸을 끌어올린다
@@ -1250,7 +1316,7 @@ window.addEventListener("error", function (ev) {
         rope.len = Math.max(ROPE_MIN, rope.len - REEL_SPEED * dt);
         if (Math.random() < dt * 14) { spawnSparks(rope.ax, rope.ay, 1, C.amber); }
       } else if (rope.len > rope.min) {
-        rope.len = Math.max(rope.min, rope.len - 540 * dt);
+        rope.len = Math.max(rope.min, rope.len - 780 * dt);
       }
     }
 
@@ -1445,6 +1511,7 @@ window.addEventListener("error", function (ev) {
     drawCity(bgTiles.far, 0.055, 0.85, groundScreenY + 150);
     drawCity(bgTiles.mid, 0.18, 0.95, groundScreenY + 96);
     drawCity(bgTiles.near, 0.44, 1, groundScreenY + 54);
+    drawSigns(groundScreenY);
     drawSkyLights();
     drawAbyss(groundScreenY);
 
@@ -1570,6 +1637,105 @@ window.addEventListener("error", function (ev) {
     ctx.globalAlpha = alpha;
     for (var x = off; x < cssW; x += tw) {
       ctx.drawImage(tile, Math.round(x), Math.round(baseY - th));
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ── 마고특별시 조선 네온사인 ── */
+  var SIGN_TEXTS = ["마고", "의금부", "산나비", "기억 조작", "개벽", "무명", "전하", "야시장", "철호", "마고특별시"];
+  var SIGN_COLORS = ["#ff2fa0", "#2bf2ff", "#ff2d55", "#7c5cff", "#ffcf4d"];
+  var signPattern = [];
+  var SIGN_SPAN = 1500;
+
+  function rr(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.lineTo(x + w - r, y);
+    g.quadraticCurveTo(x + w, y, x + w, y + r);
+    g.lineTo(x + w, y + h - r);
+    g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    g.lineTo(x + r, y + h);
+    g.quadraticCurveTo(x, y + h, x, y + h - r);
+    g.lineTo(x, y + r);
+    g.quadraticCurveTo(x, y, x + r, y);
+    g.closePath();
+  }
+
+  function makeSignTexture(text, color, vert) {
+    var fs = 15, gap = 5, padX = 11, padY = 9;
+    var chars = vert ? text.replace(/\s/g, "").split("") : [text];
+    var probe = document.createElement("canvas").getContext("2d");
+    probe.font = "700 " + fs + "px system-ui, -apple-system, 'Apple SD Gothic Neo', sans-serif";
+
+    var cw = 0, ch = 0, i;
+    if (vert) {
+      ch = chars.length * (fs + gap) - gap;
+      for (i = 0; i < chars.length; i++) { cw = Math.max(cw, probe.measureText(chars[i]).width); }
+    } else {
+      cw = probe.measureText(text).width;
+      ch = fs;
+    }
+    var w = Math.ceil(cw + padX * 2), h = Math.ceil(ch + padY * 2);
+    var c = document.createElement("canvas");
+    c.width = w * 2; c.height = h * 2;
+    var g = c.getContext("2d");
+    g.scale(2, 2);
+
+    g.shadowColor = color;
+    g.shadowBlur = 12;
+    g.fillStyle = "rgba(5, 7, 18, 0.82)";
+    g.strokeStyle = color;
+    g.lineWidth = 1.3;
+    rr(g, 1.5, 1.5, w - 3, h - 3, 3);
+    g.fill();
+    g.stroke();
+
+    g.shadowBlur = 9;
+    g.fillStyle = color;
+    g.font = "700 " + fs + "px system-ui, -apple-system, 'Apple SD Gothic Neo', sans-serif";
+    g.textAlign = "center";
+    g.textBaseline = "middle";
+    if (vert) {
+      for (i = 0; i < chars.length; i++) {
+        g.fillText(chars[i], w / 2, padY + i * (fs + gap) + fs / 2);
+      }
+    } else {
+      g.fillText(text, w / 2, h / 2 + 1);
+    }
+    return { canvas: c, w: w, h: h };
+  }
+
+  function buildSigns() {
+    signPattern = [];
+    var n = SIGN_TEXTS.length;
+    for (var i = 0; i < n; i++) {
+      var color = SIGN_COLORS[i % SIGN_COLORS.length];
+      var vert = i % 3 !== 0;
+      signPattern.push({
+        x: (i + rnd(0.05, 0.6)) * (SIGN_SPAN / n),
+        dy: -rnd(150, 540),
+        tex: makeSignTexture(SIGN_TEXTS[i], color, vert),
+        flick: rnd(0, 6),
+        speed: rnd(1.3, 2.4)
+      });
+    }
+  }
+
+  function drawSigns(groundScreenY) {
+    var par = 0.42;
+    var po = cam.x * par;
+    for (var i = 0; i < signPattern.length; i++) {
+      var s = signPattern[i];
+      var k = Math.round((po - s.x) / SIGN_SPAN);
+      var wx = s.x + k * SIGN_SPAN - po;
+      var sx = cssW * 0.5 + wx * scale;
+      var w = s.tex.w * scale, h = s.tex.h * scale;
+      if (sx + w * 0.5 < -80 || sx - w * 0.5 > cssW + 80) { continue; }
+      var sy = groundScreenY + s.dy * scale;
+      if (sy < -h || sy > cssH + h) { continue; }
+      var fl = 0.78 + Math.sin(T * s.speed + s.flick) * 0.12 + (Math.sin(T * 27 + s.flick * 3) > 0.985 ? -0.35 : 0);
+      ctx.globalAlpha = clamp(fl, 0.28, 0.95);
+      ctx.drawImage(s.tex.canvas, Math.round(sx - w / 2), Math.round(sy - h), Math.round(w), Math.round(h));
     }
     ctx.globalAlpha = 1;
   }
@@ -1803,7 +1969,8 @@ window.addEventListener("error", function (ev) {
 
   function drawRope() {
     if (!rope.on) { return; }
-    var sx = P.x + P.face * 5, sy = P.y - 40;
+    var tip = armTip();
+    var sx = tip.x, sy = tip.y;
     var ex = rope.ax, ey = rope.ay;
     var dx = ex - sx, dy = ey - sy;
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -1839,16 +2006,28 @@ window.addEventListener("error", function (ev) {
     }
   }
 
+  function armTip() {
+    if (rope.on) {
+      var sx = P.face * 4, sy = -44;
+      var a = Math.atan2(rope.ay - (P.y + sy), rope.ax - (P.x + sx));
+      var len = 17 + claw * 6;
+      return { x: P.x + sx + Math.cos(a) * len, y: P.y + sy + Math.sin(a) * len, a: a };
+    }
+    return { x: P.x + P.face * 13, y: P.y - 33, a: P.face > 0 ? 1.1 : Math.PI - 1.1 };
+  }
+
   function drawPlayer() {
     var spd = Math.sqrt(P.vx * P.vx + P.vy * P.vy);
+    var flow = clamp(spd / 760, 0, 1);
+    var back = -P.face;
 
     // 잔상
     if (spd > 520) {
       for (var i = 0; i < trail.length; i++) {
         var tr = trail[i];
-        var a = (i / trail.length) * 0.32;
+        var a = (i / trail.length) * 0.26;
         ctx.fillStyle = "rgba(255, 45, 85, " + a + ")";
-        ctx.fillRect(tr.x - 9, tr.y - 50, 18, 44);
+        ctx.fillRect(tr.x - 10, tr.y - 62, 20, 58);
       }
     }
 
@@ -1862,139 +2041,238 @@ window.addEventListener("error", function (ev) {
     if (P.onGround) {
       ctx.fillStyle = "rgba(2, 4, 12, 0.45)";
       ctx.beginPath();
-      ctx.ellipse(0, -1, 17, 4, 0, 0, TAU);
+      ctx.ellipse(0, -1, 18, 4, 0, 0, TAU);
       ctx.fill();
     }
 
-    // 그림자 광
-    var gl = ctx.createRadialGradient(0, -28, 4, 0, -28, 46);
-    gl.addColorStop(0, "rgba(43, 242, 255, 0.18)");
+    // 몸 주변 광
+    var gl = ctx.createRadialGradient(0, -34, 6, 0, -34, 54);
+    gl.addColorStop(0, "rgba(43, 242, 255, 0.16)");
     gl.addColorStop(1, "rgba(43, 242, 255, 0)");
     ctx.fillStyle = gl;
     ctx.beginPath();
-    ctx.arc(0, -28, 46, 0, TAU);
+    ctx.arc(0, -34, 54, 0, TAU);
     ctx.fill();
 
-    // 스카프 (두 갈래)
-    var sc = Math.sin(T * 7) * 3;
-    var back = -P.face;
-    var drag = clamp(-P.vx * 0.02, -22, 22);
-    ctx.strokeStyle = "rgba(255, 45, 85, 0.85)";
+    /* ── 도포자락(코트) 뒤자락: 바람에 길게 펄럭인다 ── */
+    var sway = Math.sin(T * 8.5) * 2.6;
+    var lift = Math.sin(T * 6.1 + 1) * 2.2;
+    var tailX = back * (14 + flow * 26);
+    var tailY = -6 - flow * 10 + sway;
+
+    ctx.beginPath();
+    ctx.moveTo(-6, -34);
+    ctx.quadraticCurveTo(back * 8, -18, back * (10 + flow * 10), 2);
+    ctx.quadraticCurveTo(tailX * 0.9, 10 + sway, tailX, tailY);
+    ctx.quadraticCurveTo(back * 20, -16 - lift, 4, -33);
+    ctx.closePath();
+    ctx.fillStyle = "#0a0f22";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 45, 85, 0.55)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // 안감(붉은 안) 한 줄
+    ctx.beginPath();
+    ctx.moveTo(back * 8, -20);
+    ctx.quadraticCurveTo(tailX * 0.75, -6 + sway, tailX * 0.94, tailY - 2);
+    ctx.strokeStyle = "rgba(255, 62, 165, 0.7)";
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    /* ── 다리/버선코 ── */
+    var lp = P.onGround ? Math.sin(P.legPhase) * 7 : 5;
+    var lp2 = P.onGround ? Math.sin(P.legPhase + Math.PI) * 7 : -4;
+    ctx.strokeStyle = "rgba(190, 214, 245, 0.8)";
     ctx.lineWidth = 3.6;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(0, -47);
-    ctx.quadraticCurveTo(back * 15 + drag * 0.4, -52 + sc, back * 30 + drag, -44 + sc * 1.8);
-    ctx.stroke();
-    ctx.strokeStyle = "rgba(255, 120, 150, 0.45)";
-    ctx.lineWidth = 2.2;
-    ctx.beginPath();
-    ctx.moveTo(0, -46);
-    ctx.quadraticCurveTo(back * 12 + drag * 0.3, -40 - sc, back * 26 + drag * 0.8, -34 - sc);
+    ctx.moveTo(-3, -20);
+    ctx.lineTo(-3 + lp, -8);
+    ctx.lineTo(-4 + lp * 1.25, -1);
+    ctx.moveTo(3, -20);
+    ctx.lineTo(3 + lp2, -8);
+    ctx.lineTo(4 + lp2 * 1.25, -1);
     ctx.stroke();
     ctx.lineCap = "butt";
 
-    // 다리
-    ctx.strokeStyle = "rgba(198, 226, 255, 0.75)";
-    ctx.lineWidth = 3.4;
-    var lp = P.onGround ? Math.sin(P.legPhase) * 8 : 6;
-    var lp2 = P.onGround ? Math.sin(P.legPhase + Math.PI) * 8 : -5;
-    ctx.beginPath();
-    ctx.moveTo(-3, -19);
-    ctx.lineTo(-3 + lp, -9);
-    ctx.lineTo(-4 + lp * 1.3, -1);
-    ctx.moveTo(3, -19);
-    ctx.lineTo(3 + lp2, -9);
-    ctx.lineTo(4 + lp2 * 1.3, -1);
-    ctx.stroke();
-
-    // 몸통 (어깨가 넓은 사다리꼴)
+    /* ── 철릭 상의 ── */
     ctx.beginPath();
     ctx.moveTo(-10, -46);
     ctx.lineTo(10, -46);
-    ctx.lineTo(8, -20);
-    ctx.quadraticCurveTo(0, -17, -8, -20);
+    ctx.lineTo(9, -24);
+    ctx.quadraticCurveTo(0, -20, -9, -24);
     ctx.closePath();
-    ctx.fillStyle = "#0b0e1e";
+    ctx.fillStyle = "#0d1330";
     ctx.fill();
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.6)";
-    ctx.lineWidth = 1.3;
-    ctx.stroke();
-
-    // 어깨 플레이트
-    ctx.fillStyle = "rgba(255, 45, 85, 0.9)";
-    ctx.fillRect(P.face > 0 ? 4 : -10, -47, 6, 2.6);
-
-    // 가슴 코어
-    ctx.fillStyle = "rgba(255, 45, 85, 0.95)";
-    ctx.shadowColor = "rgba(255, 45, 85, 0.9)";
-    ctx.shadowBlur = 10;
-    ctx.fillRect(-1.5, -40, 3, 8);
-    ctx.shadowBlur = 0;
-
-    // 목
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.35)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, -46);
-    ctx.lineTo(0, -50);
-    ctx.stroke();
-
-    // 머리
-    ctx.fillStyle = "#111631";
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.55)";
-    ctx.beginPath();
-    ctx.arc(0, -56, 7.6, 0, TAU);
-    ctx.fill();
-    ctx.stroke();
-
-    // 안테나
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.5)";
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.45)";
     ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(-3, -62);
-    ctx.lineTo(-8, -72);
     ctx.stroke();
-    ctx.fillStyle = "rgba(43, 242, 255, 0.9)";
+
+    // 깃(여민 깃)과 붉은 안감
     ctx.beginPath();
-    ctx.arc(-8, -72, 1.6, 0, TAU);
+    ctx.moveTo(P.face * 2, -46);
+    ctx.lineTo(P.face * 9, -25);
+    ctx.strokeStyle = "rgba(255, 45, 85, 0.85)";
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    // 허리띠
+    ctx.fillStyle = "rgba(255, 45, 85, 0.9)";
+    ctx.fillRect(-9, -27, 18, 2.4);
+
+    /* ── 철호패 (호랑이 + 삼색태극) ── */
+    ctx.save();
+    ctx.translate(P.face * 1.5, -39);
+    ctx.fillStyle = "#101a2e";
+    ctx.strokeStyle = "rgba(255, 207, 77, 0.95)";
+    ctx.lineWidth = 1.2;
+    rr(ctx, -5, -4, 10, 9, 1.6);
     ctx.fill();
-
-    // 바이저
-    ctx.fillStyle = "rgba(255, 45, 85, 0.95)";
-    ctx.shadowColor = "rgba(255, 45, 85, 0.9)";
-    ctx.shadowBlur = 8;
-    ctx.fillRect(P.face > 0 ? -1 : -6.5, -58.5, 7.5, 3);
-    ctx.shadowBlur = 0;
-
-    // 사슬팔
-    var sy = -44;
-    if (rope.on) {
-      ctx.strokeStyle = "rgba(255, 45, 85, 0.95)";
-      ctx.lineWidth = 4.4;
-      ctx.shadowColor = "rgba(255, 45, 85, 0.85)";
-      ctx.shadowBlur = 12;
+    ctx.stroke();
+    // 삼색 태극
+    var segs = ["#ff2d55", "#2bf2ff", "#ffcf4d"];
+    for (var s2 = 0; s2 < 3; s2++) {
       ctx.beginPath();
-      ctx.moveTo(P.face * 5, sy);
-      ctx.lineTo(P.face * 14, sy - 4);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "rgba(255, 200, 210, 0.95)";
-      ctx.beginPath();
-      ctx.arc(P.face * 14, sy - 4, 3, 0, TAU);
-      ctx.fill();
-    } else {
-      ctx.strokeStyle = "rgba(255, 45, 85, 0.85)";
-      ctx.lineWidth = 3.6;
-      ctx.beginPath();
-      ctx.moveTo(P.face * 6, sy);
-      ctx.lineTo(P.face * 14, sy + 8);
-      ctx.stroke();
-      ctx.fillStyle = "rgba(255, 120, 150, 0.9)";
-      ctx.beginPath();
-      ctx.arc(P.face * 14, sy + 8, 2.4, 0, TAU);
+      ctx.moveTo(0, -1.2);
+      ctx.arc(0, -1.2, 2.1, (s2 / 3) * TAU - 0.5, ((s2 + 1) / 3) * TAU - 0.5);
+      ctx.closePath();
+      ctx.fillStyle = segs[s2];
       ctx.fill();
     }
+    // 호랑이 줄무늬
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.75)";
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(-2.6, 3); ctx.lineTo(2.6, 3.4);
+    ctx.moveTo(-2.4, 4.6); ctx.lineTo(2.4, 5);
+    ctx.stroke();
+    ctx.restore();
+
+    /* ── 왼팔 ── */
+    ctx.strokeStyle = "rgba(13, 19, 48, 1)";
+    ctx.lineWidth = 4.4;
+    ctx.beginPath();
+    ctx.moveTo(-P.face * 7, -43);
+    ctx.lineTo(-P.face * 11, -31);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(255, 45, 85, 0.35)";
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+
+    /* ── 머리 ── */
+    ctx.fillStyle = "#1a2138";
+    ctx.beginPath();
+    ctx.arc(0, -52, 6.4, 0, TAU);
+    ctx.fill();
+    // 눈(바이저 느낌의 붉은 점)
+    ctx.fillStyle = "rgba(255, 45, 85, 0.95)";
+    ctx.fillRect(P.face > 0 ? 0.4 : -4.4, -53.4, 4, 1.8);
+
+    /* ── 전립(군모): 넓은 챙 + 원추 + 붉은 술 ── */
+    // 챙
+    ctx.fillStyle = "#0a0e1c";
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.35)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(0, -57, 11.5, 3.4, 0, 0, TAU);
+    ctx.fill();
+    ctx.stroke();
+    // 원추형 모자 몸체
+    ctx.beginPath();
+    ctx.moveTo(-6.4, -57.5);
+    ctx.quadraticCurveTo(-3, -68, 0, -68.5);
+    ctx.quadraticCurveTo(3, -68, 6.4, -57.5);
+    ctx.closePath();
+    ctx.fillStyle = "#0c1122";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 207, 77, 0.5)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // 정상 장식(금)
+    ctx.fillStyle = "rgba(255, 207, 77, 0.95)";
+    ctx.beginPath();
+    ctx.arc(0, -69, 1.8, 0, TAU);
+    ctx.fill();
+
+    // 붉은 술(여러 가닥) — 속도에 따라 뒤로 휜다
+    var plume = 0.4 + flow * 1.5;
+    for (var p2 = 0; p2 < 4; p2++) {
+      var ph = p2 * 0.9;
+      var lx = back * (4 + plume * (9 + p2 * 3));
+      var ly = -66 - p2 * 1.4 + Math.sin(T * 9 + ph) * (2 + flow * 3);
+      var cx2 = back * (2 + plume * 4) + Math.sin(T * 7 + ph) * 2;
+      var cy2 = -69 + Math.cos(T * 8 + ph) * 2;
+      ctx.beginPath();
+      ctx.moveTo(0, -68);
+      ctx.quadraticCurveTo(cx2, cy2, lx, ly + 6);
+      ctx.strokeStyle = p2 % 2 ? "rgba(255, 45, 85, 0.95)" : "rgba(255, 62, 165, 0.9)";
+      ctx.lineWidth = p2 % 2 ? 2.2 : 1.5;
+      ctx.lineCap = "round";
+      ctx.stroke();
+    }
+    ctx.lineCap = "butt";
+
+    /* ── 오른팔: 거대 사슬팔(3지 집게) ── */
+    var tip = armTip();
+    var ax = tip.x - P.x, ay = tip.y - P.y;
+    var ang = Math.atan2(ay, ax);
+    var open = 0.18 + claw * 0.82;
+
+    ctx.save();
+    ctx.translate(P.face * 3, -44);
+    // 어깨 하우징
+    ctx.fillStyle = "#131a30";
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.5)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(0, 0, 5.2, 0, TAU);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    // 팔 본체(마디)
+    var armLen = Math.hypot(ax - P.face * 3, ay + 44);
+    ctx.save();
+    ctx.translate(P.face * 3, -44);
+    ctx.rotate(ang);
+    var segs2 = 3;
+    for (var m = 0; m < segs2; m++) {
+      var segW = armLen / segs2;
+      var x0 = m * segW;
+      ctx.fillStyle = m % 2 ? "#151d38" : "#0f1529";
+      ctx.fillRect(x0 + 0.6, -3.1, segW - 1.2, 6.2);
+      ctx.strokeStyle = "rgba(255, 45, 85, 0.55)";
+      ctx.lineWidth = 0.7;
+      ctx.strokeRect(x0 + 0.6, -3.1, segW - 1.2, 6.2);
+    }
+    // 손목
+    ctx.fillStyle = "#1b2238";
+    ctx.fillRect(armLen - 4.2, -4.4, 4.2, 8.8);
+    ctx.strokeStyle = "rgba(255, 45, 85, 0.8)";
+    ctx.lineWidth = 0.9;
+    ctx.strokeRect(armLen - 4.2, -4.4, 4.2, 8.8);
+
+    // 3지 집게 (발사 시 180도 전개)
+    for (var c2 = -1; c2 <= 1; c2++) {
+      var spread = c2 * open * 1.15;
+      ctx.save();
+      ctx.translate(armLen, c2 * 1.6 * (1 - open * 0.4));
+      ctx.rotate(spread);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(5.5, c2 * 2.4 - 0.5, 10.5, c2 * 5.4 * open + (c2 === 0 ? 0 : 0));
+      ctx.strokeStyle = "rgba(255, 45, 85, " + (0.75 + claw * 0.25) + ")";
+      ctx.lineWidth = c2 === 0 ? 2.4 : 2;
+      ctx.lineCap = "round";
+      ctx.shadowColor = "rgba(255, 45, 85, 0.85)";
+      ctx.shadowBlur = 5 + claw * 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    }
+    ctx.lineCap = "butt";
+    ctx.restore();
 
     ctx.restore();
   }
@@ -2101,6 +2379,21 @@ window.addEventListener("error", function (ev) {
   var elCombo = document.getElementById("hudCombo");
   var elHint = document.getElementById("hint");
   var elOverlay = document.getElementById("overlay");
+  var elCutin = document.getElementById("cutin");
+  var elCutinWho = document.getElementById("cutinWho");
+  var elCutinLine = document.getElementById("cutinLine");
+  var cutinTimer = 0;
+
+  function showCutin(who, line, secs) {
+    elCutinWho.textContent = who;
+    elCutinLine.textContent = line;
+    elCutin.classList.add("is-on");
+    cutinTimer = secs || 2.6;
+  }
+  function hideCutin() {
+    elCutin.classList.remove("is-on");
+    cutinTimer = 0;
+  }
   var elSound = document.getElementById("btnSound");
   var elPause = document.getElementById("btnPause");
 
@@ -2187,12 +2480,16 @@ window.addEventListener("error", function (ev) {
     var html = "";
     if (kind === "ready") {
       html = '<div class="panel">'
-        + '<div class="panel__kicker">SANABI-STYLE WIRE ACTION</div>'
+        + '<div class="panel__kicker">마고특별시 · SANABI-STYLE</div>'
         + '<h1 class="panel__title">사슬<em>팔</em></h1>'
-        + '<p class="panel__sub">네온 옥상 지대를 사슬로 건넌다. 위쪽을 눌러 사슬을 걸고,<br>스윙의 끝에서 손을 떼면 몸이 튕겨 나간다.</p>'
+        + '<p class="panel__sub">신경 사슬팔을 단 준장이 네온 지붕 위를 건넌다.<br>위쪽을 눌러 사슬을 걸고, 스윙 끝에서 다시 눌러 발사한다.</p>'
         + diffChips()
         + '<button type="button" class="cta pickle-button" data-act="start">사슬 걸기</button>'
         + '<div class="keys">' + controlGuide() + '</div>'
+        + '<div class="quote">'
+        + '<div><b>준장</b> <em>“허.”</em></div>'
+        + '<div><b>딸</b> <em>“끝까지 가는 게 중요한 게 아니야!”</em></div>'
+        + '</div>'
         + '<div class="panel__meta">최고 <b>' + S.best_score + '</b>점 · 최고 거리 <b>' + S.best_distance + '</b>m · <b>' + S.runs_played + '</b>회 도전</div>'
         + '</div>';
     } else if (kind === "over") {
@@ -2207,6 +2504,7 @@ window.addEventListener("error", function (ev) {
         + '<div class="result__cell"><span class="result__k">최고</span><span class="result__v">' + S.best_score + '</span></div>'
         + '</div>'
         + '<button type="button" class="cta pickle-button" data-act="start">다시 사슬 걸기</button>'
+        + '<div class="quote"><div><b>준장</b> <em>“허.”</em></div></div>'
         + '<div class="panel__meta">사슬 <b>' + data.swings + '</b>회 · 스타일 <b>' + data.style + '</b>점</div>'
         + '</div>';
     } else if (kind === "paused") {
@@ -2257,6 +2555,7 @@ window.addEventListener("error", function (ev) {
     persist();
     hudCache.dist = -1; hudCache.score = -1; hudCache.lives = -1; hudCache.combo = -1;
     updateHUD();
+    showCutin("딸", "끝까지 가는 게 중요한 게 아니야!", 2.8);
     showHint(isTouch ? "위쪽을 눌러 사슬을 걸어라 · 다시 눌러 발사" : "마우스로 앵커를 클릭해 사슬을 걸어라", 5);
   }
 
@@ -2264,6 +2563,7 @@ window.addEventListener("error", function (ev) {
     mode = "over";
     rope.on = false;
     rope.a = null;
+    hideCutin();
     Sound.wind(0);
     Sound.over();
 
@@ -2500,11 +2800,18 @@ window.addEventListener("error", function (ev) {
     } else if (trail.length) {
       trail.shift();
     }
-    // 힌트 타이머
+    // 힌트 / 컷인 타이머
     if (hintTimer > 0) {
       hintTimer -= dt;
       if (hintTimer <= 0) { elHint.classList.remove("is-on"); }
     }
+    if (cutinTimer > 0) {
+      cutinTimer -= dt;
+      if (cutinTimer <= 0) { elCutin.classList.remove("is-on"); }
+    }
+    // 사슬팔 집게 전개
+    var clawTarget = rope.on ? 1 : 0;
+    claw += (clawTarget - claw) * Math.min(1, dt * 13);
   }
 
   function frame(now) {
