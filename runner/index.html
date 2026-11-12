@@ -1609,8 +1609,8 @@ window.addEventListener("error", function (ev) {
     var top = groundScreenY - 30;
     var g = ctx.createLinearGradient(0, top, 0, cssH);
     g.addColorStop(0, "rgba(4, 5, 13, 0)");
-    g.addColorStop(0.3, "rgba(4, 5, 13, 0.6)");
-    g.addColorStop(1, "rgba(3, 4, 10, 0.94)");
+    g.addColorStop(0.34, "rgba(4, 5, 13, 0.45)");
+    g.addColorStop(1, "rgba(3, 4, 10, 0.86)");
     ctx.fillStyle = g;
     ctx.fillRect(0, top, cssW, cssH - top);
   }
@@ -1718,7 +1718,7 @@ window.addEventListener("error", function (ev) {
       var vert = i % 3 !== 0;
       signPattern.push({
         x: (i + rnd(0.05, 0.6)) * (SIGN_SPAN / n),
-        dy: -rnd(150, 430),
+        dy: -rnd(90, 300),
         tex: makeSignTexture(SIGN_TEXTS[i], color, vert),
         flick: rnd(0, 6),
         speed: rnd(1.3, 2.4)
