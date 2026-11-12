@@ -1173,7 +1173,7 @@ window.addEventListener("error", function (ev) {
     var dx = P.x - a.x, dy = P.y - a.y;
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
     rope.len = clamp(d, ROPE_MIN, ROPE_MAX);
-    rope.min = Math.max(ROPE_MIN, rope.len - 55);
+    rope.min = Math.max(ROPE_MIN, rope.len * 0.55);
     rope.born = T;
     if (P.jumps < 1) { P.jumps = 1; }
     // 지면에서 걸면 사슬이 몸을 끌어올린다
@@ -1316,13 +1316,32 @@ window.addEventListener("error", function (ev) {
       P.vy += ty * sdir * PUMP * dt;
     }
 
-    // 릴인 (버튼은 강하게, 기본은 자동으로 살짝 감긴다)
+    // 사슬 감기: 각운동량을 지키며 감기므로 스윙이 빨라지고, 몸이 앵커 쪽으로 당겨진다
     if (rope.on) {
-      if (keys.dash || dashHold) {
-        rope.len = Math.max(ROPE_MIN, rope.len - REEL_SPEED * dt);
-        if (Math.random() < dt * 14) { spawnSparks(rope.ax, rope.ay, 1, C.amber); }
-      } else if (rope.len > rope.min) {
-        rope.len = Math.max(rope.min, rope.len - 520 * dt);
+      var beforeLen = rope.len;
+      var cut = (keys.dash || dashHold) ? REEL_SPEED : 700;
+      var targetLen = Math.max(keys.dash || dashHold ? ROPE_MIN : rope.min, rope.len - cut * dt);
+      if (targetLen < rope.len - 0.001) {
+        var axd = rope.ax - P.x, ayd = rope.ay - P.y;
+        var add = Math.sqrt(axd * axd + ayd * ayd) || 1;
+        var ux2 = axd / add, uy2 = ayd / add;
+        var tx2 = -uy2, ty2 = ux2;
+        var vt2 = P.vx * tx2 + P.vy * ty2;
+        var ratio = beforeLen / targetLen;
+        if (ratio > 1.015 && Math.abs(vt2) > 12) {
+          P.vx += tx2 * vt2 * (ratio - 1);
+          P.vy += ty2 * vt2 * (ratio - 1);
+        }
+        var pull = (beforeLen - targetLen) / dt;
+        var vr2 = P.vx * ux2 + P.vy * uy2;
+        if (vr2 < pull) {
+          P.vx += (pull - vr2) * ux2;
+          P.vy += (pull - vr2) * uy2;
+        }
+        rope.len = targetLen;
+        if (keys.dash || dashHold) {
+          if (Math.random() < dt * 14) { spawnSparks(rope.ax, rope.ay, 1, C.amber); }
+        }
       }
     }
 
