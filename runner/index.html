@@ -2008,7 +2008,7 @@ window.addEventListener("error", function (ev) {
   }
 
   function armTip() {
-    var sx = P.face * 7, sy = -46;                     // 어깨 (로컬 좌표)
+    var sx = P.face * 7, sy = -43;                     // 어깨 (로컬 좌표)
     var ang;
     if (rope.on) {
       ang = Math.atan2(rope.ay - (P.y + sy * HERO_S), rope.ax - (P.x + sx * HERO_S));
@@ -2067,21 +2067,21 @@ window.addEventListener("error", function (ev) {
 
     ctx.beginPath();
     ctx.moveTo(-5, -33);
-    ctx.quadraticCurveTo(back * 9, -18, back * (9 + flow * 9), 3);
-    ctx.quadraticCurveTo(tailX * 0.92, 11 + sway, tailX, tailY);
-    ctx.quadraticCurveTo(back * 19, -18, 5, -32);
+    ctx.quadraticCurveTo(back * 10, -18, back * (10 + flow * 10), 3);
+    ctx.quadraticCurveTo(tailX * 0.92, 12 + sway, tailX, tailY);
+    ctx.quadraticCurveTo(back * 20, -16, 5, -32);
     ctx.closePath();
-    ctx.fillStyle = "#080c1c";
+    ctx.fillStyle = "#0d1430";
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 45, 85, 0.5)";
-    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = "rgba(255, 45, 85, 0.55)";
+    ctx.lineWidth = 1.2;
     ctx.stroke();
     // 붉은 안감
     ctx.beginPath();
-    ctx.moveTo(back * 7, -22);
-    ctx.quadraticCurveTo(tailX * 0.72, -8 + sway, tailX * 0.95, tailY - 1);
-    ctx.strokeStyle = "rgba(255, 62, 165, 0.75)";
-    ctx.lineWidth = 1.5;
+    ctx.moveTo(back * 7, -21);
+    ctx.quadraticCurveTo(tailX * 0.72, -7 + sway, tailX * 0.96, tailY - 1);
+    ctx.strokeStyle = "rgba(255, 62, 165, 0.85)";
+    ctx.lineWidth = 2.2;
     ctx.stroke();
 
     /* ══ 다리 (버선코) ══ */
@@ -2231,7 +2231,7 @@ window.addEventListener("error", function (ev) {
     var open = 0.1 + claw * 0.9;
 
     ctx.save();
-    ctx.translate(P.face * 7, -46);
+    ctx.translate(P.face * 7, -43);
     // 어깨
     ctx.fillStyle = "#151d34";
     ctx.beginPath();
