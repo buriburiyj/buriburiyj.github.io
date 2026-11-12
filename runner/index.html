@@ -674,9 +674,9 @@ window.addEventListener("error", function (ev) {
         // 창문
         for (var wy = th - bh + 10; wy < th - 12; wy += 13) {
           for (var wx = x + 7; wx < x + w - 8; wx += 12) {
-            if (Math.random() < 0.34) {
-              g.fillStyle = Math.random() < 0.72 ? "rgba(43, 242, 255, 0.5)" : "rgba(255, 207, 77, 0.42)";
-              g.fillRect(wx, wy, 4, 5);
+            if (Math.random() < 0.17) {
+              g.fillStyle = Math.random() < 0.72 ? "rgba(43, 242, 255, 0.34)" : "rgba(255, 207, 77, 0.3)";
+              g.fillRect(wx, wy, 3, 4);
             }
           }
         }
@@ -1443,6 +1443,8 @@ window.addEventListener("error", function (ev) {
     drawCity(bgTiles.far, 0.055, 0.85, groundScreenY + 150);
     drawCity(bgTiles.mid, 0.18, 0.95, groundScreenY + 96);
     drawCity(bgTiles.near, 0.44, 1, groundScreenY + 54);
+    drawSkyLights();
+    drawAbyss(groundScreenY);
 
     // 월드
     ctx.save();
@@ -1527,6 +1529,36 @@ window.addEventListener("error", function (ev) {
     g.addColorStop(1, "rgba(255, 120, 150, 0.16)");
     ctx.fillStyle = g;
     ctx.fillRect(0, groundScreenY - 320, cssW, 380);
+  }
+
+  function drawAbyss(groundScreenY) {
+    var top = groundScreenY - 30;
+    var g = ctx.createLinearGradient(0, top, 0, cssH);
+    g.addColorStop(0, "rgba(4, 5, 13, 0)");
+    g.addColorStop(0.3, "rgba(4, 5, 13, 0.6)");
+    g.addColorStop(1, "rgba(3, 4, 10, 0.94)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, top, cssW, cssH - top);
+  }
+
+  function drawSkyLights() {
+    for (var i = 0; i < 3; i++) {
+      var sp = 0.012 + i * 0.006;
+      var x = ((T * (18 + i * 9) - cam.x * 8 * sp) % (cssW + 260) + cssW + 260) % (cssW + 260) - 130;
+      var y = cssH * (0.14 + i * 0.09) + Math.sin(T * 0.4 + i * 2) * 12;
+      var pulse = 0.5 + Math.sin(T * (1.4 + i * 0.5) + i) * 0.35;
+      ctx.fillStyle = i === 1 ? "rgba(255, 45, 85, " + (0.5 + pulse * 0.4) + ")" : "rgba(43, 242, 255, " + (0.35 + pulse * 0.35) + ")";
+      ctx.beginPath();
+      ctx.arc(x, y, 1.8, 0, TAU);
+      ctx.fill();
+      var gr = ctx.createRadialGradient(x, y, 0, x, y, 16);
+      gr.addColorStop(0, i === 1 ? "rgba(255, 45, 85, 0.18)" : "rgba(43, 242, 255, 0.14)");
+      gr.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = gr;
+      ctx.beginPath();
+      ctx.arc(x, y, 16, 0, TAU);
+      ctx.fill();
+    }
   }
 
   function drawCity(tile, par, alpha, baseY) {
@@ -2124,11 +2156,11 @@ window.addEventListener("error", function (ev) {
 
   function controlGuide() {
     if (isTouch) {
-      return '<div><b>위쪽 터치</b> 사슬 발사 · 손 떼면 발사(런치)</div>'
-        + '<div><b>아래 터치</b> 점프 (공중에서 한 번 더 = 2단)</div>'
+      return '<div><b>위쪽 탭</b> 사슬 걸기 · 한 번 더 탭(또는 길게 눌렀다 떼기) = 발사</div>'
+        + '<div><b>아래 탭</b> 점프 (공중에서 한 번 더 = 2단)</div>'
         + '<div><b>릴</b> 사슬 당겨 가속 / 공중 대시</div>';
     }
-    return '<div><b>마우스</b> 조준 후 클릭 = 사슬, 떼면 런치</div>'
+    return '<div><b>마우스</b> 조준 후 클릭 = 사슬, 다시 클릭(또는 떼면) = 발사</div>'
       + '<div><b>Space</b> 점프 (2단 점프) · <b>Shift</b> 릴·대시</div>'
       + '<div><b>A / D</b> 좌우 이동 · <b>Esc</b> 일시정지 · <b>M</b> 소리</div>';
   }
@@ -2223,7 +2255,7 @@ window.addEventListener("error", function (ev) {
     persist();
     hudCache.dist = -1; hudCache.score = -1; hudCache.lives = -1; hudCache.combo = -1;
     updateHUD();
-    showHint(isTouch ? "위쪽을 눌러 사슬을 걸어라 · 손 떼면 발사" : "마우스로 앵커를 클릭해 사슬을 걸어라", 5);
+    showHint(isTouch ? "위쪽을 눌러 사슬을 걸어라 · 다시 눌러 발사" : "마우스로 앵커를 클릭해 사슬을 걸어라", 5);
   }
 
   function gameOver(reason) {
@@ -2350,7 +2382,8 @@ window.addEventListener("error", function (ev) {
   }
   function onPointerUp() {
     holding = false;
-    if (rope.on) { detach(true); }
+    // 짧은 탭으로 걸린 사슬은 바로 풀리지 않는다 (두 번째 탭에서 발사)
+    if (rope.on && (T - rope.born) > 0.22) { detach(true); }
   }
 
   root.addEventListener("pointerdown", onPointerDown);
