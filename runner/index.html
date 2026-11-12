@@ -2051,13 +2051,18 @@ window.addEventListener("error", function (ev) {
     var back = -P.face;
 
     // 잔상
-    if (spd > 520) {
-      for (var i = 0; i < trail.length; i++) {
-        var tr = trail[i];
-        var a = (i / trail.length) * 0.24;
-        ctx.fillStyle = "rgba(255, 45, 85, " + a + ")";
-        ctx.fillRect(tr.x - 11, tr.y - 66, 22, 62);
+    if (spd > 520 && trail.length > 1) {
+      for (var i = 1; i < trail.length; i++) {
+        var a0 = (i / trail.length) * 0.16;
+        ctx.strokeStyle = "rgba(255, 45, 85, " + a0 + ")";
+        ctx.lineWidth = 2 + (i / trail.length) * 8;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(trail[i - 1].x, trail[i - 1].y - 40);
+        ctx.lineTo(trail[i].x, trail[i].y - 40);
+        ctx.stroke();
       }
+      ctx.lineCap = "butt";
     }
 
     var blink = P.invuln > 0 && Math.floor(P.invuln * 14) % 2 === 0;
@@ -2111,8 +2116,8 @@ window.addEventListener("error", function (ev) {
     /* ══ 다리 (버선코) ══ */
     var lp = P.onGround ? Math.sin(P.legPhase) * 6.5 : 5;
     var lp2 = P.onGround ? Math.sin(P.legPhase + Math.PI) * 6.5 : -4;
-    ctx.strokeStyle = "rgba(150, 168, 196, 0.85)";
-    ctx.lineWidth = 3.2;
+    ctx.strokeStyle = "rgba(96, 112, 142, 0.9)";
+    ctx.lineWidth = 3;
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(-2.5, -18);
