@@ -609,13 +609,15 @@ window.addEventListener("error", function (ev) {
 
   var VIEW_H = 900;
   var cssW = 375, cssH = 812, dpr = 1, scale = 1, viewW = 420;
+  var maxDpr = 2;
+  var lowFx = false, slowFrames = 0;
   var bgTiles = { far: null, mid: null, near: null };
   var rain = [];
 
   function resize() {
     cssW = Math.max(240, window.innerWidth || 375);
     cssH = Math.max(320, window.innerHeight || 812);
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     canvas.width = Math.round(cssW * dpr);
     canvas.height = Math.round(cssH * dpr);
     canvas.style.width = cssW + "px";
@@ -726,7 +728,7 @@ window.addEventListener("error", function (ev) {
 
   function seedRain() {
     rain = [];
-    var n = Math.round(cssW * cssH / 9000);
+    var n = Math.round(cssW * cssH / (lowFx ? 18000 : 9000));
     for (var i = 0; i < n; i++) {
       rain.push({
         x: Math.random() * cssW,
@@ -2512,6 +2514,14 @@ window.addEventListener("error", function (ev) {
     lastT = now;
     if (dt > 0.05) { dt = 0.05; }
     if (dt < 0) { dt = 0; }
+
+    // 느린 기기에서는 해상도를 한 단계 낮춰 프레임을 지킨다
+    if (dt > 0.024) { slowFrames++; } else { slowFrames = Math.max(0, slowFrames - 1); }
+    if (!lowFx && slowFrames > 50) {
+      lowFx = true;
+      maxDpr = 1.25;
+      resize();
+    }
 
     acc += dt;
     var guard = 0;
