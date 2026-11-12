@@ -842,10 +842,11 @@ window.addEventListener("error", function (ev) {
     var idx = gen.index++;
 
     if (idx === 0) {
-      addPlatform(-500, 1000, 0);
-      anchors.push(crane(760, -300));
-      addOrbArc(600, -170, 3, 120);
-      gen.gx = 1000;
+      addPlatform(-420, 720, 0);
+      anchors.push(crane(320, -280));
+      anchors.push(crane(600, -300));
+      addOrbArc(450, -160, 3, 110);
+      gen.gx = 720;
       gen.top = 0;
       return;
     }
@@ -1422,8 +1423,10 @@ window.addEventListener("error", function (ev) {
     var sky = ctx.createLinearGradient(0, 0, 0, cssH);
     sky.addColorStop(0, "#04050d");
     sky.addColorStop(0.42, "#0a0e26");
-    sky.addColorStop(0.72, "#161336");
-    sky.addColorStop(1, "#2a0d24");
+    sky.addColorStop(0.66, "#171336");
+    sky.addColorStop(0.76, "#2b1027");
+    sky.addColorStop(0.86, "#0d0b1c");
+    sky.addColorStop(1, "#04050c");
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, cssW, cssH);
 
@@ -2542,6 +2545,8 @@ window.addEventListener("error", function (ev) {
       return { platforms: platforms.length, anchors: anchors.length, spikes: spikes.length, lasers: lasers.length, orbs: orbs.length };
     },
     get run() { return run; },
+    get anchors() { return anchors.map(function (a) { return { k: a.kind, x: Math.round(a.x), y: Math.round(a.y) }; }); },
+    get platforms() { return platforms.map(function (p) { return { x1: Math.round(p.x1), x2: Math.round(p.x2), top: p.top }; }); },
     mode: function () { return mode; },
     start: startRun, jump: jump, grapple: grapple, detach: detach,
     cam: cam, lives: function () { return lives; },
