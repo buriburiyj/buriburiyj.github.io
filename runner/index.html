@@ -680,6 +680,7 @@ window.addEventListener("error", function (ev) {
     scale = cssH / VIEW_H;
     if (cssW / scale > 1900) { scale = cssW / 1900; }
     viewW = cssW / scale;
+    HERO_S = cssW < 520 ? 1.42 : 1.24;
     buildBackground();
     seedRain();
   }
