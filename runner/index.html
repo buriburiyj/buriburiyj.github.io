@@ -1104,6 +1104,13 @@ window.addEventListener("error", function (ev) {
     rope.len = clamp(d, ROPE_MIN, ROPE_MAX);
     rope.born = T;
     if (P.jumps < 1) { P.jumps = 1; }
+    // 지면에서 걸면 사슬이 몸을 끌어올린다
+    if (P.onGround) {
+      P.vy = -430;
+      P.onGround = false;
+      P.coyote = 0;
+      spawnDust(P.x, P.y, 5);
+    }
     Sound.shoot();
     Sound.latch();
     spawnSparks(a.x, a.y, 14);
@@ -1458,33 +1465,50 @@ window.addEventListener("error", function (ev) {
   }
 
   function drawMoon(groundScreenY) {
-    var mx = cssW * 0.74, my = Math.min(cssH * 0.26, groundScreenY - 260);
-    var r = Math.min(cssW * 0.19, 96);
-    var g = ctx.createRadialGradient(mx, my, r * 0.2, mx, my, r * 2.6);
-    g.addColorStop(0, "rgba(255, 60, 96, 0.5)");
-    g.addColorStop(0.35, "rgba(190, 30, 72, 0.16)");
+    var mx = cssW * 0.76, my = Math.min(cssH * 0.24, groundScreenY - 300);
+    var r = Math.min(cssW * 0.115, 76);
+
+    var g = ctx.createRadialGradient(mx, my, r * 0.4, mx, my, r * 3.4);
+    g.addColorStop(0, "rgba(255, 70, 100, 0.32)");
+    g.addColorStop(0.35, "rgba(190, 30, 72, 0.12)");
     g.addColorStop(1, "rgba(120, 16, 52, 0)");
     ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(mx, my, r * 2.6, 0, TAU);
+    ctx.arc(mx, my, r * 3.4, 0, TAU);
     ctx.fill();
 
-    ctx.fillStyle = "rgba(255, 84, 116, 0.9)";
+    ctx.save();
     ctx.beginPath();
     ctx.arc(mx, my, r, 0, TAU);
-    ctx.fill();
+    ctx.clip();
+    ctx.fillStyle = "rgba(224, 54, 92, 0.9)";
+    ctx.fillRect(mx - r, my - r, r * 2, r * 2);
+    // 대기 띠
+    for (var i = 0; i < 7; i++) {
+      var by = my - r + (i / 7) * r * 2 + Math.sin(i * 2.1) * 3;
+      ctx.fillStyle = "rgba(12, 10, 30, " + (0.16 + (i % 3) * 0.08) + ")";
+      ctx.fillRect(mx - r, by, r * 2, r * rnd(0.06, 0.16));
+    }
+    // 상단 하이라이트
+    var hl = ctx.createLinearGradient(mx, my - r, mx, my + r);
+    hl.addColorStop(0, "rgba(255, 210, 220, 0.5)");
+    hl.addColorStop(0.5, "rgba(255, 210, 220, 0)");
+    ctx.fillStyle = hl;
+    ctx.fillRect(mx - r, my - r, r * 2, r * 2);
+    ctx.restore();
 
-    ctx.fillStyle = "rgba(255, 180, 190, 0.25)";
+    ctx.strokeStyle = "rgba(255, 160, 180, 0.45)";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(mx - r * 0.24, my - r * 0.22, r * 0.62, 0, TAU);
-    ctx.fill();
+    ctx.arc(mx, my, r, 0, TAU);
+    ctx.stroke();
 
     // 달을 가로지르는 전선
-    ctx.strokeStyle = "rgba(8, 10, 22, 0.7)";
+    ctx.strokeStyle = "rgba(8, 10, 22, 0.75)";
     ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.moveTo(0, my - r * 1.5);
-    ctx.quadraticCurveTo(cssW * 0.5, my - r * 0.2, cssW, my - r * 1.9);
+    ctx.moveTo(0, my - r * 1.7);
+    ctx.quadraticCurveTo(cssW * 0.52, my - r * 0.3, cssW, my - r * 2.1);
     ctx.stroke();
   }
 
@@ -1792,6 +1816,14 @@ window.addEventListener("error", function (ev) {
     ctx.save();
     ctx.translate(P.x, P.y);
 
+    // 발밑 그림자
+    if (P.onGround) {
+      ctx.fillStyle = "rgba(2, 4, 12, 0.45)";
+      ctx.beginPath();
+      ctx.ellipse(0, -1, 17, 4, 0, 0, TAU);
+      ctx.fill();
+    }
+
     // 그림자 광
     var gl = ctx.createRadialGradient(0, -28, 4, 0, -28, 46);
     gl.addColorStop(0, "rgba(43, 242, 255, 0.18)");
@@ -1801,75 +1833,125 @@ window.addEventListener("error", function (ev) {
     ctx.arc(0, -28, 46, 0, TAU);
     ctx.fill();
 
-    // 스카프
+    // 스카프 (두 갈래)
     var sc = Math.sin(T * 7) * 3;
     var back = -P.face;
+    var drag = clamp(-P.vx * 0.02, -22, 22);
     ctx.strokeStyle = "rgba(255, 45, 85, 0.85)";
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 3.6;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(0, -44);
-    ctx.quadraticCurveTo(back * 16, -50 + sc, back * 30 - P.vx * 0.012, -40 + sc * 1.6);
+    ctx.moveTo(0, -47);
+    ctx.quadraticCurveTo(back * 15 + drag * 0.4, -52 + sc, back * 30 + drag, -44 + sc * 1.8);
     ctx.stroke();
-
-    // 다리
-    ctx.strokeStyle = "rgba(200, 226, 255, 0.7)";
-    ctx.lineWidth = 3.6;
-    var lp = P.onGround ? Math.sin(P.legPhase) * 8 : 5;
-    var lp2 = P.onGround ? Math.sin(P.legPhase + Math.PI) * 8 : -4;
+    ctx.strokeStyle = "rgba(255, 120, 150, 0.45)";
+    ctx.lineWidth = 2.2;
     ctx.beginPath();
-    ctx.moveTo(-3, -20);
-    ctx.lineTo(-3 + lp, -2);
-    ctx.moveTo(3, -20);
-    ctx.lineTo(3 + lp2, -2);
+    ctx.moveTo(0, -46);
+    ctx.quadraticCurveTo(back * 12 + drag * 0.3, -40 - sc, back * 26 + drag * 0.8, -34 - sc);
     ctx.stroke();
     ctx.lineCap = "butt";
 
-    // 몸통
-    ctx.fillStyle = "#0a0d1c";
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.55)";
-    ctx.lineWidth = 1.4;
-    roundRect(-11, -48, 22, 32, 7);
-    ctx.fill();
+    // 다리
+    ctx.strokeStyle = "rgba(198, 226, 255, 0.75)";
+    ctx.lineWidth = 3.4;
+    var lp = P.onGround ? Math.sin(P.legPhase) * 8 : 6;
+    var lp2 = P.onGround ? Math.sin(P.legPhase + Math.PI) * 8 : -5;
+    ctx.beginPath();
+    ctx.moveTo(-3, -19);
+    ctx.lineTo(-3 + lp, -9);
+    ctx.lineTo(-4 + lp * 1.3, -1);
+    ctx.moveTo(3, -19);
+    ctx.lineTo(3 + lp2, -9);
+    ctx.lineTo(4 + lp2 * 1.3, -1);
     ctx.stroke();
+
+    // 몸통 (어깨가 넓은 사다리꼴)
+    ctx.beginPath();
+    ctx.moveTo(-10, -46);
+    ctx.lineTo(10, -46);
+    ctx.lineTo(8, -20);
+    ctx.quadraticCurveTo(0, -17, -8, -20);
+    ctx.closePath();
+    ctx.fillStyle = "#0b0e1e";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.6)";
+    ctx.lineWidth = 1.3;
+    ctx.stroke();
+
+    // 어깨 플레이트
+    ctx.fillStyle = "rgba(255, 45, 85, 0.9)";
+    ctx.fillRect(P.face > 0 ? 4 : -10, -47, 6, 2.6);
 
     // 가슴 코어
     ctx.fillStyle = "rgba(255, 45, 85, 0.95)";
     ctx.shadowColor = "rgba(255, 45, 85, 0.9)";
     ctx.shadowBlur = 10;
-    ctx.fillRect(-2, -38, 4, 9);
+    ctx.fillRect(-1.5, -40, 3, 8);
     ctx.shadowBlur = 0;
+
+    // 목
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.35)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -46);
+    ctx.lineTo(0, -50);
+    ctx.stroke();
 
     // 머리
     ctx.fillStyle = "#111631";
-    ctx.strokeStyle = "rgba(43, 242, 255, 0.5)";
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.55)";
     ctx.beginPath();
-    ctx.arc(0, -54, 8.5, 0, TAU);
+    ctx.arc(0, -56, 7.6, 0, TAU);
     ctx.fill();
     ctx.stroke();
 
+    // 안테나
+    ctx.strokeStyle = "rgba(43, 242, 255, 0.5)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(-3, -62);
+    ctx.lineTo(-8, -72);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(43, 242, 255, 0.9)";
+    ctx.beginPath();
+    ctx.arc(-8, -72, 1.6, 0, TAU);
+    ctx.fill();
+
     // 바이저
     ctx.fillStyle = "rgba(255, 45, 85, 0.95)";
-    ctx.fillRect(P.face > 0 ? -1 : -7, -56, 8, 3);
+    ctx.shadowColor = "rgba(255, 45, 85, 0.9)";
+    ctx.shadowBlur = 8;
+    ctx.fillRect(P.face > 0 ? -1 : -6.5, -58.5, 7.5, 3);
+    ctx.shadowBlur = 0;
 
     // 사슬팔
+    var sy = -44;
     if (rope.on) {
       ctx.strokeStyle = "rgba(255, 45, 85, 0.95)";
-      ctx.lineWidth = 4;
-      ctx.shadowColor = "rgba(255, 45, 85, 0.8)";
+      ctx.lineWidth = 4.4;
+      ctx.shadowColor = "rgba(255, 45, 85, 0.85)";
       ctx.shadowBlur = 12;
       ctx.beginPath();
-      ctx.moveTo(P.face * 6, -42);
-      ctx.lineTo(P.face * 15, -49);
+      ctx.moveTo(P.face * 5, sy);
+      ctx.lineTo(P.face * 14, sy - 4);
       ctx.stroke();
       ctx.shadowBlur = 0;
-    } else {
-      ctx.strokeStyle = "rgba(255, 45, 85, 0.8)";
-      ctx.lineWidth = 3.4;
+      ctx.fillStyle = "rgba(255, 200, 210, 0.95)";
       ctx.beginPath();
-      ctx.moveTo(P.face * 8, -40);
-      ctx.lineTo(P.face * 15, -31);
+      ctx.arc(P.face * 14, sy - 4, 3, 0, TAU);
+      ctx.fill();
+    } else {
+      ctx.strokeStyle = "rgba(255, 45, 85, 0.85)";
+      ctx.lineWidth = 3.6;
+      ctx.beginPath();
+      ctx.moveTo(P.face * 6, sy);
+      ctx.lineTo(P.face * 14, sy + 8);
       ctx.stroke();
+      ctx.fillStyle = "rgba(255, 120, 150, 0.9)";
+      ctx.beginPath();
+      ctx.arc(P.face * 14, sy + 8, 2.4, 0, TAU);
+      ctx.fill();
     }
 
     ctx.restore();
@@ -2449,9 +2531,10 @@ window.addEventListener("error", function (ev) {
 
   /* 디버그용 핸들 (게임 로직 확인) */
   window.__chainarm = {
-    player: P, rope: rope, run: run, world: function () {
+    player: P, rope: rope, world: function () {
       return { platforms: platforms.length, anchors: anchors.length, spikes: spikes.length, lasers: lasers.length, orbs: orbs.length };
     },
+    get run() { return run; },
     mode: function () { return mode; },
     start: startRun, jump: jump, grapple: grapple, detach: detach,
     cam: cam, lives: function () { return lives; },
