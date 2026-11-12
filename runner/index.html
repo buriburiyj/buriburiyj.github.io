@@ -1185,6 +1185,10 @@ window.addEventListener("error", function (ev) {
     Sound.shoot();
     Sound.latch();
     spawnSparks(a.x, a.y, 14);
+    for (var ri = 0; ri < 10; ri++) {
+      var ra = (ri / 10) * TAU;
+      particles.push({ x: a.x + Math.cos(ra) * 10, y: a.y + Math.sin(ra) * 10, vx: Math.cos(ra) * 90, vy: Math.sin(ra) * 90, life: 0.34, max: 0.34, size: 2, color: C.cyan, grav: 0, kind: "dust" });
+    }
     a.flash = 1;
     shake(2.6, 0.16);
     run.swings++;
@@ -2228,7 +2232,7 @@ window.addEventListener("error", function (ev) {
     /* ══ 사슬팔 : 거대 3지 집게 ══ */
     var tip = armTip();
     var ang = tip.ang, armLen = tip.len;
-    var open = 0.1 + claw * 0.9;
+    var open = 0.1 + claw * 1.42;
 
     ctx.save();
     ctx.translate(P.face * 7, -43);
@@ -2273,7 +2277,7 @@ window.addEventListener("error", function (ev) {
       for (var c2 = -1; c2 <= 1; c2++) {
         ctx.save();
         ctx.translate(armLen - 1, 0);
-        ctx.rotate(c2 * open * 1.0);
+        ctx.rotate(c2 * open);
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.quadraticCurveTo(7, c2 * 3.2, 11.5, c2 * 7.2 * open + 1.5);
