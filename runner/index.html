@@ -856,6 +856,7 @@ window.addEventListener("error", function (ev) {
   var flash = 0;
   var lastWind = 0;
   var claw = 0;
+  var HERO_S = 1.24;
 
   function screenToWorld(sx, sy) {
     return { x: cam.x + sx / scale, y: cam.y + sy / scale };
@@ -1510,8 +1511,8 @@ window.addEventListener("error", function (ev) {
 
     drawCity(bgTiles.far, 0.055, 0.85, groundScreenY + 150);
     drawCity(bgTiles.mid, 0.18, 0.95, groundScreenY + 96);
-    drawCity(bgTiles.near, 0.44, 1, groundScreenY + 54);
     drawSigns(groundScreenY);
+    drawCity(bgTiles.near, 0.44, 1, groundScreenY + 54);
     drawSkyLights();
     drawAbyss(groundScreenY);
 
@@ -1642,10 +1643,10 @@ window.addEventListener("error", function (ev) {
   }
 
   /* ── 마고특별시 조선 네온사인 ── */
-  var SIGN_TEXTS = ["마고", "의금부", "산나비", "기억 조작", "개벽", "무명", "전하", "야시장", "철호", "마고특별시"];
+  var SIGN_TEXTS = ["마고", "의금부", "산나비", "기억 조작", "개벽", "철호", "야시장"];
   var SIGN_COLORS = ["#ff2fa0", "#2bf2ff", "#ff2d55", "#7c5cff", "#ffcf4d"];
   var signPattern = [];
-  var SIGN_SPAN = 1500;
+  var SIGN_SPAN = 2100;
 
   function rr(g, x, y, w, h, r) {
     g.beginPath();
@@ -1713,7 +1714,7 @@ window.addEventListener("error", function (ev) {
       var vert = i % 3 !== 0;
       signPattern.push({
         x: (i + rnd(0.05, 0.6)) * (SIGN_SPAN / n),
-        dy: -rnd(150, 540),
+        dy: -rnd(150, 430),
         tex: makeSignTexture(SIGN_TEXTS[i], color, vert),
         flick: rnd(0, 6),
         speed: rnd(1.3, 2.4)
@@ -1733,8 +1734,8 @@ window.addEventListener("error", function (ev) {
       if (sx + w * 0.5 < -80 || sx - w * 0.5 > cssW + 80) { continue; }
       var sy = groundScreenY + s.dy * scale;
       if (sy < -h || sy > cssH + h) { continue; }
-      var fl = 0.78 + Math.sin(T * s.speed + s.flick) * 0.12 + (Math.sin(T * 27 + s.flick * 3) > 0.985 ? -0.35 : 0);
-      ctx.globalAlpha = clamp(fl, 0.28, 0.95);
+      var fl = 0.62 + Math.sin(T * s.speed + s.flick) * 0.1 + (Math.sin(T * 27 + s.flick * 3) > 0.985 ? -0.3 : 0);
+      ctx.globalAlpha = clamp(fl, 0.24, 0.8);
       ctx.drawImage(s.tex.canvas, Math.round(sx - w / 2), Math.round(sy - h), Math.round(w), Math.round(h));
     }
     ctx.globalAlpha = 1;
@@ -2008,12 +2009,12 @@ window.addEventListener("error", function (ev) {
 
   function armTip() {
     if (rope.on) {
-      var sx = P.face * 4, sy = -44;
+      var sx = P.face * 4 * HERO_S, sy = -44 * HERO_S;
       var a = Math.atan2(rope.ay - (P.y + sy), rope.ax - (P.x + sx));
-      var len = 17 + claw * 6;
+      var len = (17 + claw * 6) * HERO_S;
       return { x: P.x + sx + Math.cos(a) * len, y: P.y + sy + Math.sin(a) * len, a: a };
     }
-    return { x: P.x + P.face * 13, y: P.y - 33, a: P.face > 0 ? 1.1 : Math.PI - 1.1 };
+    return { x: P.x + P.face * 13 * HERO_S, y: P.y - 33 * HERO_S, a: P.face > 0 ? 1.1 : Math.PI - 1.1 };
   }
 
   function drawPlayer() {
@@ -2036,6 +2037,7 @@ window.addEventListener("error", function (ev) {
 
     ctx.save();
     ctx.translate(P.x, P.y);
+    ctx.scale(HERO_S, HERO_S);
 
     // 발밑 그림자
     if (P.onGround) {
