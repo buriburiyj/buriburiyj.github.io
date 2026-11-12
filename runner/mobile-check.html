@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>mobile check</title>
+<style>
+  body { margin:0; background:#222; display:flex; gap:24px; align-items:flex-start; padding:20px; font-family:system-ui; color:#ddd; }
+  .phone { width:375px; height:812px; border-radius:28px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.6); position:relative; }
+  iframe { width:375px; height:812px; border:0; display:block; }
+  .cap { font-size:12px; margin-bottom:6px; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="cap">iPhone 13 mini 375×812 (ready)</div>
+    <div class="phone"><iframe id="a" src="../runner/index.html?touch=1&v=4"></iframe></div>
+  </div>
+  <div>
+    <div class="cap">iPhone 13 mini 375×812 (playing)</div>
+    <div class="phone"><iframe id="b" src="../runner/index.html?touch=1&v=4&auto=1"></iframe></div>
+  </div>
+</body>
+</html>

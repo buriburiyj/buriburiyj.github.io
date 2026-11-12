@@ -2286,6 +2286,13 @@ window.addEventListener("error", function (ev) {
     isTouch = "ontouchstart" in window;
   }
   if (isTouch) { root.classList.add("is-touch"); }
+  // 테스트/강제 옵션: ?touch=1 이면 터치 UI로 표시
+  try {
+    if (/[?&]touch=1/.test(window.location.search)) {
+      isTouch = true;
+      root.classList.add("is-touch");
+    }
+  } catch (e) { /* 무시 */ }
 
   var elJump = document.getElementById("btnJump");
   var elReel = document.getElementById("btnReel");
