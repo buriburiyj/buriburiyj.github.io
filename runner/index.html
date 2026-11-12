@@ -1173,7 +1173,7 @@ window.addEventListener("error", function (ev) {
     var dx = P.x - a.x, dy = P.y - a.y;
     var d = Math.sqrt(dx * dx + dy * dy) || 1;
     rope.len = clamp(d, ROPE_MIN, ROPE_MAX);
-    rope.min = Math.max(ROPE_MIN, Math.min(rope.len * 0.62, rope.len - 80));
+    rope.min = Math.max(ROPE_MIN, rope.len - 55);
     rope.born = T;
     if (P.jumps < 1) { P.jumps = 1; }
     // 지면에서 걸면 사슬이 몸을 끌어올린다
@@ -1204,8 +1204,8 @@ window.addEventListener("error", function (ev) {
     if (launch) {
       var sp = Math.sqrt(P.vx * P.vx + P.vy * P.vy);
       if (sp > 520) {
-        P.vx = P.vx * 1.1 + P.face * 95;
-        P.vy = P.vy * 1.1 - 80;
+        P.vx = P.vx * 1.14 + P.face * 110;
+        P.vy = P.vy * 1.14 - 95;
         combo = Math.min(combo + 1, 9);
         comboT = COMBO_WINDOW;
         var pts = 40 * combo;
@@ -1322,7 +1322,7 @@ window.addEventListener("error", function (ev) {
         rope.len = Math.max(ROPE_MIN, rope.len - REEL_SPEED * dt);
         if (Math.random() < dt * 14) { spawnSparks(rope.ax, rope.ay, 1, C.amber); }
       } else if (rope.len > rope.min) {
-        rope.len = Math.max(rope.min, rope.len - 780 * dt);
+        rope.len = Math.max(rope.min, rope.len - 520 * dt);
       }
     }
 
