@@ -127,7 +127,7 @@
         ? '<span class="tag bad">기준 초과</span>' : '<span class="tag gray">기준 미달</span>';
       return '<button class="cand" data-act="pick-batch" data-id="' + c.id + '" aria-pressed="' + on + '">' +
         '<span style="flex:1"><span class="id">' + c.id + ' · ' + esc(productName(c.product_id)) + '</span>' +
-        '<span class="meta">확정 ' + c.count + '건 · QC ' + esc(c.qc) + ' · 로트 ' + esc(c.lot) + '</span></span>' +
+        '<span class="meta">확정 ' + c.count + '건 · QC ' + esc(c.qc) + ' · ' + esc(c.lot) + '</span></span>' +
         '<span class="rate"><b>' + pct(c.rate) + '</b><span>' + tag + '</span></span></button>';
     }).join('');
 
