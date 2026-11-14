@@ -490,6 +490,20 @@
     return { state: s, stillEligible: stillEligible, rate: rate };
   }
 
+  /* 판정 정정(모의 재검사)을 분석 결과에 반영 — 정정된 확정 수량으로 다시 판정한다 */
+  function applyCorrection(a, correction) {
+    if (!correction) return a;
+    var q = correction.correctedQty;
+    var rate = a.producedQty ? q / a.producedQty : 0;
+    return Object.assign({}, a, {
+      originalQtyConfirmed: a.qtyConfirmed,
+      qtyConfirmed: q,
+      rateProduced: rate,
+      eligible: q > 0 && rate >= CFG.threshold,
+      correctionApplied: correction
+    });
+  }
+
   /* 재평가: 의결 시점 판단과 현재 계산이 달라졌는지 */
   function needsReview(state, batchId, analysis) {
     var bs = state.batches[batchId];
@@ -513,6 +527,7 @@
     CFG: CFG, STATUS_LABEL: STATUS_LABEL, TASK_LABEL: TASK_LABEL,
     parsePipe: parsePipe, buildModel: buildModel, mappingCheck: mappingCheck,
     analyzeBatch: analyzeBatch, allocate: allocate, aggregateLotScope: aggregateLotScope,
+    applyCorrection: applyCorrection,
     emptyState: emptyState, getBatchState: getBatchState, ensureBatch: ensureBatch,
     requestLogistics: requestLogistics, approve: approve, reject: reject,
     logisticsReply: logisticsReply, correctJudgment: correctJudgment,

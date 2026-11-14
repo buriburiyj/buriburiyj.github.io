@@ -62,7 +62,11 @@
   }
 
   /* ---------- 분석 ---------- */
-  function analysis() { return E.analyzeBatch(MODEL, UI.batchId, STATE.customClaims); }
+  function analysis() {
+    var a = E.analyzeBatch(MODEL, UI.batchId, STATE.customClaims);
+    var b = STATE.batches[UI.batchId];
+    return (b && b.correction) ? E.applyCorrection(a, b.correction) : a;
+  }
   function scoped() {
     var a = analysis();
     return UI.lotScope ? E.aggregateLotScope(MODEL, a) : a;
@@ -204,6 +208,7 @@
         '회수 대상 = 확정(True) AND 불량률 ≥ 10% → <b>' + (over ? '충족' : '미충족') + '</b><br>' +
         '참고 · 분모를 SBL 출하수량(' + n(a.shippedQty) + ' EA)으로 바꾸면 ' + pct(a.rateShipped) + ' (판단 정의는 배치 수량 기준)' +
       '</div>' +
+      (a.correctionApplied ? '<div class="banner sim" style="margin-top:10px">판정 정정 반영 — 확정 ' + n(a.originalQtyConfirmed) + ' → <b>' + n(a.qtyConfirmed) + ' EA</b>, 불량률 ' + pct(a.rateProduced) + '. 아래 수치와 판정은 정정 후 기준입니다.</div>' : '') +
       '<div class="note"><b>예비검사 보류 건은 회수 대상이 아니라 조사·소명 대상</b>으로 분리했습니다(정책 원문). 회수 판단 단위는 생산 배치입니다.</div>' +
       claimsDetails(a) +
       lotBlock(a, s) +
@@ -330,7 +335,7 @@
       '<button class="act ghost sm" data-act="do-reply">모의 회신 반영 → 보류 작업 재개</button>' +
       '<hr class="sep">' +
       '<div class="h3">판정 정정 <span class="tag sim">모의 재검사</span></div>' +
-      '<div class="row"><label class="field"><span>정정 후 확정 수량(EA)</span><input id="corr" type="number" inputmode="numeric" value="' + esc(UI.correctedQty || Math.round(a.qtyConfirmed * 0.7)) + '"></label>' +
+      '<div class="row"><label class="field"><span>정정 후 확정 수량(EA)</span><input id="corr" type="number" inputmode="numeric" value="' + esc(UI.correctedQty || (bs.correction ? a.qtyConfirmed : Math.round(a.qtyConfirmed * 0.7))) + '"></label>' +
       '<label class="field"><span>&nbsp;</span><button class="act ghost" data-act="do-correct">정정 반영 · 후속작업 재검토</button></label></div>' +
       '<div class="note">정정으로 기준(10%) 아래로 내려가면 회수 의결이 뒤집히고, 이미 만든 영업 통보·생산 재공급 작업이 자동으로 <b>재검토</b> 상태로 바뀝니다(가상 입력).</div>');
   }
@@ -358,8 +363,9 @@
     }).join('');
     var open = bs.tasks.filter(function (t) { return t.status === 'TODO'; }).length;
     var hold = bs.tasks.filter(function (t) { return t.status === 'HOLD'; }).length;
+    var rev = bs.tasks.filter(function (t) { return t.status === 'REVIEW'; }).length;
     return section(4, '후속 작업', '의결 결과로 생성되는 부서별 작업',
-      '<div class="kv" style="margin-top:0">' + kv('진행', open + '건') + kv('보류', hold + '건') + '</div>' + tasks +
+      '<div class="kv" style="margin-top:0">' + kv('진행', open + '건') + kv('보류', hold + '건') + (rev ? kv('재검토', rev + '건') + kv('전체', bs.tasks.length + '건') : '') + '</div>' + tasks +
       '<div class="note">작업 상태는 브라우저 저장소(localStorage)에 남습니다. 같은 배치를 다시 열면 판정과 함께 <b>바뀐 상태</b>가 그대로 보입니다.</div>');
   }
 
@@ -488,8 +494,9 @@
     }
     if (act === 'approve') {
       var s = scoped();
-      if (!s.eligible && !analysis().eligible) {
-        toast('확정 불량률이 기준(10%) 미달이라 회수 의결 대상이 아닙니다. 원인 조사·보류로 처리하세요.', 'warn');
+      if (!s.eligible) {
+        toast('확정 불량률 ' + pct(s.rateProduced) + ' — 기준(10%) 미달이라 회수 의결 대상이 아닙니다. 원인 조사·소명으로 처리하세요.', 'warn');
+        return;
       }
       res = E.approve(STATE, { batchId: UI.batchId, at: at, analysis: s, note: (UI.lotScope ? '회수 범위 로트 확대(가정)' : '') });
       STATE = res.state; save(); render();
