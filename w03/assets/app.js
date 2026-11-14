@@ -165,10 +165,13 @@
 
   function newsSection() {
     var t = MODEL.texts.news || '';
+    var bullets = t.split('\n').map(function (l) { return l.trim(); })
+      .filter(function (l) { return l.indexOf('- ') === 0; })
+      .map(function (l) { return esc(l.slice(2).replace(/\*\*/g, '')); });
     return section(2, 'AI 판단 — 근거 부족', '언론 보도는 회수 판단 근거가 아닙니다',
       '<div class="banner warn"><b>판정 불가 · 확인 필요.</b> 보도는 단일 매체의 미확정 표현이고 특정 제품·배치를 지목하지 않았습니다. <code>quality_policy_cv.md</code>는 “외부 언론 보도는 회수 판단의 근거가 아니며 규격 검사 결과를 우선한다”고 정합니다.</div>' +
-      '<div class="h3">원본 보도에서 확인한 사실 <span class="tag orig">원본</span></div>' +
-      '<div class="note">' + esc(t.replace(/^#.*$/m, '').replace(/\n+/g, ' ').slice(0, 420)).replace(/^- /g, '· ') + '</div>' +
+      '<div class="h3">원본 보도에서 확인한 사실 <span class="tag orig">ext_news_quality_incident.md</span></div>' +
+      '<div class="note">' + (bullets.length ? bullets.map(function (b) { return '· ' + b; }).join('<br>') : esc(t.slice(0, 300))) + '</div>' +
       '<div class="h3">판단에 필요한 정보 (없는 것)</div>' +
       '<div class="tbl-wrap"><table><thead><tr><th>필요 정보</th><th>현재 상태</th><th>다음 처리</th></tr></thead><tbody>' +
       '<tr><td>지목된 배치·로트</td><td>없음</td><td>품질팀 확인 요청</td></tr>' +
@@ -212,7 +215,7 @@
       '<div class="note"><b>예비검사 보류 건은 회수 대상이 아니라 조사·소명 대상</b>으로 분리했습니다(정책 원문). 회수 판단 단위는 생산 배치입니다.</div>' +
       claimsDetails(a) +
       lotBlock(a, s) +
-      mappingBlock(a) +
+      mappingBlock(s, a) +
       customersBlock(s) +
       capacityBlock(s, a));
 
@@ -252,7 +255,7 @@
       (s.scopeLabel ? '<div class="note">현재 계산 범위: <b>' + s.scopeLabel + '</b></div>' : '');
   }
 
-  function mappingBlock(a) {
+  function mappingBlock(s, a) {
     var m = a.mapping;
     var bs = bsOf(UI.batchId);
     var st = bs.logistics;
@@ -261,7 +264,7 @@
         : '<span class="tag bad">미확인</span>';
     return '<div class="h3">출하처 연결 — SBL ↔ SH <span class="tag orig">원본 공백</span> ' + chip + '</div>' +
       '<div class="tbl-wrap"><table><tbody>' +
-      '<tr><td>배치 → 고객 납품 이력(SBL)</td><td class="num"><b>' + a.customers.length + '곳 · ' + n(a.shippedQty) + ' EA</b></td><td><span class="tag ok">확인</span></td></tr>' +
+      '<tr><td>' + (s.scopeLabel ? '회수 범위(로트 확대) → 고객 납품 이력(SBL)' : '배치 → 고객 납품 이력(SBL)') + '</td><td class="num"><b>' + s.customers.length + '곳 · ' + n(s.shippedQty) + ' EA</b></td><td><span class="tag ok">확인</span></td></tr>' +
       '<tr><td>배치 → 재무 출하(SH) 1:1 매핑</td><td class="num">' + m.matched + ' / ' + n(m.sblRows) + '건</td><td><span class="tag bad">미연결</span></td></tr>' +
       '<tr><td>SBL↔SH 후보 일치(고객·제품·출하일·수량)</td><td class="num">' + m.matched + '건 (불일치 ' + n(m.unmatched) + ')</td><td><span class="tag calc">검증 결과</span></td></tr>' +
       '</tbody></table></div>' +
@@ -335,7 +338,7 @@
       '<button class="act ghost sm" data-act="do-reply">모의 회신 반영 → 보류 작업 재개</button>' +
       '<hr class="sep">' +
       '<div class="h3">판정 정정 <span class="tag sim">모의 재검사</span></div>' +
-      '<div class="row"><label class="field"><span>정정 후 확정 수량(EA)</span><input id="corr" type="number" inputmode="numeric" value="' + esc(UI.correctedQty || (bs.correction ? a.qtyConfirmed : Math.round(a.qtyConfirmed * 0.7))) + '"></label>' +
+      '<div class="row"><label class="field"><span>정정 후 확정 수량(EA)</span><input id="corr" type="number" inputmode="numeric" value="' + esc(UI.correctedQty || (bs.correction ? a.qtyConfirmed : (a.qtyConfirmed ? Math.round(a.qtyConfirmed * 0.7) : ''))) + '"></label>' +
       '<label class="field"><span>&nbsp;</span><button class="act ghost" data-act="do-correct">정정 반영 · 후속작업 재검토</button></label></div>' +
       '<div class="note">정정으로 기준(10%) 아래로 내려가면 회수 의결이 뒤집히고, 이미 만든 영업 통보·생산 재공급 작업이 자동으로 <b>재검토</b> 상태로 바뀝니다(가상 입력).</div>');
   }
