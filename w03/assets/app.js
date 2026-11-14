@@ -5,6 +5,20 @@
   var LS = 'w03.state.v1';
   var MODEL = null;
 
+  /* 진단용: 실행 중 오류를 모아 둔다 (화면에는 노출되지 않음) */
+  window.W03_DIAG = { errors: [] };
+  window.addEventListener('error', function (e) { window.W03_DIAG.errors.push(String(e.message)); });
+  window.addEventListener('unhandledrejection', function (e) {
+    window.W03_DIAG.errors.push('rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+  });
+  (function () {
+    var oe = console.error;
+    console.error = function () {
+      window.W03_DIAG.errors.push(Array.prototype.join.call(arguments, ' '));
+      oe.apply(console, arguments);
+    };
+  })();
+
   var UI = {
     intake: 'BATCH',        /* BATCH | NEWS */
     batchId: 'B-02-2602-01',
@@ -119,18 +133,17 @@
       '<span class="meta">ext_news_quality_incident.md · 단일 매체·미확정</span></span>' +
       '<span class="rate"><b style="font-size:13px">배치 미지목</b><span class="tag warn">근거 부족</span></span></button>';
 
-    var allBatches = MODEL.prod.slice().sort(function (x, y) {
-      return x.batch_id < y.batch_id ? 1 : -1;
-    }).map(function (p) {
-      return '<option value="' + p.batch_id + '"' + (p.batch_id === UI.batchId ? ' selected' : '') + '>' +
-        p.batch_id + ' · ' + esc(productName(p.product_id)) + ' · ' + esc(p.qc_result) + '</option>';
+    var allBatches = candidates().map(function (c) {
+      return '<option value="' + c.id + '">' + c.id + ' · ' + esc(productName(c.product_id)) + ' · 확정 ' + c.count + '건</option>';
     }).join('');
 
     var pf = UI.prefill || {};
     return section(1, '사건 접수', '처리할 일을 고르거나 새 클레임을 입력', '' +
       '<div class="cands">' + rows + newsBtn + '</div>' +
       '<details' + (UI.prefill ? ' open' : '') + '><summary>직접 입력 — 새 클레임 접수 (가정 입력)</summary>' +
-      '<div class="row"><label class="field"><span>배치</span><select id="cc-batch">' + allBatches + '</select></label>' +
+      '<div class="row"><label class="field"><span>배치 ID</span>' +
+      '<input id="cc-batch" list="cc-batch-list" value="' + esc(pf.batch || UI.batchId) + '" placeholder="예: B-02-2602-02">' +
+      '<datalist id="cc-batch-list">' + allBatches + '</datalist></label>' +
       '<label class="field"><span>확정 여부</span><select id="cc-conf"><option value="True">확정(규격이탈)</option><option value="False">보류(조사중)</option></select></label></div>' +
       '<div class="row"><label class="field"><span>영향 수량(EA)</span><input id="cc-qty" type="number" inputmode="numeric" value="' + (pf.qty || 15600) + '"></label>' +
       '<label class="field"><span>고객</span><input id="cc-cust" value="C-101"></label></div>' +
@@ -274,7 +287,7 @@
       kv('재공급 필요', n(c.need_qty) + ' EA') +
       kv('부족분', n(c.shortfall) + ' EA') +
       '</div>' +
-      '<div class="note"><b>' + esc(productName(a.batch ? a.batch.product_id : '')) + '</b>는 F1 전용 라인(' + a.productName + ')에서 생산되고 가동률이 ' + c.utilization_pct.toFixed(0) + '%입니다. ' +
+      '<div class="note"><b>' + esc(productName(a.batch ? a.batch.product_id : '')) + ' ' + esc(a.batch ? a.batch.product_id : '') + '</b>는 ' + c.plant_id + ' 전용 라인 <b>' + c.line_id + '</b>에서 생산되고 가동률이 ' + c.utilization_pct.toFixed(0) + '%입니다. ' +
       '회수 물량을 그대로 재공급하려면 잔여 여력의 ' + (c.need_qty ? (c.need_qty / (c.slack_qty || 1)).toFixed(1) : '—') + '배가 필요해, 생산팀은 다른 납품 일정을 미루거나 배분을 조정해야 합니다. ' +
       '배분 규칙: <span class="tag assume">매출비중 내림차순</span> (참가자 정의) — 대형 고객(C-101 ' + '30%, C-102 25%) 우선.</div>';
   }
@@ -448,10 +461,11 @@
       return;
     }
     if (act === 'add-claim') {
-      var bid = (document.getElementById('cc-batch') || {}).value || UI.batchId;
+      var bid = String((document.getElementById('cc-batch') || {}).value || '').trim();
       var q = Number((document.getElementById('cc-qty') || {}).value || 0);
       var conf = (document.getElementById('cc-conf') || {}).value || 'True';
       var cust = (document.getElementById('cc-cust') || {}).value || 'C-101';
+      if (!MODEL.prodById[bid]) { toast('원본 배치 로그에 없는 배치 ID입니다: ' + bid, 'warn'); return; }
       if (!q || q <= 0) { toast('수량을 입력하세요.', 'warn'); return; }
       var seq = STATE.customClaims.length + 1;
       STATE.customClaims.push({

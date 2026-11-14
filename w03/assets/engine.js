@@ -358,7 +358,7 @@
     pushTask(bs, {
       owner: '영업팀', type: 'CUSTOMER_NOTICE',
       title: '회수 대상 고객 통보 — ' + (names || '납품처 없음'),
-      status: confirmedLogi ? 'TODO' : 'TODO', blockedBy: null,
+      status: 'TODO', blockedBy: null,
       note: 'SBL 원본으로 확인된 납품처 ' + a.customers.length + '곳 · ' + fmtInt(a.shippedQty) + ' EA',
       createdAt: opt.at
     });
