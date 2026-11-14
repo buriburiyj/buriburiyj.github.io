@@ -45,7 +45,7 @@ body {
 }
 .topbar .wrap { padding-bottom: 0; display: flex; align-items: center; gap: 10px; }
 .topbar h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: -.2px; }
-.topbar .sub { font-size: 11px; color: #9fb0c9; margin-top: 2px; letter-spacing: .2px; }
+.topbar .sub { font-size: 10.5px; color: #9fb0c9; margin-top: 2px; letter-spacing: .2px; }
 .topbar .reset {
   margin-left: auto; flex: none;
   background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.18);
@@ -109,9 +109,10 @@ section.card {
   font: inherit; color: inherit;
 }
 .cand[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); }
-.cand .id { font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; }
-.cand .meta { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
-.cand .rate { margin-left: auto; text-align: right; font-variant-numeric: tabular-nums; }
+.cand > span:first-child { min-width: 0; flex: 1 1 auto; }
+.cand .id { display: block; font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; }
+.cand .meta { display: block; font-size: 11.5px; color: var(--ink-2); margin-top: 2px; line-height: 1.35; }
+.cand .rate { flex: 0 0 auto; margin-left: auto; text-align: right; font-variant-numeric: tabular-nums; }
 .cand .rate b { display: block; font-size: 15px; letter-spacing: -.3px; }
 .cand .rate span { font-size: 10.5px; color: var(--ink-3); }
 .cand.news { border-style: solid; }
