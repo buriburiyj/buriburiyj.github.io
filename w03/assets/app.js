@@ -264,9 +264,9 @@
         : '<span class="tag bad">미확인</span>';
     return '<div class="h3">출하처 연결 — SBL ↔ SH <span class="tag orig">원본 공백</span> ' + chip + '</div>' +
       '<div class="tbl-wrap"><table><tbody>' +
-      '<tr><td>' + (s.scopeLabel ? '회수 범위(로트 확대) → 고객 납품 이력(SBL)' : '배치 → 고객 납품 이력(SBL)') + '</td><td class="num"><b>' + s.customers.length + '곳 · ' + n(s.shippedQty) + ' EA</b></td><td><span class="tag ok">확인</span></td></tr>' +
-      '<tr><td>배치 → 재무 출하(SH) 1:1 매핑</td><td class="num">' + m.matched + ' / ' + n(m.sblRows) + '건</td><td><span class="tag bad">미연결</span></td></tr>' +
-      '<tr><td>SBL↔SH 후보 일치(고객·제품·출하일·수량)</td><td class="num">' + m.matched + '건 (불일치 ' + n(m.unmatched) + ')</td><td><span class="tag calc">검증 결과</span></td></tr>' +
+      '<tr><td>' + (s.scopeLabel ? '납품처(SBL) · 로트 확대' : '납품처(SBL)') + '</td><td class="num"><b>' + s.customers.length + '곳 · ' + n(s.shippedQty) + ' EA</b></td><td><span class="tag ok">확인</span></td></tr>' +
+      '<tr><td>매출 출하(SH) 매핑</td><td class="num">' + m.matched + ' / ' + n(m.sblRows) + '건</td><td><span class="tag bad">미연결</span></td></tr>' +
+      '<tr><td>후보 일치 검증</td><td class="num">' + m.matched + '건 (불일치 ' + n(m.unmatched) + ')</td><td><span class="tag calc">검증 결과</span></td></tr>' +
       '</tbody></table></div>' +
       '<div class="note">SH 출하 ' + n(m.shRows) + '건에는 <code>batch_id</code>가 없어 매출 귀속을 확정할 수 없습니다. 그래서 <b>납품처·수량은 SBL 원본으로 확정</b>하고, <b>매출 영향·잔여 출하 범위는 물류팀 확인 후 확정</b>으로 나눴습니다. 매출 영향 추정 ' + E.wonWon(a.revenueEstimate) + ' <span class="tag assume">추정·평균단가</span></div>';
   }
@@ -275,14 +275,16 @@
     if (!s.customers.length) return '';
     var rows = s.customers.map(function (c) {
       var r = s.capacity && s.capacity.alloc.rows.filter(function (x) { return x.customer_id === c.customer_id; })[0];
-      return '<tr><td><b>' + esc(c.customer_name) + '</b><br><span style="color:#7b879a;font-size:10.5px">' + c.customer_id + '</span></td>' +
-        '<td class="num">' + c.revenue_share_pct.toFixed(1) + '%</td>' +
-        '<td class="num">' + n(c.qty) + '</td>' +
-        '<td class="num">' + (r ? n(r.allocated_qty) : '—') + '</td>' +
-        '<td>' + (r && r.shortage_qty > 0 ? '<span class="tag bad">부족 ' + n(r.shortage_qty) + '</span>' : '<span class="tag ok">충족</span>') + '</td></tr>';
+      var ratePct = c.qty ? Math.round((r ? r.allocated_qty : 0) / c.qty * 100) : 0;
+      return '<div class="crow">' +
+        '<div class="cname">' + esc(c.customer_name) + ' <span>' + c.customer_id + ' · 매출비중 ' + c.revenue_share_pct.toFixed(1) + '%</span></div>' +
+        '<div class="cnum">회수 ' + n(c.qty) + ' EA → 배정 ' + (r ? n(r.allocated_qty) : '—') + ' (' + ratePct + '%) ' +
+        (r && r.shortage_qty > 0 ? '<span class="tag bad">부족 ' + n(r.shortage_qty) + '</span>' : '<span class="tag ok">충족</span>') +
+        '</div></div>';
     }).join('');
     return '<div class="h3">영향 고객 · 재공급 배분 ' + (s.scopeLabel ? '<span class="tag assume">' + s.scopeLabel + '</span>' : '') + '</div>' +
-      '<div class="tbl-wrap"><table><thead><tr><th>고객</th><th class="num">매출비중</th><th class="num">회수 EA</th><th class="num">재공급 배정</th><th>결과</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+      '<div class="clist">' + rows + '</div>' +
+      '<div class="note">배분 규칙: 매출비중 내림차순(참가자 정의). 잔여 여력이 모자라면 하위 고객부터 부족분이 남습니다.</div>';
   }
 
   function capacityBlock(s, a) {
