@@ -93,6 +93,18 @@
 
   .tg{font-size:10.5px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:1px 7px}
 
+  .own-grid{display:grid;grid-template-columns:1fr;gap:9px}
+  @media(min-width:760px){.own-grid{grid-template-columns:1fr 1fr}}
+  .own-card{background:rgba(10,13,18,.45);border:1px solid var(--line);border-radius:10px;padding:10px 11px;
+    display:flex;flex-direction:column;gap:6px}
+  .own-card .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .own-card .role{font-size:13px;font-weight:800}
+  .own-card .pname{font-size:11px;color:var(--dim2);font-weight:600}
+  .own-card .kvrow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:6px;align-items:center;font-size:11.5px}
+  .own-card .kvrow .k{color:var(--dim2);font-size:10.5px;font-weight:800;letter-spacing:.03em}
+  .own-card .kvrow .v{display:flex;gap:6px;align-items:center;min-width:0}
+  .own-card .kvrow code{word-break:break-all;color:#d6e3f2}
+
   /* ---------- tables ---------- */
   .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
   table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:560px}
@@ -261,12 +273,7 @@
       <h2>🔑 내 보유 키만으로 지금 돌리는 최강 조합</h2>
       <p class="lead">OpenRouter · NVIDIA · Groq · Gemini · Mistral · Cloudflare + Kiro CLI</p>
     </div>
-    <div class="tscroll">
-      <table id="own-table">
-        <thead><tr><th>역할</th><th>모델</th><th>Base URL</th><th>키</th><th>상태</th><th></th></tr></thead>
-        <tbody id="own-body"></tbody>
-      </table>
-    </div>
+    <div class="own-grid" id="own-body"></div>
     <p class="hint">Mistral은 11-16 기준 신규 API가 결제수단 전제 → <b>주의보</b>. 기존 키는 <code>/v1/models</code>로 생존 확인 후 쓰세요.</p>
   </section>
 
@@ -745,17 +752,19 @@ function renderOwn(){
     const keyName = p.env ? p.env : (isKiro ? "로그인" : "키 불필요");
     const status = isKiro ? '<span class="bdg sm">IDE/CLI</span>' : liveBadge(p);
     const warn = id === "mistral" ? ' <span class="bdg warn sm">주의보</span>' : "";
-    return '<tr>' +
-      '<td class="nm">' + esc(role.role) + warn + '<div class="dim" style="font-size:11px">' + esc(p.name) + '</div></td>' +
-      '<td><span class="mono">' + esc(model || "—") + '</span>' +
-        (model ? ' <button class="cp" data-copy="' + esc(model) + '">복사</button>' : '') +
-        '<div class="dim" style="font-size:11px">' + esc(role.why) + '</div></td>' +
-      '<td><span class="mono">' + esc(base) + '</span> <button class="cp" data-copy="' + esc(base) + '">복사</button></td>' +
-      '<td class="mono dim">' + esc(keyName) + '</td>' +
-      '<td>' + status + '</td>' +
-      '<td>' + (isKiro ? '<a href="https://kiro.dev/downloads" target="_blank" rel="noopener noreferrer">설치</a>' :
-        (p.src ? '<a href="' + esc(p.src.url) + '" target="_blank" rel="noopener noreferrer">문서</a>' : '')) + '</td>' +
-    '</tr>';
+    return '<article class="own-card">' +
+      '<div class="top"><span><span class="role">' + esc(role.role) + '</span>' + warn +
+        '<span class="pname"> · ' + esc(p.name) + '</span></span>' + status + '</div>' +
+      '<div class="kvrow"><span class="k">모델</span><span class="v"><code>' + esc(model || "—") + '</code>' +
+        (model ? '<button class="cp" data-copy="' + esc(model) + '">복사</button>' : '') + '</span></div>' +
+      '<div class="kvrow"><span class="k">Base</span><span class="v"><code>' + esc(base) + '</code>' +
+        '<button class="cp" data-copy="' + esc(base) + '">복사</button></span></div>' +
+      '<div class="kvrow"><span class="k">키</span><span class="v"><code class="dim">' + esc(keyName) + '</code>' +
+        '<span class="dim" style="font-size:11px">' + esc(role.why) + '</span>' +
+        (isKiro ? '<a href="https://kiro.dev/downloads" target="_blank" rel="noopener noreferrer" style="font-size:11px">설치</a>'
+          : (p.src ? '<a href="' + esc(p.src.url) + '" target="_blank" rel="noopener noreferrer" style="font-size:11px">문서</a>' : '')) +
+        '</span></div>' +
+    '</article>';
   }).join("");
   $("own-body").innerHTML = rows;
 }
