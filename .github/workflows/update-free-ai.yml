@@ -1,0 +1,72 @@
+name: free-ai live probe
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "free-ai/scripts/probe.py"
+      - "free-ai/scripts/providers.json"
+      - ".github/workflows/update-free-ai.yml"
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: free-ai-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run probe (stdlib only)
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: python3 free-ai/scripts/probe.py
+
+      - name: Validate data.json
+        run: |
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("free-ai/data.json", encoding="utf-8"))
+          assert d["totals"]["providers"] >= 30, d["totals"]
+          assert len(d["live_models"]) >= 10, d["totals"]
+          print("ok:", json.dumps(d["totals"], ensure_ascii=False))
+          PY
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- free-ai/data.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "no change"
+            exit 0
+          fi
+          git add free-ai/data.json
+          git commit -m "chore(free-ai): 실시간 프로브 $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Request Pages rebuild
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"
