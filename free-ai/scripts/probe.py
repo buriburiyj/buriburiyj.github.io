@@ -318,6 +318,12 @@ def parse_nvidia(payload, pid, pname, tier, keyless):
     return out
 
 
+CHAT_EXCLUDE = re.compile(
+    r"(lyria|tts|whisper|embed|bge|stable-diffusion|nvr-|guard|rerank|clip|parse|nvclip|deplot|kosmos|reward|safety)",
+    re.I,
+)
+CURATED_MODELS = {"nvidia", "cloudflare", "gemini", "groq", "mistral", "cohere", "zai", "kiro"}
+
 PARSERS = {
     "openrouter": parse_openrouter_like,
     "routeway": parse_routeway,
@@ -510,12 +516,18 @@ def build():
         item["live_note"] = _live_note(item)
         item["models_live"] = [m for m in live_models if m["p"] == provider["id"]]
         if item["models_live"]:
-            # 카드에 보여줄 대표 모델: 컨텍스트 큰 순 3개
-            top = sorted(item["models_live"],
-                         key=lambda r: (-(r.get("ctx") or 0), r["id"]))[:3]
+            # 카드에 보여줄 대표 모델: 텍스트 대화 모델 중 컨텍스트 큰 순 3개
+            # (음악/임베딩/가드 모델이 대표로 올라오지 않게 걸러낸다)
+            sel = [r for r in item["models_live"]
+                   if "text" in r["out"] and "text" in r["in"] and not CHAT_EXCLUDE.search(r["id"])]
+            sel = sel or item["models_live"]
+            top = sorted(sel, key=lambda r: (-(r.get("ctx") or 0), r["id"]))[:3]
             item["models_top"] = [{"id": r["id"], "note": _ctx_label(r)} for r in top]
         else:
             item["models_top"] = item.get("models") or []
+        if provider["id"] in CURATED_MODELS and item.get("models"):
+            # 문서로 검증한 대표 모델이 더 정확한 제공사는 큐레이션 목록을 그대로 쓴다
+            item["models_top"] = item["models"]
         merged.append(item)
 
     totals = {

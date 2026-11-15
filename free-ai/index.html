@@ -351,6 +351,7 @@
         <button class="chip" data-tag="비전" aria-pressed="false">비전</button>
         <button class="chip" data-tag="nokey" aria-pressed="false">키 없이</button>
         <button class="chip" data-tag="live" aria-pressed="false">지연 실측됨</button>
+        <button class="chip" data-tag="extra" aria-pressed="false">오디오·임베딩 포함</button>
       </div>
       <div class="meta-line"><span id="mcount">—</span><span>헤더 클릭 = 정렬</span></div>
     </div>
@@ -486,9 +487,11 @@ function barrierBadge(b){
 function liveBadge(p){
   const c = p.chat_probe;
   if (c && c.ok) return '<span class="bdg live">LIVE 200 · ' + c.ms + 'ms</span>';
-  if (c && !c.ok) return '<span class="bdg dead">채팅 ' + (c.status || "ERR") + '</span>';
+  if (c && !c.ok && c.status === 0) return '<span class="bdg dead">브라우저 CORS 차단</span>';
+  if (c && !c.ok) return '<span class="bdg dead">채팅 ' + c.status + '</span>';
   const pr = p.probe;
   if (pr && pr.status === 200) return '<span class="bdg live">HTTP 200 · ' + pr.ms + 'ms</span>';
+  if (pr && (pr.status === 401 || pr.status === 403)) return '<span class="bdg sm">키 필요 · ' + pr.ms + 'ms</span>';
   if (pr && pr.status) return '<span class="bdg dead">HTTP ' + pr.status + '</span>';
   return '<span class="bdg sm">미측정</span>';
 }
@@ -946,7 +949,7 @@ function renderGenerator(){
 }
 
 /* ========================================================== model table */
-const mstate = {q: "", p: "all", tags: new Set(), sort: "ctx", dir: -1};
+const mstate = {q: "", p: "all", tags: new Set(), sort: "ctx", dir: -1, extra: false};
 
 function renderModelSelect(){
   const ids = [...new Set(state.models.map((m) => m.p))];
@@ -963,10 +966,11 @@ function renderModels(){
   const q = mstate.q.toLowerCase();
   let rows = state.models.filter((m) => {
     if (mstate.p !== "all" && m.p !== mstate.p) return false;
+    if (!mstate.tags.has("extra") && (m.out || []).indexOf("text") < 0) return false;
     if (mstate.tags.has("nokey") && !m.keyless) return false;
     if (mstate.tags.has("live") && m.latency_ms == null) return false;
     for (const t of mstate.tags){
-      if (["nokey", "live"].indexOf(t) >= 0) continue;
+      if (["nokey", "live", "extra"].indexOf(t) >= 0) continue;
       if ((m.tags || []).indexOf(t) < 0) return false;
     }
     if (q){
@@ -1108,8 +1112,11 @@ function mergeLive(){
       const rows = state.models.filter((m) => m.p === p.id);
       p.probe = {kind: "catalog", status: cat.status, ms: cat.ms, free: rows.length, total: cat.total, cors: cat.cors, browser: true};
       p.live_note = "브라우저 실측 HTTP " + cat.status + " · " + cat.ms + "ms · 무료 " + rows.length + "종";
-      p.models_top = rows.slice().sort((a, b) => (b.ctx || 0) - (a.ctx || 0)).slice(0, 3)
-        .map((m) => ({id: m.id, note: m.ctx ? fmtCtx(m.ctx) : ""}));
+      if (CURATED_FIRST.indexOf(p.id) < 0){
+        const sel = rows.filter((m) => m.in.indexOf("text") >= 0 && m.out.indexOf("text") >= 0 && !/lyria|tts|whisper|embed|bge|stable-diffusion|nvr-|guard|rerank|clip|parse/i.test(m.id));
+        p.models_top = (sel.length ? sel : rows).slice().sort((a, b) => (b.ctx || 0) - (a.ctx || 0)).slice(0, 3)
+          .map((m) => ({id: m.id, note: m.ctx ? fmtCtx(m.ctx) : ""}));
+      }
     }
   });
 }
