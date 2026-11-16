@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Yune · 개발 허브 / 무료 AI 지도</title>
+<meta name="description" content="무료 AI API·코딩 CLI·프로모션을 실시간으로 실측하는 개발 허브. 카드 없이 쓰는 루트만 모아 둔 대시보드." />
+<meta name="theme-color" content="#0a0d12" />
+<meta property="og:title" content="Yune · 개발 허브 / 무료 AI 지도" />
+<meta property="og:description" content="무료 AI API·코딩 CLI·프로모션 실시간 실측 대시보드" />
+<style>
+  :root{
+    --bg:#0a0d12; --card:#121924; --card2:#16202d;
+    --line:#22303f; --line2:#2c3d50; --txt:#e8eef6; --dim:#93a4b8; --dim2:#6b7d90;
+    --accent:#7cf5c8; --accent2:#6aa9ff; --warn:#ffb86b; --bad:#ff7a85; --own:#c7a6ff;
+    --radius:15px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1200px 600px at 70% -10%, #16303f 0%, transparent 60%),
+               radial-gradient(900px 500px at -10% 8%, #1a2740 0%, transparent 55%), var(--bg);
+    color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5; padding-bottom:50px;
+  }
+  a{color:var(--accent2);text-decoration:none}
+  code{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 14px}
+
+  header.hero{padding:30px 0 4px}
+  .kicker{display:inline-flex;align-items:center;gap:7px;font-size:12px;letter-spacing:.04em;color:var(--accent);
+    border:1px solid rgba(124,245,200,.3);background:rgba(124,245,200,.07);padding:5px 10px;border-radius:999px;font-weight:700}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(124,245,200,.5)}70%{box-shadow:0 0 0 8px rgba(124,245,200,0)}100%{box-shadow:0 0 0 0 rgba(124,245,200,0)}}
+  h1{font-size:clamp(26px,6vw,42px);line-height:1.14;margin:13px 0 7px;letter-spacing:-.025em}
+  h1 .gr{background:linear-gradient(92deg,var(--accent) 0%,var(--accent2) 55%,var(--own) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);font-size:13.5px;margin:0;max-width:620px}
+  .sub b{color:var(--txt)}
+
+  .livestrip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 0;font-size:12px;color:var(--dim2)}
+  .livestrip .box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 10px;display:inline-flex;gap:7px;align-items:center}
+  .livestrip b{color:var(--txt);font-weight:700}
+  .livestrip a{font-size:12px}
+
+  /* summary bar */
+  .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0 0}
+  @media(min-width:700px){.summary{grid-template-columns:repeat(4,1fr)}}
+  .s-item{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-radius:13px;padding:11px 12px;display:flex;flex-direction:column;gap:1px}
+  .s-item .v{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.2;font-variant-numeric:tabular-nums}
+  .s-item .k{font-size:10.5px;color:var(--dim2)}
+  .s-item.a .v{color:var(--accent)} .s-item.b .v{color:var(--accent2)} .s-item.c .v{color:var(--own)} .s-item.d .v{color:var(--warn)}
+
+  section{margin-top:26px}
+  .sec-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+  h2{font-size:17.5px;margin:0;letter-spacing:-.01em}
+  .sec-head .lead{font-size:12.5px;color:var(--dim2);margin:0}
+  .hint{font-size:11.5px;color:var(--dim2);margin:8px 0 0}
+
+  /* main tool cards */
+  .tools{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:820px){.tools{grid-template-columns:repeat(3,1fr)}}
+  .tool{display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,var(--card2) 0%,var(--card) 60%);
+    border:1px solid var(--line);border-radius:var(--radius);padding:15px;position:relative;overflow:hidden;
+    color:inherit;transition:.15s}
+  .tool:hover{border-color:var(--line2);transform:translateY(-1px)}
+  .tool::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--topline,var(--accent))}
+  .tool[data-tone="b"]::before{--topline:var(--accent2)}
+  .tool[data-tone="c"]::before{--topline:var(--own)}
+  .tool .em{font-size:22px;line-height:1}
+  .tool h3{font-size:16px;margin:0;letter-spacing:-.01em}
+  .tool .desc{font-size:12px;color:var(--dim);margin:0;min-height:34px}
+  .tool .metrics{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--dim2)}
+  .tool .metrics b{color:var(--txt);font-weight:800;font-variant-numeric:tabular-nums}
+  .tool .go{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;color:var(--accent);margin-top:auto}
+  .tool[data-tone="b"] .go{color:var(--accent2)}
+  .tool[data-tone="c"] .go{color:var(--own)}
+  .tool .status{font-size:10.5px;color:var(--dim2);border-top:1px solid var(--line);padding-top:8px}
+
+  /* secondary */
+  .grid2{display:grid;grid-template-columns:1fr;gap:11px}
+  @media(min-width:700px){.grid2{grid-template-columns:1fr 1fr}}
+  .mini{display:block;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);
+    border-radius:13px;padding:13px;color:inherit}
+  .mini:hover{border-color:var(--line2)}
+  .mini .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .mini h3{font-size:14.5px;margin:0}
+  .mini .cat{font-size:11px;color:var(--dim2);margin-top:2px}
+  .mini p{font-size:12px;color:var(--dim);margin:7px 0 0}
+  .badge{font-size:10px;font-weight:800;color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:1px 7px;white-space:nowrap}
+
+  ul.posts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  ul.posts li{background:rgba(18,25,36,.7);border:1px solid var(--line);border-radius:11px;padding:10px 12px;
+    display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+  ul.posts .t{font-size:13px;font-weight:600}
+  ul.posts .d{font-size:11px;color:var(--dim2);font-variant-numeric:tabular-nums}
+
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:14px;font-size:11.5px;color:var(--dim2);line-height:1.7}
+  footer b{color:var(--dim)}
+  footer a{color:var(--accent2)}
+</style>
+</head>
+<body>
+<script>
+/* 진단용: 이 페이지에서 발생한 JS 오류를 html[data-js-error] 에 남긴다(화면에는 안 보임). */
+window.addEventListener('error', function(e){ var h=document.documentElement; h.dataset.jsError=(h.dataset.jsError||'')+' | '+(e.message||'error'); });
+window.addEventListener('unhandledrejection', function(e){ var h=document.documentElement; h.dataset.jsError=(h.dataset.jsError||'')+' | reject:'+((e.reason&&e.reason.message)||e.reason); });
+</script>
+<div class="wrap">
+  <header class="hero">
+    <span class="kicker"><span class="live-dot"></span> LIVE · 3개 데이터 소스 실시간 동기화</span>
+    <h1>무료로 굴리는 <span class="gr">AI 개발 허브</span></h1>
+    <p class="sub">무료 API, 무료 코딩 에이전트, 지금 열려 있는 프로모션을 <b>직접 실측</b>해서 한 곳에 모았습니다. 카드 없이 쓰는 루트만 위로.</p>
+
+    <div class="livestrip">
+      <span class="box">지금 <b id="clock">—</b></span>
+      <span class="box">마지막 실측 <b id="sync-at">불러오는 중…</b></span>
+      <a href="#tools">도구 바로가기 ↓</a>
+      <a href="https://github.com/buriburiyj" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+
+    <div class="summary">
+      <div class="s-item a"><div class="v" id="m-models">—</div><div class="k">실시간 무료 모델</div></div>
+      <div class="s-item b"><div class="v" id="m-providers">—</div><div class="k">무료 API 제공사</div></div>
+      <div class="s-item c"><div class="v" id="m-cli">—</div><div class="k">코딩 CLI·IDE 실측</div></div>
+      <div class="s-item d"><div class="v" id="m-deals">—</div><div class="k">지금 받을 수 있는 혜택</div></div>
+    </div>
+  </header>
+
+  <section id="tools">
+    <div class="sec-head">
+      <h2>🧰 도구</h2>
+      <p class="lead">각 페이지는 data.json을 실시간으로 읽어 숫자가 갱신됩니다</p>
+    </div>
+    <div class="tools">
+      <a class="tool" href="/free-ai/" data-tone="a">
+        <span class="em">🛰</span>
+        <h3>무료 AI API 레이더</h3>
+        <p class="desc">카드 없이 호출되는 API·모델만. 6시간마다 자동 실측, 폴백 체인 생성기 포함.</p>
+        <div class="metrics">
+          <span>무료 모델 <b id="fa-models">—</b></span>
+          <span>제공사 <b id="fa-providers">—</b></span>
+          <span>키 없이 200 <b id="fa-keyless">—</b></span>
+        </div>
+        <span class="go">열기 →</span>
+        <div class="status" id="fa-status">data.json 확인 중…</div>
+      </a>
+
+      <a class="tool" href="/free-cli/" data-tone="b">
+        <span class="em">🧪</span>
+        <h3>코딩 에이전트·CLI 레이더</h3>
+        <p class="desc">Kiro·Antigravity·OpenCode·Copilot… 무료 한도와 M4 설치 명령, Claude 무료 여부까지.</p>
+        <div class="metrics">
+          <span>실측 도구 <b id="fc-tools">—</b></span>
+          <span>카드X 무료 <b id="fc-nocard">—</b></span>
+          <span>무료 Claude <b id="fc-claude">—</b></span>
+        </div>
+        <span class="go">열기 →</span>
+        <div class="status" id="fc-status">data.json 확인 중…</div>
+      </a>
+
+      <a class="tool" href="/free-deals/" data-tone="c">
+        <span class="em">🎁</span>
+        <h3>무료 프로모션 보드</h3>
+        <p class="desc">학생 혜택·체험 크레딧·기간 한정 프로모. 카드 필요 여부와 마감 D-day를 분리.</p>
+        <div class="metrics">
+          <span>카드X <b id="fd-now">—</b></span>
+          <span>카드·인증 <b id="fd-verify">—</b></span>
+          <span>종료 <b id="fd-ended">—</b></span>
+        </div>
+        <span class="go">열기 →</span>
+        <div class="status" id="fd-status">data.json 확인 중…</div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>🕹 그 밖에</h2>
+      <p class="lead">예전에 만든 것들</p>
+    </div>
+    <div class="grid2">
+      <a class="mini" href="/runner/">
+        <div class="top"><h3>사슬팔 · CHAIN ARM</h3><span class="badge">게임</span></div>
+        <div class="cat">네온 사이버펑크 사슬 와이어 액션</div>
+        <p>방향키 하나로 사슬을 걸어 이동하는 미니게임. 모바일 터치 지원.</p>
+      </a>
+      <a class="mini" href="/w03/">
+        <div class="top"><h3>W03 · 품질 이슈와 공급 복구</h3><span class="badge">운영 시스템</span></div>
+        <div class="cat">Corevia Cosmetics 품질 클레임 배치 판정</div>
+        <p>클레임 판정 → 품질위원회 의결 → 후속 작업까지 이어지는 실행형 데모.</p>
+      </a>
+      <a class="mini" href="/about/">
+        <div class="top"><h3>About</h3><span class="badge">소개</span></div>
+        <div class="cat">Yune · Gwangju</div>
+        <p>만드는 것과 연락 방법. 프로젝트 목록도 여기.</p>
+      </a>
+      <a class="mini" href="https://github.com/buriburiyj" target="_blank" rel="noopener">
+        <div class="top"><h3>GitHub</h3><span class="badge">@buriburiyj</span></div>
+        <div class="cat">코드 저장소</div>
+        <p>err · easy-git · gcode · claude-clone-ts · mdlive 같은 작은 도구들.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>✍️ 글</h2>
+      <p class="lead">가끔 씁니다</p>
+    </div>
+    <ul class="posts">
+      <li><a class="t" href="/2026/09/28/genspark-skills.html">젠스파크 크레딧 아끼면서 대화 이어가는 스킬 4개</a><span class="d">2026-09-28</span></li>
+      <li><a class="t" href="/2026/09/28/genspark-skills-en.html">4 Genspark Skills to Save Credits and Continue Work Across Chats</a><span class="d">2026-09-28</span></li>
+      <li><a class="t" href="/2026/10/01/genspark-claw-free.html">젠스파크 클로(Claw) 무료로 쓰기</a><span class="d">2026-10-01</span></li>
+      <li><a class="t" href="/2026/10/01/genspark-claw-free-en.html">Genspark Claw, free</a><span class="d">2026-10-01</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p><b>이 사이트의 규칙</b> — 정보를 지어내지 않습니다. 확인한 것은 확인 날짜와 출처 링크를 붙이고, 확인 못 한 값은 <b>확인 못 함</b>으로 남깁니다. 무료는 <b>완전 무료 / 사용량 제한 무료(카드X) / 카드 필요 / 유료</b>로 나눠 표기합니다.</p>
+    <p>© 2026 Yune · <a href="/free-ai/">free-ai</a> · <a href="/free-cli/">free-cli</a> · <a href="/free-deals/">free-deals</a> · <a href="/about/">about</a></p>
+  </footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+function setText(id, v){ const el = $(id); if (el) el.textContent = v; }
+function clock(){
+  const d = new Date();
+  setText("clock", d.toLocaleString("ko-KR", {month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", weekday:"short"}));
+}
+clock(); setInterval(clock, 30000);
+
+async function getJSON(paths){
+  for (const p of paths){
+    try{
+      const r = await fetch(p + (p.includes("?") ? "&" : "?") + "t=" + Date.now(), {cache:"no-store"});
+      if (!r.ok) continue;
+      const j = await r.json();
+      if (j) return j;
+    } catch(e){}
+  }
+  return null;
+}
+const RAW_BASE = "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github.io/main/";
+
+(async function init(){
+  const [ai, cli, deals] = await Promise.all([
+    getJSON(["/free-ai/data.json", RAW_BASE + "free-ai/data.json"]),
+    getJSON(["/free-cli/data.json", RAW_BASE + "free-cli/data.json"]),
+    getJSON(["/free-deals/data.json", RAW_BASE + "free-deals/data.json"])
+  ]);
+  const stamps = [];
+  if (ai && ai.totals){
+    setText("m-models", ai.totals.free_models ?? "—");
+    setText("m-providers", ai.totals.providers ?? "—");
+    setText("fa-models", ai.totals.free_models ?? "—");
+    setText("fa-providers", ai.totals.providers ?? "—");
+    setText("fa-keyless", ai.totals.keyless_live ?? "—");
+    setText("fa-status", "마지막 자동 실측 " + (ai.generated_kst || "—"));
+    if (ai.generated_kst) stamps.push(ai.generated_kst);
+  } else {
+    setText("fa-status", "data.json 확인 실패 — 페이지에서 다시 시도");
+  }
+  if (cli && cli.tools instanceof Array){
+    const nocard = cli.tools.filter(t => t.tier === "nocard").length;
+    const claude = cli.tools.filter(t => t.claude && (t.tier === "nocard" || t.tier === "limited")).length;
+    setText("m-cli", cli.tools.length);
+    setText("fc-tools", cli.tools.length);
+    setText("fc-nocard", nocard);
+    setText("fc-claude", claude);
+    setText("fc-status", "실측 " + (cli.verified || cli.generated_kst || "—"));
+    if (cli.generated_kst) stamps.push(cli.generated_kst);
+  } else {
+    setText("fc-status", "data.json 확인 실패");
+  }
+  if (deals && deals.deals instanceof Array){
+    const now = deals.deals.filter(d => d.tier === "now").length;
+    const verify = deals.deals.filter(d => d.tier === "verify").length;
+    const ended = deals.deals.filter(d => d.tier === "ended").length;
+    setText("m-deals", now);
+    setText("fd-now", now);
+    setText("fd-verify", verify);
+    setText("fd-ended", ended);
+    setText("fd-status", "실측 " + (deals.verified || deals.generated_kst || "—"));
+    if (deals.generated_kst) stamps.push(deals.generated_kst);
+  } else {
+    setText("fd-status", "data.json 확인 실패");
+  }
+  setText("sync-at", stamps.length ? stamps.slice(0, 1).join("") : "확인 못 함");
+})();
+</script>
+</body>
+</html>

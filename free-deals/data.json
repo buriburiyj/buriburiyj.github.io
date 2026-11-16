@@ -1,0 +1,645 @@
+{
+ "schema": 1,
+ "generated_utc": "2026-11-16T12:08:55Z",
+ "generated_kst": "2026-11-16 21:08 KST",
+ "generator": "free-deals/data.json (수동 실측 + scripts/fetch_deals.py 자동 갱신)",
+ "verified": "2026-11-16",
+ "origin": "/free-deals/",
+ "raw_url": "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github.io/main/free-deals/data.json",
+ "rules": {
+  "tier_rule": "now=카드 등록 없이 오늘 바로 받을 수 있음 / verify=카드·학생인증 등 관문 있음 / caution=조건이 까다롭거나 미확인·종료 임박 / ended=종료 확인됨",
+  "deadline_rule": "공식 페이지에 적힌 날짜만. 없으면 null(상시 또는 비공개).",
+  "korea_rule": "가능=한국 계정으로 제한 없음 / 조건부=한국은 되지만 학교·지역 조건 있음 / 불가=미국 전용 등",
+  "unknown": "확인 못 한 값은 null 또는 '확인 못 함'."
+ },
+ "totals": {
+  "deals": 22,
+  "now": 10,
+  "verify": 5,
+  "caution": 4,
+  "ended": 3
+ },
+ "deals": [
+  {
+   "id": "kiro-students",
+   "title": "Kiro for Students — 월 1,000 크레딧",
+   "vendor": "AWS Kiro",
+   "tier": "now",
+   "value": "월 1,000 크레딧 · 12개월",
+   "limit": "매월 리셋, 이월 없음 · 학생 등급은 추가 크레딧 구매 불가",
+   "card": false,
+   "verifyBy": "대학 이메일 + SheerID · 만 18세 이상",
+   "korea": "조건부",
+   "student": true,
+   "deadline": null,
+   "condition": "지정 대학 재학생만(2026-10-20 기준 133개교). 한국은 국민대 등 목록에 포함된 학교만 가능. 1년 뒤 Kiro Free(월 50)로 자동 전환.",
+   "note": "Claude Sonnet 4.5 포함. Kiro Free의 20배 크레딧이라 카드 없이 Claude를 가장 오래 쓰는 루트.",
+   "src": [
+    {
+     "label": "kiro.dev/students",
+     "url": "https://kiro.dev/students/"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "copilot-student",
+   "title": "GitHub Copilot Student — 코드 완성 무제한",
+   "vendor": "GitHub",
+   "tier": "now",
+   "value": "코드 완성 무제한 + 월 AI 크레딧",
+   "limit": "채팅·에이전트는 AI 크레딧 한도(금액 비공개)",
+   "card": false,
+   "verifyBy": "GitHub Education 인증(만 13세 이상 · 학교 이메일 또는 재학 증명)",
+   "korea": "가능",
+   "student": true,
+   "deadline": null,
+   "condition": "GitHub Education 승인 후 Copilot Student를 따로 활성화해야 함(승인과 활성화는 별개 단계, 며칠 걸릴 수 있음). 자격은 매월 재평가.",
+   "note": "무료 플랜(월 2,000 completions)과 달리 완성이 무제한. CLI·에이전트도 같은 크레딧 풀.",
+   "src": [
+    {
+     "label": "docs.github.com · Copilot for students",
+     "url": "https://docs.github.com/en/copilot/how-tos/copilot-on-github/set-up-copilot/enable-copilot/set-up-for-students"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "zed-student",
+   "title": "Zed Pro for Students — 12개월 + 월 $10 토큰",
+   "vendor": "Zed",
+   "tier": "now",
+   "value": "Zed Pro 12개월 · 월 $10 AI 토큰 크레딧",
+   "limit": "1년 뒤 Free로 자동 강등 · Claude Opus/Fable·GPT Pro 모델은 제외",
+   "card": false,
+   "verifyBy": "만 18세 이상 대학 재학 · GitHub 계정(30일 이상)",
+   "korea": "가능",
+   "student": true,
+   "deadline": null,
+   "condition": "전 세계 대학 재학생 대상. JetBrains 대학 도메인 DB로 인증하며, 목록에 없으면 직접 추가 가능.",
+   "note": "에디터 자체가 가볍고 무료 티어도 쓸 만함. AI 크레딧 소진 후엔 내 키로 계속.",
+   "src": [
+    {
+     "label": "zed.dev/education",
+     "url": "https://zed.dev/education"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "antigravity-free",
+   "title": "Antigravity 무료 — Gemini 4 Hydrogen + (11-18까지) Claude",
+   "vendor": "Google",
+   "tier": "now",
+   "value": "개인 계정 $0 · 주간 쿼터 · 탭 완성·명령 무제한",
+   "limit": "주간 레이트리밋 — 숫자 비공개",
+   "card": false,
+   "verifyBy": "Google 계정",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "무료 등급은 Gemini 4 Hydrogen·3.8 Flash가 기본. Claude Sonnet/Opus 4.6과 GPT-OSS-120b는 2026-11-18 제거 예고.",
+   "note": "Gemini CLI 개인 무료가 2026-06-18 종료되며 생긴 후속 경로. CLI는 agy.",
+   "src": [
+    {
+     "label": "antigravity.google/pricing",
+     "url": "https://antigravity.google/pricing"
+    },
+    {
+     "label": "antigravity.google/docs/models",
+     "url": "https://antigravity.google/docs/models"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "codex-free",
+   "title": "ChatGPT Free 플랜의 Codex (트라이얼)",
+   "vendor": "OpenAI",
+   "tier": "now",
+   "value": "Codex CLI·IDE 확장 사용 가능(제한적)",
+   "limit": "'Limited trial access' — 메시지·모델 제한, 수치 비공개",
+   "card": false,
+   "verifyBy": "ChatGPT 계정",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "Codex Cloud(클라우드 작업)는 Free/Go 미포함. 무료 한도 소진 시 Plus($20) 또는 API 키.",
+   "note": "유료 인상 전에 터미널 감각만 익히기 좋음. 모델은 GPT-6 Luna 등 엔트리 계열.",
+   "src": [
+    {
+     "label": "chatgpt.com/codex/pricing",
+     "url": "https://chatgpt.com/codex/pricing/"
+    },
+    {
+     "label": "help.openai.com · Codex with your plan",
+     "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "opencode-zen",
+   "title": "OpenCode Zen 무료 모델 13종",
+   "vendor": "OpenCode",
+   "tier": "now",
+   "value": "13종 무료(2026-11-16 실측 / 전체 87종)",
+   "limit": "수치 한도 비공개 · '기간 한정'",
+   "card": false,
+   "verifyBy": "없음(가입 없이 사용 가능)",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "무료 목록은 수시로 교체됨. OpenCode 밖에서 호출하면 거부. 일부 모델은 입력이 학습에 쓰일 수 있음.",
+   "note": "big-pickle, deepseek-v4.1-flash-free, glm-5.3-flash-free, minimax-m3.1-flash-free 등.",
+   "src": [
+    {
+     "label": "opencode.ai/zen/v1/models",
+     "url": "https://opencode.ai/zen/v1/models"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "cline-free",
+   "title": "Cline 무료 모델 프로모",
+   "vendor": "Cline",
+   "tier": "now",
+   "value": "FREE 태그 모델 무료(프로모 기간)",
+   "limit": "프로모별 사용 쿼터 · 대상 모델 순환",
+   "card": false,
+   "verifyBy": "Cline 계정",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "무료 모델은 Cline IDE 확장·CLI 안에서만. Cline API로는 사용 불가.",
+   "note": "쿼터 소진 후 ClinePass($9.99/월) 또는 내 키. 확장 자체는 Apache-2.0 무료.",
+   "src": [
+    {
+     "label": "docs.cline.bot · free-models",
+     "url": "https://github.com/cline/cline/blob/main/docs/getting-started/free-models.mdx"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "devin-swe2",
+   "title": "SWE-2 Flash 무료 (Devin Desktop / CLI)",
+   "vendor": "Cognition",
+   "tier": "now",
+   "value": "SWE-2 Flash 추론 무료 · Free 플랜도 Medium 선택 가능",
+   "limit": "Free 플랜은 High·Max 불가",
+   "card": false,
+   "verifyBy": "계정",
+   "korea": "가능",
+   "student": false,
+   "deadline": "2026-11-30",
+   "condition": "2026-11-30 18:00 UTC까지 셀프서브 플랜 무료. 이후 list 가격($0.10/$0.50 per 1M) 적용.",
+   "note": "구 Windsurf(2026-06-02 Devin Desktop으로 개명). 무료 모델은 쿼터를 차감하지 않음.",
+   "src": [
+    {
+     "label": "docs.devin.ai · Cascade models",
+     "url": "https://docs.devin.ai/windsurf/plugins/cascade/models"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "amd-tokenlab",
+   "title": "AMD Token Lab — 무료 API 키 10 포인트",
+   "vendor": "AMD",
+   "tier": "now",
+   "value": "10 포인트 · 30일 유효 · 분당 20요청",
+   "limit": "30일 후 만료 · 포인트 소진 시 중단 · 마지막 5일에 15일 연장 1회",
+   "card": false,
+   "verifyBy": "AMD AI Developer Program 무료 가입(이메일)",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "OpenAI 호환 엔드포인트 https://api.tokenlab.amd.com/v1 · 카탈로그 10여 종(DeepSeek V4.1 Flash, Qwen3.8-27B, Gemma 4 31B 등)",
+   "note": "2026-11-13 시작. 크레딧 요청서 없이 키 즉시 발급. Codex CLI·Claude 호환 클라이언트에도 붙일 수 있음.",
+   "src": [
+    {
+     "label": "developer.amd.com/ai-developer-program",
+     "url": "https://developer.amd.com/ai-developer-program/"
+    },
+    {
+     "label": "devcommunity.amd.com · Token Lab 후기",
+     "url": "https://devcommunity.amd.com/t/cant-beat-free-gemma-4-31b-on-amd-token-lab-with-a-local-chat-page-and-an-adk-agent/1385"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "gemini-api-free",
+   "title": "Google AI Studio Gemini API 무료 티어",
+   "vendor": "Google",
+   "tier": "now",
+   "value": "모델별 무료(RPD/RPM) — Gemini 3.8 Flash 등",
+   "limit": "모델별로 다르고 AI Studio 로그인 화면에서만 확인 가능",
+   "card": false,
+   "verifyBy": "Google 계정 + API 키",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "Gemini 4 Carbon·3.1 Pro Preview 등은 무료 대상 아님. 하루 한도는 퍼시픽 자정 리셋.",
+   "note": "정확한 모델별 수치는 /free-ai/ 실시간 표에서. 이미 보유한 키 그대로 사용.",
+   "src": [
+    {
+     "label": "ai.google.dev/gemini-api/docs/rate-limits",
+     "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16",
+    "final_url": "https://aistudio.google.com/docs/rate-limits"
+   }
+  },
+  {
+   "id": "google-ai-plus-student",
+   "title": "Google AI Plus 학생 12개월 무료 (한국)",
+   "vendor": "Google",
+   "tier": "verify",
+   "value": "Google AI Plus 12개월 ₩0 (정가 월 11,000원)",
+   "limit": "12개월 후 자동 갱신 · Gemini Omni + AI 비구독자 대비 2배 한도 + 400GB",
+   "card": true,
+   "verifyBy": "SheerID 학생 인증 + 유효 결제수단 등록",
+   "korea": "조건부",
+   "student": true,
+   "deadline": "2026-12-31",
+   "condition": "만 18세 이상 고등교육기관 재학 · 개인 Google 계정 · 학교 발급 Workspace 계정은 불가. 신청 마감 12/31, 해지 안 하면 12개월 뒤 월 11,000원 청구.",
+   "note": "무료지만 카드가 필요해서 'verify'로 분류. 대학생 아니면 대상 아님(SheerID가 학교 정보 확인).",
+   "src": [
+    {
+     "label": "blog.google/intl/ko-kr · 학생 혜택",
+     "url": "https://blog.google/intl/ko-kr/company-news/inside-google/student-offer-google-ai-kr/"
+    },
+    {
+     "label": "one.google.com · 학생 오퍼 약관",
+     "url": "https://one.google.com/offer/studentoffer8"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "google-ai-pro-student",
+   "title": "Google AI Pro 학생 할인 — 월 7,300원",
+   "vendor": "Google",
+   "tier": "verify",
+   "value": "월 7,300원(정가 대비 최대 74% 할인) · 최대 4년",
+   "limit": "무료 아님 · 학생 자격 종료 후 정가 자동 갱신 가능",
+   "card": true,
+   "verifyBy": "SheerID 학생 인증 + 결제수단",
+   "korea": "조건부",
+   "student": true,
+   "deadline": null,
+   "condition": "한국은 1년 무료(AI Plus)와 별개 상품. 5TB 저장공간·고급 Gemini 기능. 매년 학생 인증 필요.",
+   "note": "1년 무료를 원하면 AI Plus 쪽을 골라야 함 — 신청 화면의 플랜 이름을 꼭 확인.",
+   "src": [
+    {
+     "label": "blog.google/intl/ko-kr · 학생 혜택",
+     "url": "https://blog.google/intl/ko-kr/company-news/inside-google/student-offer-google-ai-kr/"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "kiro-pro-trial",
+   "title": "Kiro Pro 첫 업그레이드 — 그 달 무료 + 500 크레딧",
+   "vendor": "AWS Kiro",
+   "tier": "verify",
+   "value": "업그레이드한 달 무료 + 500 트라이얼 크레딧(12개월 내 사용)",
+   "limit": "첫 업그레이드 1회만 · 이후 월 $20",
+   "card": true,
+   "verifyBy": "결제수단 등록",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "2026-11-01부터 적용. 그 전에 한 번이라도 업그레이드한 계정은 대상 아님. 월 중 업그레이드는 일할 계산.",
+   "note": "무료가 아니라 '첫 달만 무료'. 학생이라면 Kiro for Students(월 1,000)가 먼저.",
+   "src": [
+    {
+     "label": "kiro.dev/docs/billing",
+     "url": "https://kiro.dev/docs/billing/"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "vercel-gateway",
+   "title": "Vercel AI Gateway — 30일마다 $5",
+   "vendor": "Vercel",
+   "tier": "verify",
+   "value": "$5 / 30일",
+   "limit": "팀당 $5 · 첫 AI Gateway 사용 시 시작",
+   "card": true,
+   "verifyBy": "카드 등록",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "무료 크레딧이 30일마다 리셋되는 형태. 모델별 요율은 제공사 정가.",
+   "note": "집계 사이트(aifree.dev) 11-15 검증, 원문 재확인은 못 함.",
+   "src": [
+    {
+     "label": "vercel.com/ai-gateway",
+     "url": "https://vercel.com/ai-gateway"
+    }
+   ],
+   "checked": "2026-11-15",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "cerebras-trial",
+   "title": "Cerebras Inference — 30일 $5 체험",
+   "vendor": "Cerebras",
+   "tier": "verify",
+   "value": "$5 · 30일",
+   "limit": "체험 기간 후 유료",
+   "card": true,
+   "verifyBy": "유효 결제수단 등록",
+   "korea": "가능",
+   "student": false,
+   "deadline": null,
+   "condition": "2026-11-15 재확인 기준 체험 크레딧에 카드 필수.",
+   "note": "속도가 매우 빠른 편. 짧은 기간 테스트용.",
+   "src": [
+    {
+     "label": "cloud.cerebras.ai",
+     "url": "https://cloud.cerebras.ai/"
+    }
+   ],
+   "checked": "2026-11-15",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "agentrouter",
+   "title": "AgentRouter — 체크인당 $25 (주의)",
+   "vendor": "AgentRouter",
+   "tier": "caution",
+   "value": "$25 / 일일 체크인 · 초대 $50",
+   "limit": "Claude·GPT는 일일 한정 수량, 소진 시 대기",
+   "card": false,
+   "verifyBy": "2025년 이전 생성 GitHub 계정(GitHub OAuth)",
+   "korea": "확인 못 함",
+   "student": false,
+   "deadline": null,
+   "condition": "지원 클라이언트(Claude Code·Codex·OpenCode·Cline 등)에서만 사용. 충전 불가, 계정 제재 시 그룹 강등.",
+   "note": "집계 사이트에 '미확인 신고 접수' 표시가 있음. 계정·키를 맡기는 리스크를 감수할 때만.",
+   "src": [
+    {
+     "label": "aifree.dev · AgentRouter",
+     "url": "https://aifree.dev/offer/agentrouter-free-credits"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "akashml",
+   "title": "AkashML — 신규 $100 크레딧 (미확인)",
+   "vendor": "Akash",
+   "tier": "caution",
+   "value": "$100 일회성",
+   "limit": "신규 계정 1회 · 지원 모델 전용",
+   "card": false,
+   "verifyBy": "가입",
+   "korea": "확인 못 함",
+   "student": false,
+   "deadline": null,
+   "condition": "집계 사이트(aifree.dev) 11-15 검증값. 공식 페이지에서 금액·조건을 직접 확인하지 못함.",
+   "note": "금액이 큰 만큼 가입 전 공식 공지를 확인하세요.",
+   "src": [
+    {
+     "label": "aifree.dev · AkashML",
+     "url": "https://aifree.dev/offers"
+    }
+   ],
+   "checked": "2026-11-15",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "itzi-deepseek",
+   "title": "DeepSeek V4.1 Flash 무료 — 오늘 밤 종료",
+   "vendor": "Itzi",
+   "tier": "caution",
+   "value": "일 20회 무료(캠페인 코드로 최대 150회)",
+   "limit": "요청당 입력 64k · 출력 12k",
+   "card": false,
+   "verifyBy": "계정(이메일)",
+   "korea": "가능",
+   "student": false,
+   "deadline": "2026-11-16",
+   "condition": "2026-11-17 00:00 UTC(= 11-17 09:00 KST) 종료. 채팅과 API 키 사용량이 같은 일일 한도 공유.",
+   "note": "오늘 밤까지. 이후엔 같은 회사 유료 크레딧 또는 다른 무료 루트로 이동.",
+   "src": [
+    {
+     "label": "itzi.app/free-deepseek",
+     "url": "https://itzi.app/free-deepseek"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "hiapi-blackfriday",
+   "title": "HiAPI 블랙프라이데이 — 하루 1,000만 토큰 (예정)",
+   "vendor": "HiAPI",
+   "tier": "caution",
+   "value": "DeepSeek V4.1 Flash 하루 1,000만 토큰 × 7일",
+   "limit": "분당 10요청 · 동시 2 · 당일 미사용분 소멸",
+   "card": true,
+   "verifyBy": "1회 이상 충전 이력",
+   "korea": "확인 못 함",
+   "student": false,
+   "deadline": "2026-11-30",
+   "condition": "2026-11-24 ~ 11-30(PT). 충전 이력이 있어야 무료 토큰이 열리고, 이벤트 페이지가 공개하는 헤더를 붙여야 정상가 청구를 피함.",
+   "note": "아직 시작 전. '무료'지만 결제 이력이 전제라 카드X로 분류하지 않음.",
+   "src": [
+    {
+     "label": "hiapi.ai 블로그",
+     "url": "https://hiapi.ai/en/blog/free-deepseek-api-black-friday-2026"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "gemini-cli-ended",
+   "title": "Gemini CLI 개인 무료 — 종료",
+   "vendor": "Google",
+   "tier": "ended",
+   "value": "—",
+   "limit": "—",
+   "card": false,
+   "verifyBy": "—",
+   "korea": "—",
+   "student": false,
+   "deadline": "2026-06-18",
+   "condition": "개인 무료·AI Pro/Ultra 경로가 Antigravity CLI로 이전. 남은 경로는 Code Assist Standard/Enterprise 또는 유료 API 키.",
+   "note": "README·문서 일부에 옛 '1,000 requests/day' 표기가 남아 있어 헷갈림. 대체는 /free-cli/의 Antigravity.",
+   "src": [
+    {
+     "label": "github.com/google-gemini/gemini-cli",
+     "url": "https://github.com/google-gemini/gemini-cli"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "qwen-oauth-ended",
+   "title": "Qwen Code 무료 로그인 — 종료",
+   "vendor": "Alibaba",
+   "tier": "ended",
+   "value": "—",
+   "limit": "—",
+   "card": false,
+   "verifyBy": "—",
+   "korea": "—",
+   "student": false,
+   "deadline": "2026-04-15",
+   "condition": "1,000 → 100 요청/일로 줄인 뒤 2026-04-15 종료. CLI 자체는 Apache-2.0으로 계속 무료.",
+   "note": "서버 측 차단이라 재로그인·구버전으로 되살아나지 않음. Model Studio 신규 무료 쿼터(90일)로 대체.",
+   "src": [
+    {
+     "label": "QwenLM/qwen-code PR #3207",
+     "url": "https://github.com/QwenLM/qwen-code/pull/3207"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  },
+  {
+   "id": "roo-code-ended",
+   "title": "Roo Code — 종료",
+   "vendor": "Roo Code Inc.",
+   "tier": "ended",
+   "value": "—",
+   "limit": "—",
+   "card": false,
+   "verifyBy": "—",
+   "korea": "—",
+   "student": false,
+   "deadline": "2026-05-15",
+   "condition": "확장 서비스 종료, 저장소 아카이브(마지막 v3.54.0), 마켓 리스팅 내려감.",
+   "note": "커뮤니티 포크 Zoo Code 또는 Cline·Kilo Code로 이동.",
+   "src": [
+    {
+     "label": "github.com/RooCodeInc/Roo-Code",
+     "url": "https://github.com/RooCodeInc/Roo-Code"
+    }
+   ],
+   "checked": "2026-11-16",
+   "liveness": {
+    "status": 200,
+    "checked": "2026-11-16"
+   }
+  }
+ ],
+ "feeds": [
+  {
+   "id": "free-ai",
+   "label": "free-ai API 레이더",
+   "url": "/free-ai/data.json"
+  },
+  {
+   "id": "zen",
+   "label": "OpenCode Zen 무료 모델",
+   "url": "https://opencode.ai/zen/v1/models"
+  }
+ ],
+ "free_ai_snapshot": {
+  "generated_kst": "2026-11-16 15:43 KST",
+  "totals": {
+   "providers": 36,
+   "free_models": 104,
+   "keyless_models": 39,
+   "keyless_live": 2,
+   "catalogs_ok": 9,
+   "catalogs": 9,
+   "chats_ok": 2,
+   "chats": 3,
+   "grades": {
+    "S": 7,
+    "A": 5,
+    "B": 12,
+    "주의": 12
+   }
+  }
+ },
+ "generated_by": "free-deals/scripts/fetch_deals.py"
+}

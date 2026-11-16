@@ -1,0 +1,887 @@
+{
+ "schema": 1,
+ "generated_utc": "2026-11-16T12:08:51Z",
+ "generated_kst": "2026-11-16 21:08 KST",
+ "generator": "free-cli/data.json (수동 실측 + scripts/fetch_cli.py 자동 갱신)",
+ "verified": "2026-11-16",
+ "origin": "/free-cli/",
+ "raw_url": "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github.io/main/free-cli/data.json",
+ "rules": {
+  "free_rule": "tier=nocard는 카드 없이 계정만으로 무료 사용이 확인된 경우만. 수치 한도가 비공개면 '비공개'로 적고 추정하지 않는다.",
+  "claude_rule": "claude=true는 무료 등급에서 Claude 모델 선택이 문서로 확인된 경우만.",
+  "ended_rule": "공식 공지·README·저장소 상태로 종료가 확인된 것만 ended.",
+  "unknown": "확인 못 한 값은 null 또는 '확인 못 함'."
+ },
+ "totals": {
+  "tools": 15,
+  "nocard": 10,
+  "limited": 1,
+  "paid": 1,
+  "ended": 3,
+  "claude_free_now": 2
+ },
+ "tools": [
+  {
+   "id": "antigravity-cli",
+   "name": "Antigravity CLI",
+   "vendor": "Google",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "Gemini CLI 개인 무료 티어를 대체한 Google의 터미널 에이전트",
+   "free": "개인 Google 계정 $0. 주간 레이트리밋(숫자 비공개) · 탭 완성·명령 요청 무제한",
+   "models": [
+    "Gemini 4 Hydrogen",
+    "Gemini 3.8 Flash",
+    "Claude Sonnet 4.6 (thinking)",
+    "Claude Opus 4.6 (thinking)",
+    "GPT-OSS-120b"
+   ],
+   "claude": true,
+   "claudeNote": "무료 등급에 Claude Sonnet 4.6 · Opus 4.6 포함 — 단 2026-11-18 제거 예고",
+   "card": false,
+   "install": "curl -fsSL https://antigravity.google/cli/install.sh | bash",
+   "installAlt": "brew install --cask antigravity-cli",
+   "binary": "~/.local/bin/agy",
+   "auth": "Google OAuth(첫 실행 시 브라우저) · macOS 키체인 저장 · 원격/SSH는 인증 URL 출력",
+   "m4": "macOS 12+ 애플실리콘 네이티브. 설치 스크립트가 격리 속성(xattr)까지 제거",
+   "caveats": [
+    "무료 등급의 Claude·GPT-OSS-120b는 2026-11-18 제거 예고(공식 모델 문서). 이후 무료는 Gemini 4 Hydrogen·3.8 Flash만",
+    "주간 한도 수치를 Google이 공개하지 않음 — '의미 있는 쿼터'라고만 표기",
+    "BYOK(내 키)·커스텀 엔드포인트 미지원",
+    "2026-06-18부로 Gemini CLI의 개인 무료 경로가 이쪽으로 이전"
+   ],
+   "src": [
+    {
+     "label": "antigravity.google/docs/getting-started",
+     "url": "https://antigravity.google/docs/getting-started/"
+    },
+    {
+     "label": "antigravity.google/docs/models",
+     "url": "https://antigravity.google/docs/models"
+    },
+    {
+     "label": "antigravity.google/pricing",
+     "url": "https://antigravity.google/pricing"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "google-antigravity/antigravity-cli"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "kiro",
+   "name": "Kiro (IDE + CLI)",
+   "vendor": "AWS",
+   "kind": "both",
+   "kindLabel": "IDE + CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "무료 등급에서 Claude Sonnet 4.5를 쓰는 거의 유일한 공식 경로",
+   "free": "Kiro Free 상시 월 50 크레딧 · 카드 불필요 · 크레딧은 0.01 단위 차감",
+   "models": [
+    "Claude Sonnet 4.5 (1.3x)",
+    "Auto (1.0x)",
+    "GLM-5 (0.5x)",
+    "DeepSeek 3.2 (0.25x)",
+    "MiniMax M2.5 (0.25x)",
+    "MiniMax M2.1 (0.15x)",
+    "Qwen3 Coder Next (0.05x)"
+   ],
+   "claude": true,
+   "claudeNote": "Claude Sonnet 4.5는 1.3배 차감 — 50크레딧으로 실질 30~40 요청 수준",
+   "card": false,
+   "install": "curl -fsSL https://cli.kiro.dev/install | bash",
+   "installAlt": "brew install --cask kiro-cli  (IDE는 kiro.dev에서 DMG 다운로드)",
+   "binary": "kiro-cli",
+   "auth": "Google · GitHub · AWS Builder ID 중 선택(소셜 로그인/Builder ID만 Claude Sonnet 4.5 접근)",
+   "m4": "macOS 인텔·애플실리콘 모두 지원. CLI 3.0.0부터 단일 kiro-cli 바이너리",
+   "caveats": [
+    "Kiro Web·클라우드 세션·API 키 로그인(CI/CD)은 Pro($20) 이상",
+    "OpenClaw 같은 서드파티 자동화 하네스로 라우팅하는 행위는 약관상 금지",
+    "대학생 인증 시 월 1,000크레딧(12개월) 별도 프로그램 — /free-deals/ 참고"
+   ],
+   "src": [
+    {
+     "label": "kiro.dev/pricing",
+     "url": "https://kiro.dev/pricing/"
+    },
+    {
+     "label": "kiro.dev/docs/models",
+     "url": "https://kiro.dev/docs/models/"
+    },
+    {
+     "label": "kiro.dev/docs/getting-started/installation",
+     "url": "https://kiro.dev/docs/getting-started/installation/"
+    }
+   ],
+   "probe": null,
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "opencode",
+   "name": "OpenCode",
+   "vendor": "anomalyco",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "가입 없이 Zen 무료 모델을 바로 붙여 쓰는 오픈소스 터미널 에이전트",
+   "free": "프로그램 자체는 상시 무료(오픈소스) · Zen 무료 모델 13종(2026-11-16 실측) · 수치 한도 비공개",
+   "models": [
+    "big-pickle",
+    "deepseek-v4.1-flash-free",
+    "glm-5.3-flash-free",
+    "minimax-m3.1-flash-free",
+    "mimo-v2.6-flash-free",
+    "nemotron-3.5-super-vl-free",
+    "nemotron-3.5-lightning-free",
+    "longcat-2.5-free",
+    "flint-40b-free",
+    "beam-free",
+    "iceman-free",
+    "inkling-2-small-free",
+    "hy4-flash-free"
+   ],
+   "claude": false,
+   "claudeNote": "무료 목록에 Claude 없음(유료 pay-as-you-go에만)",
+   "card": false,
+   "install": "curl -fsSL https://opencode.ai/install | bash",
+   "installAlt": "npm install -g opencode-ai  ·  brew install anomalyco/tap/opencode",
+   "binary": "opencode",
+   "auth": "무료 모델은 계정 없이 사용 가능. 유료/내 키는 /connect 로 연결",
+   "m4": "애플실리콘 네이티브 바이너리. WezTerm·Ghostty 같은 모던 터미널 권장",
+   "caveats": [
+    "무료 모델은 모두 '기간 한정' — 목록이 수시로 바뀜(10월 대비 11월 목록도 다름)",
+    "Big Pickle·Pulse Alpha·MiMo 계열은 무료 기간 중 입력 데이터가 모델 개선에 쓰일 수 있음",
+    "무료 등급은 OpenCode 밖에서 호출하면 거부됨(전용 게이트웨이)",
+    "수치 한도(RPD 등)는 공식 문서에 없음 — 확인 못 함"
+   ],
+   "src": [
+    {
+     "label": "opencode.ai/docs",
+     "url": "https://opencode.ai/docs/"
+    },
+    {
+     "label": "opencode.ai/zen/v1/models",
+     "url": "https://opencode.ai/zen/v1/models"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "anomalyco/opencode"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "copilot",
+   "name": "GitHub Copilot (Free)",
+   "vendor": "GitHub",
+   "kind": "both",
+   "kindLabel": "IDE + CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "월 2,000 코드 완성 + 제한적 채팅·에이전트. CLI까지 무료 플랜에 포함",
+   "free": "월 2,000 코드 완성 · 채팅·에이전트는 AI 크레딧 제한(금액 비공개) · auto 모델 선택만",
+   "models": [
+    "auto 모델 선택(엔트리 모델)"
+   ],
+   "claude": false,
+   "claudeNote": "무료 플랜은 모델 수동 선택 불가 — Claude 지정은 Pro 이상",
+   "card": false,
+   "install": "npm install -g @github/copilot",
+   "installAlt": "VS Code → Copilot 확장 설치 후 GitHub 로그인",
+   "binary": "copilot",
+   "auth": "GitHub 계정 로그인(디바이스 코드)",
+   "m4": "npm 전역 설치 · Node 20+",
+   "caveats": [
+    "무료 플랜은 채팅·에이전트 한도 금액을 GitHub이 공개하지 않음",
+    "학생 인증(GitHub Education) 시 Copilot Student — 코드 완성 무제한으로 올라감",
+    "무료 플랜은 코드 완성 2,000회/월 소진 후 다음 달까지 완성 기능 정지"
+   ],
+   "src": [
+    {
+     "label": "github.com/features/copilot/plans",
+     "url": "https://github.com/features/copilot/plans"
+    },
+    {
+     "label": "docs.github.com · Copilot AI credits",
+     "url": "https://docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing"
+    }
+   ],
+   "probe": {
+    "kind": "npm",
+    "pkg": "@github/copilot"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "codex-cli",
+   "name": "Codex CLI",
+   "vendor": "OpenAI",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "limited",
+   "tierLabel": "무료(트라이얼)",
+   "headline": "ChatGPT Free 플랜에도 포함된 '제한적 트라이얼'",
+   "free": "ChatGPT Free/Go 플랜에 Codex 포함 — 'Limited trial access' · 모델·메시지 제한, 수치 비공개",
+   "models": [
+    "GPT-6 Luna (Free는 데스크톱 앱 기준 표기)"
+   ],
+   "claude": false,
+   "claudeNote": "Claude 없음",
+   "card": false,
+   "install": "npm install -g @openai/codex",
+   "installAlt": "brew install --cask codex",
+   "binary": "codex",
+   "auth": "ChatGPT 계정 로그인 또는 OpenAI API 키(종량제)",
+   "m4": "애플실리콘 네이티브 바이너리(rust)",
+   "caveats": [
+    "Free 플랜의 정확한 한도는 OpenAI가 숫자로 공개하지 않음",
+    "Codex Cloud(클라우드 작업)는 Free/Go 미포함",
+    "API 키로 쓰면 종량제 — 무료 아님"
+   ],
+   "src": [
+    {
+     "label": "chatgpt.com/codex/pricing",
+     "url": "https://chatgpt.com/codex/pricing/"
+    },
+    {
+     "label": "help.openai.com · Using Codex with your plan",
+     "url": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan"
+    }
+   ],
+   "probe": {
+    "kind": "npm",
+    "pkg": "@openai/codex"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "cline",
+   "name": "Cline",
+   "vendor": "Cline",
+   "kind": "both",
+   "kindLabel": "확장 + CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "확장·CLI 무료 + 돌아가며 열리는 무료 모델 프로모",
+   "free": "확장·CLI 무료(Apache-2.0). Cline 계정만 있으면 FREE 태그 모델을 프로모 기간 무료 사용",
+   "models": [
+    "FREE 태그 모델(순환 프로모)",
+    "내 키(Anthropic·OpenAI·Gemini·OpenRouter·Groq 등)"
+   ],
+   "claude": false,
+   "claudeNote": "무료 프로모에 Claude 고정 없음 · 내 Anthropic 키로는 사용 가능",
+   "card": false,
+   "install": "npm install -g cline",
+   "installAlt": "VS Code 마켓에서 Cline 확장 설치",
+   "binary": "cline",
+   "auth": "Cline 계정(무료 모델) 또는 각 제공사 API 키",
+   "m4": "확장·CLI 모두 애플실리콘 지원",
+   "caveats": [
+    "무료 모델은 Cline IDE 확장·CLI 안에서만 동작(API로는 사용 불가)",
+    "프로모 한도·대상 모델이 예고 없이 바뀜",
+    "무료 사용분은 모델 개선에 활용될 수 있음"
+   ],
+   "src": [
+    {
+     "label": "docs.cline.bot · free-models",
+     "url": "https://github.com/cline/cline/blob/main/docs/getting-started/free-models.mdx"
+    },
+    {
+     "label": "cline.bot/pricing",
+     "url": "https://cline.bot/pricing"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "cline/cline"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "devin-desktop",
+   "name": "Devin Desktop (구 Windsurf)",
+   "vendor": "Cognition",
+   "kind": "ide",
+   "kindLabel": "IDE",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "Windsurf가 2026-06-02 Devin Desktop으로 개명 — 무료 쿼터는 유지",
+   "free": "Free $0 · 라이트 에이전트 쿼터(일·주 리셋, 수치 비공개) · 인라인 편집·Tab 완성 무제한",
+   "models": [
+    "SWE-2 Flash (Medium)",
+    "무료 모델은 쿼터 미차감"
+   ],
+   "claude": false,
+   "claudeNote": "무료 플랜은 모델 선택 제한 — Claude·GPT·Gemini 프론티어는 Pro",
+   "card": false,
+   "install": "https://devin.ai/pricing 에서 macOS 앱 다운로드 (구 windsurf.com/pricing 이 이 주소로 연결)",
+   "installAlt": "CLI는 Devin CLI 별도 제공",
+   "binary": "앱(.app)",
+   "auth": "계정 로그인(이메일/Google/GitHub)",
+   "m4": "macOS 앱 · 애플실리콘 지원",
+   "caveats": [
+    "SWE-2 Flash 무료는 2026-11-30 18:00 UTC까지(그 뒤 유료, 무료 플랜은 Medium만)",
+    "무료 쿼터 수치를 공개하지 않음 — 소진 시 일/주 리셋 대기",
+    "Windsurf라는 이름으로 검색하면 옛 가격표가 나옴"
+   ],
+   "src": [
+    {
+     "label": "devin.ai/pricing",
+     "url": "https://devin.ai/pricing"
+    },
+    {
+     "label": "docs.devin.ai · Cascade models",
+     "url": "https://docs.devin.ai/windsurf/plugins/cascade/models"
+    }
+   ],
+   "probe": null,
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "trae",
+   "name": "Trae",
+   "vendor": "ByteDance",
+   "kind": "ide",
+   "kindLabel": "IDE",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "Auto 모드 한정 무료 — 모델 수동 선택은 유료",
+   "free": "Free $0(미국 외) · Auto 모드만 · 월 5,000 자동완성 · 동시 클라우드 작업 2개 · 사용량 한도 비공개",
+   "models": [
+    "Auto(내부 라우팅)"
+   ],
+   "claude": false,
+   "claudeNote": "무료는 Auto만 — Claude 직접 선택은 Pro($20) 이상",
+   "card": false,
+   "install": "https://www.trae.ai 에서 macOS 설치 파일 다운로드",
+   "installAlt": "VS Code 기반 IDE — 기존 설정·확장 가져오기 지원",
+   "binary": "앱(.app)",
+   "auth": "이메일/Google/GitHub 계정",
+   "m4": "macOS 지원(애플실리콘)",
+   "caveats": [
+    "무료 한도는 1회성인지 매월인지 공식 페이지끼리 서로 다르게 적혀 있음",
+    "미국 가격표에는 Free 카드가 없음(지역별 정책 차이)",
+    "프라이버시 모드를 켜지 않으면 대화가 학습에 쓰일 수 있음"
+   ],
+   "src": [
+    {
+     "label": "trae.ai/pricing",
+     "url": "https://www.trae.ai/pricing"
+    }
+   ],
+   "probe": null,
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "kilo-code",
+   "name": "Kilo Code",
+   "vendor": "Kilo",
+   "kind": "both",
+   "kindLabel": "확장 + CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "Roo Code 포크 출신 — MIT, 제공사 요율 그대로(마크업 0)",
+   "free": "프로그램 무료(MIT). 모델은 내 키/로컬 — 추론 비용은 각자",
+   "models": [
+    "내 키(500+ 모델)",
+    "로컬(Ollama·LM Studio)"
+   ],
+   "claude": false,
+   "claudeNote": "Claude를 쓰려면 Anthropic 키 필요(무료 아님)",
+   "card": false,
+   "install": "npm install -g @kilocode/cli",
+   "installAlt": "VS Code·JetBrains 마켓에서 Kilo Code 설치",
+   "binary": "kilo",
+   "auth": "각 제공사 API 키 또는 로컬 모델",
+   "m4": "확장·CLI 모두 지원",
+   "caveats": [
+    "무료 모델을 자체 제공하지 않음 — 내 키나 로컬 모델이 전제",
+    "Roo Code에서 마이그레이션 시 API 키 저장 방식·오케스트레이터 모드가 깨질 수 있음"
+   ],
+   "src": [
+    {
+     "label": "github.com/Kilo-Org/kilocode",
+     "url": "https://github.com/Kilo-Org/kilocode"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "Kilo-Org/kilocode"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "goose",
+   "name": "Goose",
+   "vendor": "Block / aaif-goose",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "Block이 만든 오픈소스 로컬 에이전트 — 내 키·로컬 모델",
+   "free": "오픈소스 무료. 추론은 내 키 또는 Ollama 같은 로컬 모델",
+   "models": [
+    "내 키",
+    "로컬 모델"
+   ],
+   "claude": false,
+   "claudeNote": "Claude는 Anthropic 키 필요",
+   "card": false,
+   "install": "curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash",
+   "installAlt": "goose-docs.ai 설치 문서에서 데스크톱 앱 다운로드",
+   "binary": "goose",
+   "auth": "제공사 키 또는 로컬 모델",
+   "m4": "macOS CLI·데스크톱 앱 지원",
+   "caveats": [
+    "자체 무료 모델 없음",
+    "저장소가 block/goose → aaif-goose/goose 로 이전(옛 링크는 리다이렉트)"
+   ],
+   "src": [
+    {
+     "label": "goose-docs.ai",
+     "url": "https://goose-docs.ai/docs/getting-started/installation"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "aaif-goose/goose"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "crush",
+   "name": "Crush",
+   "vendor": "Charm",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "nocard",
+   "tierLabel": "카드X 무료",
+   "headline": "터미널 감성 좋은 Charm의 오픈소스 에이전트",
+   "free": "오픈소스 무료. 추론은 내 키/로컬",
+   "models": [
+    "내 키",
+    "로컬"
+   ],
+   "claude": false,
+   "claudeNote": "Claude는 Anthropic 키 필요",
+   "card": false,
+   "install": "brew install charmbracelet/tap/crush",
+   "installAlt": "npm install -g @charmland/crush",
+   "binary": "crush",
+   "auth": "제공사 키 · /connect 또는 설정 파일",
+   "m4": "애플실리콘 지원",
+   "caveats": [
+    "자체 무료 모델 없음",
+    "Charm 생태계 도구라 설정이 ~/.config/crush 에 모임"
+   ],
+   "src": [
+    {
+     "label": "github.com/charmbracelet/crush",
+     "url": "https://github.com/charmbracelet/crush"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "charmbracelet/crush"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "gemini-cli",
+   "name": "Gemini CLI",
+   "vendor": "Google",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "ended",
+   "tier": "ended",
+   "tierLabel": "개인 무료 종료",
+   "headline": "2026-06-18 개인 무료·AI Pro/Ultra 경로 종료 → Antigravity CLI로 이전",
+   "free": "개인 Google 계정·AI Pro/Ultra 무료 경로 없음. 남은 경로: Code Assist Standard/Enterprise 라이선스, 유료 API 키, Vertex AI",
+   "models": [
+    "Gemini 3.8 Flash (유료 API 키 기준)"
+   ],
+   "claude": false,
+   "claudeNote": "Claude 없음",
+   "card": true,
+   "install": "npm install -g @google/gemini-cli",
+   "installAlt": "brew install gemini-cli",
+   "binary": "gemini",
+   "auth": "Code Assist 라이선스 · 유료 API 키 · Vertex AI",
+   "m4": "설치·실행은 그대로 되지만 무료 개인 사용은 불가",
+   "caveats": [
+    "README·문서 일부에 옛 '1,000 requests/day' 표기가 남아 혼동을 부름 — 공식 배너가 우선",
+    "무료 대체는 Antigravity CLI(agy)",
+    "Google이 Gemini 4 세대 벤치마크에 쓰지 말라고 명시"
+   ],
+   "replacement": "antigravity-cli",
+   "src": [
+    {
+     "label": "github.com/google-gemini/gemini-cli README",
+     "url": "https://github.com/google-gemini/gemini-cli"
+    },
+    {
+     "label": "developers.googleblog.com · transition notice",
+     "url": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "google-gemini/gemini-cli"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "qwen-code",
+   "name": "Qwen Code",
+   "vendor": "Alibaba",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "ended",
+   "tier": "ended",
+   "tierLabel": "무료 쿼터 종료",
+   "headline": "CLI는 Apache-2.0 무료, qwen.ai 로그인 무료 쿼터는 2026-04-15 종료",
+   "free": "프로그램은 계속 무료. 무료 모델 접근은 종료 — Model Studio 신규 무료 쿼터(90일, 모델당 1M 토큰)나 OpenRouter·Fireworks 키 필요",
+   "models": [
+    "Qwen3 Coder 계열(내 키)"
+   ],
+   "claude": false,
+   "claudeNote": "Claude 없음",
+   "card": false,
+   "install": "npm install -g @qwen-code/qwen-code",
+   "installAlt": "npx @qwen-code/qwen-code",
+   "binary": "qwen",
+   "auth": "/auth 에서 Model Studio 키 또는 서드파티 제공사 선택",
+   "m4": "Node 20+",
+   "caveats": [
+    "2026-04-13 1,000 → 100 요청/일로 축소, 2026-04-15 종료",
+    "재로그인·구버전 설치로 되살릴 수 없음(서버 측 차단)",
+    "Model Studio 무료 쿼터는 'Free Quota Only'를 켜야 과금 방지"
+   ],
+   "replacement": null,
+   "src": [
+    {
+     "label": "QwenLM/qwen-code issue #3203 · PR #3207",
+     "url": "https://github.com/QwenLM/qwen-code/pull/3207"
+    },
+    {
+     "label": "qwen-code README (news)",
+     "url": "https://github.com/QwenLM/qwen-code"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "QwenLM/qwen-code"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "roo-code",
+   "name": "Roo Code",
+   "vendor": "Roo Code Inc.",
+   "kind": "extension",
+   "kindLabel": "확장",
+   "status": "ended",
+   "tier": "ended",
+   "tierLabel": "종료",
+   "headline": "2026-05-15 확장 서비스 종료 · 저장소 아카이브(마지막 v3.54.0)",
+   "free": "없음. 마켓 리스팅도 내려감",
+   "models": [],
+   "claude": false,
+   "claudeNote": "—",
+   "card": false,
+   "install": "설치 불가 — 아래 대안 사용",
+   "installAlt": "커뮤니티 포크 Zoo Code · Cline · Kilo Code",
+   "binary": "—",
+   "auth": "—",
+   "m4": "—",
+   "caveats": [
+    "README가 Cline·Zoo Code로 이전 안내",
+    "설정을 내보내면 API 키가 포함되니 공유 금지",
+    "팀은 Roomote(클라우드 에이전트)로 이동"
+   ],
+   "replacement": "cline",
+   "src": [
+    {
+     "label": "github.com/RooCodeInc/Roo-Code (archived)",
+     "url": "https://github.com/RooCodeInc/Roo-Code"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "RooCodeInc/Roo-Code"
+   },
+   "checked": "2026-11-16"
+  },
+  {
+   "id": "claude-code",
+   "name": "Claude Code",
+   "vendor": "Anthropic",
+   "kind": "cli",
+   "kindLabel": "CLI",
+   "status": "active",
+   "tier": "paid",
+   "tierLabel": "유료(구독/API)",
+   "headline": "무료 없음 — Pro $20(연간 $17 상당)부터. 단, 클라이언트는 다른 무료 모델로도 돌릴 수 있음",
+   "free": "Free 채팅 플랜 미포함. Pro $20/월(연 $200), Max $100, Ultra $200",
+   "models": [
+    "Claude Sonnet 5.5",
+    "Opus 5.5",
+    "Haiku 5.5(구독 사용량 공유)"
+   ],
+   "claude": true,
+   "claudeNote": "Claude는 유료 구독/API로만. 무료로 쓰려면 Kiro Free(Sonnet 4.5)나 Antigravity(11-18까지)",
+   "card": true,
+   "install": "npm install -g @anthropic-ai/claude-code",
+   "installAlt": "curl -fsSL https://claude.ai/install.sh | bash",
+   "binary": "claude",
+   "auth": "Claude Pro/Max 로그인 또는 Anthropic API 키",
+   "m4": "애플실리콘 네이티브. ANTHROPIC_API_KEY가 있으면 구독 대신 API로 과금되니 주의",
+   "caveats": [
+    "구독 사용량은 채팅과 한 풀을 공유(5시간·주간 한도)",
+    "비-Anthropic 무료 모델을 Anthropic 호환 엔드포인트로 붙이면 '클라이언트만' 무료로 쓸 수 있음(검증된 우회로, 공식 지원 아님)"
+   ],
+   "src": [
+    {
+     "label": "claude.com/pricing",
+     "url": "https://claude.com/pricing"
+    },
+    {
+     "label": "support.claude.com · Claude Code with Pro/Max",
+     "url": "https://support.claude.com/en/articles/11145838-use-claude-code-with-your-pro-max-or-ultra-plan"
+    }
+   ],
+   "probe": {
+    "kind": "gh",
+    "repo": "anthropics/claude-code"
+   },
+   "checked": "2026-11-16"
+  }
+ ],
+ "combos": [
+  {
+   "id": "claude-now",
+   "title": "클로드 무료로 만져보기 (오늘~11-18)",
+   "audience": "카드 없이 Claude를 써보고 싶을 때",
+   "steps": [
+    "curl -fsSL https://antigravity.google/cli/install.sh | bash",
+    "agy 실행 → Google 로그인 → 모델 선택에서 Claude Sonnet 4.6(thinking) 선택",
+    "11-18 이후엔 Kiro Free 월 50크레딧의 Claude Sonnet 4.5로 이동"
+   ],
+   "note": "Antigravity 무료 Claude는 2026-11-18 제거 예고. 그 뒤 공식 무료 Claude 경로는 Kiro Free뿐."
+  },
+  {
+   "id": "no-signup",
+   "title": "가입·키 없이 5분 안에",
+   "audience": "일단 터미널에서 굴려보고 싶을 때",
+   "steps": [
+    "curl -fsSL https://opencode.ai/install | bash",
+    "opencode 실행 → /models → Free 표시 모델 선택",
+    "같은 목적으로 Antigravity CLI(agy)도 무료"
+   ],
+   "note": "OpenCode Zen 무료 13종은 2026-11-16 실측. 목록은 수시로 바뀜."
+  },
+  {
+   "id": "my-keys",
+   "title": "내 보유 키로 최대치 뽑기",
+   "audience": "OpenRouter · NVIDIA NIM · Groq · Google AI Studio · Cloudflare 보유",
+   "steps": [
+    "opencode 실행 → /connect → OpenRouter 키 연결",
+    "무료 모델은 Zen 무료 목록, 막히면 OpenRouter :free → Groq openai/gpt-oss-120b 순으로 폴백",
+    "이미지·화면 이해가 필요하면 Gemini 키를 같은 방식으로 연결"
+   ],
+   "note": "키를 새로 만들 필요 없음. free-ai 페이지의 폴백 생성기와 같은 순서."
+  },
+  {
+   "id": "student",
+   "title": "학생 인증이 되면",
+   "audience": "학교 이메일·재학 증명이 있을 때",
+   "steps": [
+    "GitHub Education 인증 → Copilot Student(코드 완성 무제한)",
+    "Kiro for Students 신청 → 월 1,000크레딧(지정 대학만)",
+    "Zed Student → Zed Pro 12개월 + 월 $10 토큰 크레딧"
+   ],
+   "note": "셋 다 카드 없이 가능. 자세한 조건은 /free-deals/."
+  },
+  {
+   "id": "local",
+   "title": "토큰 0원 로컬 조합",
+   "audience": "밤샘 작업·오프라인",
+   "steps": [
+    "brew install charmbracelet/tap/crush",
+    "Ollama로 로컬 모델 받고 crush 설정에 연결",
+    "Goose도 같은 방식(내 키 없이 로컬만)"
+   ],
+   "note": "무료지만 품질·속도는 API 모델보다 낮음. M4 기본 메모리에서 7~14B가 현실적."
+  }
+ ],
+ "probes": [
+  {
+   "id": "antigravity-cli",
+   "label": "Antigravity CLI",
+   "kind": "gh",
+   "repo": "google-antigravity/antigravity-cli",
+   "fallback": {
+    "tag": "1.5.9",
+    "at": "2026-11-14T05:39:50Z"
+   }
+  },
+  {
+   "id": "opencode",
+   "label": "OpenCode",
+   "kind": "gh",
+   "repo": "anomalyco/opencode",
+   "fallback": {
+    "tag": "v1.19.5",
+    "at": "2026-10-28T06:17:49Z"
+   }
+  },
+  {
+   "id": "cline",
+   "label": "Cline",
+   "kind": "gh",
+   "repo": "cline/cline",
+   "fallback": {
+    "tag": "v4.1.26",
+    "at": "2026-10-26T09:06:50Z"
+   }
+  },
+  {
+   "id": "kilo-code",
+   "label": "Kilo Code",
+   "kind": "gh",
+   "repo": "Kilo-Org/kilocode",
+   "fallback": {
+    "tag": "v7.8.27",
+    "at": "2026-11-05T12:40:58Z"
+   }
+  },
+  {
+   "id": "goose",
+   "label": "Goose",
+   "kind": "gh",
+   "repo": "aaif-goose/goose",
+   "fallback": {
+    "tag": "v1.59.2",
+    "at": "2026-11-16T05:26:30Z"
+   }
+  },
+  {
+   "id": "crush",
+   "label": "Crush",
+   "kind": "gh",
+   "repo": "charmbracelet/crush",
+   "fallback": {
+    "tag": "v0.101.0",
+    "at": "2026-11-12T16:02:35Z"
+   }
+  },
+  {
+   "id": "gemini-cli",
+   "label": "Gemini CLI",
+   "kind": "gh",
+   "repo": "google-gemini/gemini-cli",
+   "fallback": {
+    "tag": "v0.68.0",
+    "at": "2026-11-10T21:17:07Z"
+   }
+  },
+  {
+   "id": "qwen-code",
+   "label": "Qwen Code",
+   "kind": "gh",
+   "repo": "QwenLM/qwen-code",
+   "fallback": {
+    "tag": "v0.27.4",
+    "at": "2026-11-15T07:04:40Z"
+   }
+  },
+  {
+   "id": "roo-code",
+   "label": "Roo Code (아카이브)",
+   "kind": "gh",
+   "repo": "RooCodeInc/Roo-Code",
+   "fallback": {
+    "tag": "v3.54.0",
+    "at": "2026-05-15T17:52:24Z"
+   }
+  },
+  {
+   "id": "claude-code",
+   "label": "Claude Code",
+   "kind": "gh",
+   "repo": "anthropics/claude-code",
+   "fallback": {
+    "tag": "v2.1.325",
+    "at": "2026-11-13T20:40:01Z"
+   }
+  },
+  {
+   "id": "codex-cli",
+   "label": "Codex CLI",
+   "kind": "npm",
+   "pkg": "@openai/codex",
+   "fallback": {
+    "tag": "v0.169.0",
+    "at": null
+   }
+  },
+  {
+   "id": "copilot",
+   "label": "Copilot CLI",
+   "kind": "npm",
+   "pkg": "@github/copilot",
+   "fallback": {
+    "tag": "v1.0.112",
+    "at": null
+   }
+  },
+  {
+   "id": "gemini-cli-npm",
+   "label": "Gemini CLI (npm)",
+   "kind": "npm",
+   "pkg": "@google/gemini-cli",
+   "fallback": {
+    "tag": "v0.68.0",
+    "at": null
+   }
+  },
+  {
+   "id": "qwen-code-npm",
+   "label": "Qwen Code (npm)",
+   "kind": "npm",
+   "pkg": "@qwen-code/qwen-code",
+   "fallback": {
+    "tag": "v0.27.4",
+    "at": null
+   }
+  },
+  {
+   "id": "zen",
+   "label": "OpenCode Zen 무료 모델",
+   "kind": "zen",
+   "url": "https://opencode.ai/zen/v1/models",
+   "fallback": {
+    "tag": "13 / 87 무료",
+    "at": null
+   }
+  }
+ ],
+ "generated_by": "free-cli/scripts/fetch_cli.py"
+}
