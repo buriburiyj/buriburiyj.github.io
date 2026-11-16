@@ -381,10 +381,11 @@ function cardHTML(t){
   const caveats = (t.caveats||[]).length
     ? '<details class="warnbox"><summary>주의 ' + t.caveats.length + '가지</summary><ul>' + t.caveats.map(c=>'<li>'+esc(c)+'</li>').join("") + '</ul></details>'
     : "";
+  const isCmd = /^(curl|npm|npx|brew|pip|git|sudo|docker|ollama)\b/.test(t.install || "") || (t.install || "").includes(" | bash");
   const install = t.install ? (
     '<div class="code-row"><div style="min-width:0"><code>' + esc(t.install) + '</code>' +
     (t.installAlt ? '<div class="alt">또는 ' + esc(t.installAlt) + '</div>' : "") + '</div>' +
-    '<button class="cp" data-copy="' + esc(t.install) + '">복사</button></div>'
+    (isCmd ? '<button class="cp" data-copy="' + esc(t.install) + '">복사</button>' : "") + '</div>'
   ) : '<div class="dim" style="font-size:11.5px">설치 명령 없음</div>';
   const src = (t.src||[]).map(s => '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '</a>').join(" ");
   return '<article class="card" data-tier="' + esc(t.tier) + '">'

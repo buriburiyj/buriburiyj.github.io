@@ -289,7 +289,12 @@ const RAW_BASE = "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github
   } else {
     setText("fd-status", "data.json 확인 실패");
   }
-  setText("sync-at", stamps.length ? stamps.slice(0, 1).join("") : "확인 못 함");
+  if (stamps.length){
+    const latest = stamps.slice().sort((a, b) => String(a).localeCompare(String(b))).pop();
+    setText("sync-at", latest + (stamps.length > 1 ? " (최신)" : ""));
+  } else {
+    setText("sync-at", "확인 못 함");
+  }
 })();
 </script>
 </body>

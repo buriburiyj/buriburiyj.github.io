@@ -257,10 +257,14 @@ const state = { data:null, deals:[], tier:"all", nocard:false, student:false, ko
 const $ = (id) => document.getElementById(id);
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function daysLeft(iso){
+  // 달력 날짜 기준 D-day: 오늘 마감이면 0(오늘), 어제 마감이면 -1
   if (!iso) return null;
-  const d = new Date(iso + "T23:59:59+09:00");
-  if (isNaN(d)) return null;
-  return Math.ceil((d.getTime() - Date.now()) / 864e5);
+  const [y, m, dd] = iso.split("-").map(Number);
+  if (!y || !m || !dd) return null;
+  const target = Date.UTC(y, m - 1, dd);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((target - today) / 864e5);
 }
 function ddayHTML(iso){
   const n = daysLeft(iso);
@@ -316,8 +320,10 @@ function matches(d){
 }
 function cardHTML(d){
   const badges = ['<span class="bdg ' + (TIER_CLS[d.tier]||"") + '">' + esc(TIER_LABEL[d.tier]||d.tier) + '</span>'];
-  if (d.card) badges.push('<span class="bdg trial sm">카드 필요</span>');
-  else badges.push('<span class="bdg sm">카드X</span>');
+  if (d.tier !== "ended"){
+    if (d.card) badges.push('<span class="bdg trial sm">카드 필요</span>');
+    else badges.push('<span class="bdg sm">카드X</span>');
+  }
   if (d.student) badges.push('<span class="bdg own sm">학생</span>');
   if (d.deadline) badges.push(ddayHTML(d.deadline));
   const src = (d.src||[]).map(s => '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '</a>').join(" ");
