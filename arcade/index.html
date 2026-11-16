@@ -229,6 +229,8 @@
     background:rgba(94,234,255,.12);border:1px solid rgba(94,234,255,.25);border-radius:6px;padding:1px 5px}
   .card .eff{font-size:11.5px;color:#b7d8ea;margin-top:4px;line-height:1.5}
   .card .eff b{color:#8dffcf;font-weight:800}
+  .card .cur{font-size:10.5px;color:rgba(150,190,215,.72);margin-top:5px;letter-spacing:.01em}
+  .card .cur b{color:rgba(190,225,245,.9);font-weight:700}
   .card .syn{font-size:10px;color:var(--gold);margin-top:4px;letter-spacing:.02em;display:flex;gap:4px;align-items:center}
   .card .key{position:absolute;right:9px;top:8px;font-size:9px;font-weight:800;color:rgba(160,220,255,.5);
     border:1px solid rgba(110,220,255,.2);border-radius:5px;padding:0 4px;line-height:14px}
@@ -269,13 +271,13 @@
   @media (min-width:640px){
     .cards{flex-direction:row;max-width:940px;gap:14px;align-items:stretch}
     .card{flex:1 1 0;display:flex;flex-direction:column;text-align:left;padding:16px 16px 22px;gap:0;
-      min-height:264px;justify-content:flex-start}
+      min-height:224px;justify-content:flex-start}
     .card .ic{font-size:38px;text-align:left;margin-bottom:8px;line-height:1}
     .card .body{display:flex;flex-direction:column;flex:1}
     .card .hd{justify-content:flex-start;gap:6px}
     .card .nm{font-size:15px}
     .card .eff{min-height:0;flex:1;font-size:12px;line-height:1.65;margin-top:7px;color:#c2dced}
-    .card .syn{margin-top:10px;font-size:10.5px;line-height:1.4}
+    .card .syn{margin-top:8px;font-size:10.5px;line-height:1.4}
     .card .key{right:auto;left:50%;transform:translateX(-50%);top:auto;bottom:7px}
     .screen{padding:22px}
     .shop{grid-template-columns:1fr 1fr}
@@ -1412,7 +1414,7 @@ function buildCardPool() {
     if (w.evolved || w.lv >= def.maxLv) continue;
     pool.push({
       kind: 'weapon', key: w.key, icon: def.icon, color: def.color, name: def.name,
-      eff: def.up(w.lv), lvFrom: w.lv, lvTo: w.lv + 1,
+      eff: def.up(w.lv), cur: '현재 ' + def.summary(w.lv), lvFrom: w.lv, lvTo: w.lv + 1,
       syn: (!w.evolved && w.lv + 1 >= def.maxLv) ? `최대 레벨 → ${def.evo.name} 진화 가능` : '',
       apply: () => { w.lv++; recalcStats(); }
     });
@@ -1435,7 +1437,7 @@ function buildCardPool() {
     if (ps.lv >= def.maxLv) continue;
     pool.push({
       kind: 'passive', key: ps.key, icon: def.icon, color: def.color, name: def.name,
-      eff: def.fmt(ps.lv + 1), lvFrom: ps.lv, lvTo: ps.lv + 1,
+      eff: def.fmt(ps.lv + 1), cur: '현재 ' + def.fmt(ps.lv).replace(/<b>|<\/b>/g, ''), lvFrom: ps.lv, lvTo: ps.lv + 1,
       syn: evoHint(ps.key, ps.lv + 1),
       apply: () => { ps.lv++; recalcStats(); }
     });
@@ -1474,25 +1476,34 @@ function openLevelUp() {
   if (!G.player || !G.player.alive || G.state === 'over' || G.state === 'lobby') { G.pendingLevels = 0; return; }
   const pool = buildCardPool();
   const cards = [];
-  // evolution cards first (max 1)
   const evoCard = pool.find(c => c.kind === 'evo');
   if (evoCard) cards.push(evoCard);
   const rest = pool.filter(c => c !== evoCard);
-  // weighted shuffle: prefer new weapons slightly, then upgrades
-  const weighted = [];
+  // bucket by category so every level-up offers a real mix
+  const b = { weaponUp: [], passiveUp: [], newWeapon: [], newPassive: [], other: [] };
   for (const c of rest) {
-    let w = 1;
-    if (c.badge === 'NEW' && c.kind === 'weapon') w = 2.2;
-    if (c.kind === 'passive' && c.badge === 'NEW') w = 1.4;
-    if (c.kind === 'weapon' && c.badge !== 'NEW') w = 1.6;
-    for (let i = 0; i < Math.round(w * 10); i++) weighted.push(c);
+    if (c.kind === 'weapon' && c.badge === 'NEW') b.newWeapon.push(c);
+    else if (c.kind === 'weapon') b.weaponUp.push(c);
+    else if (c.kind === 'passive' && c.badge === 'NEW') b.newPassive.push(c);
+    else if (c.kind === 'passive') b.passiveUp.push(c);
+    else b.other.push(c);
   }
+  const order = ['weaponUp', 'newWeapon', 'passiveUp', 'newPassive', 'other'];
+  // rotate the starting bucket a little for variety
+  const shift = Math.floor(Math.random() * 3);
+  const rot = order.slice(shift).concat(order.slice(0, shift));
   const chosen = new Set(cards);
   let guard = 0;
-  while (cards.length < 3 && weighted.length && guard++ < 500) {
-    const c = weighted[(Math.random() * weighted.length) | 0];
-    if (chosen.has(c)) continue;
-    chosen.add(c); cards.push(c);
+  while (cards.length < 3 && guard++ < 12) {
+    let added = false;
+    for (const k of rot) {
+      if (cards.length >= 3) break;
+      const arr = b[k].filter(c => !chosen.has(c));
+      if (!arr.length) continue;
+      const c = arr[(Math.random() * arr.length) | 0];
+      chosen.add(c); cards.push(c); added = true;
+    }
+    if (!added) break;
   }
   // fillers
   let fi = 0;
@@ -1506,6 +1517,7 @@ function openLevelUp() {
   G.state = 'levelup';
   $('luSub').textContent = G.pendingLevels > 1 ? `강화 선택 (남은 레벨업 ${G.pendingLevels})` : '강화를 선택하세요';
   $('levelup').classList.add('show');
+  renderOnce = true;
   SFX.levelUp();
 }
 
@@ -1525,6 +1537,7 @@ function renderCards(cards) {
        <div class="body">
          <div class="hd"><span class="nm">${c.name}</span>${lvTag}${c.badge ? `<span class="badge ${c.kind === 'evo' ? 'evo' : 'new'}">${c.badge}</span>` : ''}</div>
          <div class="eff">${c.eff}</div>
+         ${c.cur ? `<div class="cur">${c.cur}</div>` : ''}
          ${c.syn ? `<div class="syn">${c.syn}</div>` : ''}
        </div>
        <div class="key">${i + 1}</div>`;
