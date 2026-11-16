@@ -32,7 +32,7 @@
    "korea": "조건부",
    "student": true,
    "deadline": null,
-   "condition": "지정 대학 재학생만(2026-10-20 기준 133개교). 한국은 국민대 등 목록에 포함된 학교만 가능. 1년 뒤 Kiro Free(월 50)로 자동 전환.",
+   "condition": "공식 목록에 게시된 대학 재학생만(한국은 국민대 등 포함, 학교별 확인 필요). 1년 뒤 Kiro Free(월 50)로 자동 전환.",
    "note": "Claude Sonnet 4.5 포함. Kiro Free의 20배 크레딧이라 카드 없이 Claude를 가장 오래 쓰는 루트.",
    "src": [
     {
