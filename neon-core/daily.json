@@ -6,7 +6,7 @@
  "seed_hex": "948969ee3509499f",
  "seed_int": 10703202461235628447,
  "tag": "QR4U",
- "generated_utc": "2026-11-18T16:50:58Z",
+ "generated_utc": "2026-11-18T17:15:55Z",
  "title": "NEON CORE — 2026-11-19",
  "theme": {
   "id": "chrome-dawn",
@@ -105,15 +105,15 @@
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261119-20261118T165050Z",
-  "run_id": 44351936863,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44351936863",
+  "task_id": "seed-20261119-20261118T171547Z",
+  "run_id": 44356685607,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44356685607",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-18T16:51:04Z",
+  "stored_at": "2026-11-18T17:16:01Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-18T16:51:04Z",
-  "published_kst": "2026-11-19 01:51 KST"
+  "published_utc": "2026-11-18T17:16:01Z",
+  "published_kst": "2026-11-19 02:16 KST"
  },
  "history": [
   "2026-11-19"
