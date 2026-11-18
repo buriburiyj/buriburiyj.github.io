@@ -1841,6 +1841,9 @@ function renderLobby(seed, info) {
     .map((m, i) => `<span class="chip${i % 2 ? ' alt' : ''}" title="${m.desc}">${m.name}</span>`)
     .join('');
   $('lobbyBoss').style.color = seed.theme.boss;
+  $('lobbySwatch').innerHTML = ['primary', 'secondary', 'accent', 'boss']
+    .map((k) => `<i style="width:9px;height:9px;border-radius:50%;background:${seed.theme[k]};box-shadow:0 0 8px ${seed.theme[k]};display:inline-block"></i>`)
+    .join('');
   $('lobbyTag').style.color = seed.theme.secondary;
 
   const src = $('lobbySrc');
@@ -1964,6 +1967,19 @@ function updateCountdown(dateKey) {
     game.playerMesh.visible = true;
     game.playerMesh.position.set(0, 0, 10);
     renderLobby(seed, info);
+  });
+  $('btnShare').addEventListener('click', async () => {
+    const text = $('overShare').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      $('btnShare').textContent = '복사됨 ✓';
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); $('btnShare').textContent = '복사됨 ✓'; } catch (err) { $('btnShare').textContent = '복사 실패'; }
+      document.body.removeChild(ta);
+    }
+    setTimeout(() => { $('btnShare').textContent = '결과 복사'; }, 1800);
   });
   $('btnResume').addEventListener('click', () => game.resume());
   $('btnQuit').addEventListener('click', () => {
