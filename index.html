@@ -289,6 +289,18 @@ const RAW_BASE = "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github
   } else {
     setText("fd-status", "data.json 확인 실패");
   }
+  // 24시간 자동 수집(live.json): 러너가 실제로 열어 확인한 마지막 회차를 상태줄에 붙인다.
+  try{
+    const live = await getJSON(["/free-deals/live.json", RAW_BASE + "free-deals/live.json"]);
+    if (live && live.totals){
+      const t = live.totals;
+      const base = deals && deals.deals instanceof Array
+        ? "실측 " + (deals.verified || deals.generated_kst || "—")
+        : "24시간 자동";
+      setText("fd-status", base + " · 자동 " + (live.collected_kst || "—").replace(" KST", "")
+        + " · 소스 " + (t.sources_ok ?? "—") + "/" + (t.sources ?? "—"));
+    }
+  } catch(e){}
   if (stamps.length){
     const latest = stamps.slice().sort((a, b) => String(a).localeCompare(String(b))).pop();
     setText("sync-at", latest + (stamps.length > 1 ? " (최신)" : ""));
