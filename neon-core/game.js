@@ -20,6 +20,12 @@ const fmt = (n) => Math.round(n).toLocaleString('ko-KR');
 const $ = (id) => document.getElementById(id);
 const TAU = Math.PI * 2;
 
+function shiftDate(dateKey, days) {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d + days));
+  return t.toISOString().slice(0, 10);
+}
+
 const store = {
   get(key, fallback) {
     try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); }
@@ -1807,7 +1813,16 @@ class Game {
     const today = Math.max(store.get(todayKey, 0) || 0, Math.round(run.score));
     store.set(todayKey, today);
 
-    const ratio = run.score / this.seed.target_score;
+    // 연속 플레이 일수
+  const streakKey = 'nc.streak.v1';
+  const prevStreak = store.get(streakKey, null);
+  let streak = 1;
+  if (prevStreak && prevStreak.last === date) streak = prevStreak.count || 1;
+  else if (prevStreak && prevStreak.last === shiftDate(date, -1)) streak = (prevStreak.count || 0) + 1;
+  store.set(streakKey, { last: date, count: streak });
+  this.streak = streak;
+
+  const ratio = run.score / this.seed.target_score;
     const rank = ratio >= 1.2 ? 'S' : ratio >= 1 ? 'A' : ratio >= 0.7 ? 'B' : ratio >= 0.4 ? 'C' : 'D';
     $('overKicker').innerHTML = `<span class="dot"></span> ${victory ? 'CORE CLEARED' : 'CORE LOST'}`;
     $('overTitle').textContent = victory ? '코어 격파' : '생존 실패';
@@ -1869,6 +1884,9 @@ function renderLobby(seed, info) {
   const today = store.get('nc.today.' + seed.date_kst, 0) || 0;
   $('lobbyBest').textContent = fmt(best);
   $('lobbyToday').textContent = fmt(today);
+  const st = store.get('nc.streak.v1', null);
+  const alive = st && (st.last === seed.date_kst || st.last === shiftDate(seed.date_kst, -1));
+  $('lobbyStreak').textContent = alive ? (st.count || 0) : 0;
   updateCountdown(seed.date_kst);
 
   document.documentElement.style.setProperty('--p', seed.theme.primary);
