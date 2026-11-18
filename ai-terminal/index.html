@@ -205,7 +205,8 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
       <div class="kv"><span>한도</span><b id="kv-limit">—</b></div>
       <p class="side-h">free catalogs</p>
       <div class="kv"><span>무료 모델</span><b id="kv-models">—</b></div>
-      <div class="kv"><span>실시간 keyless</span><b id="kv-live">—</b></div>
+      <div class="kv"><span>keyless</span><b id="kv-live">—</b></div>
+      <div class="kv"><span>실시간 무료</span><b id="kv-live2">—</b></div>
       <div class="kv"><span>딜</span><b id="kv-deals">—</b></div>
       <div class="kv"><span>D1 기록</span><b id="kv-d1">—</b></div>
       <p class="side-h">commands</p>
@@ -637,7 +638,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
         S.data.models = (d.live_models || []).slice();
         setKV("kv-models", String((d.totals && d.totals.free_models) || S.data.models.length), "ok");
         var keyless = (d.totals && d.totals.keyless_models);
-        if(keyless != null) setKV("kv-live", String(keyless), "");
+        if(keyless != null){ setKV("kv-live", String(keyless), ""); S.data.keyless = keyless; }
         return d;
       }).catch(function(){ return null; });
 
@@ -651,7 +652,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
       .then(function(d){
         S.data.live = d;
         var n = d.totals && d.totals.free_models;
-        if(n) setKV("kv-live", String(n), "ok");
+        if(n){ setKV("kv-live2", String(n), "ok"); S.data.liveFree = n; }
         return d;
       }).catch(function(){ return null; });
 
@@ -675,7 +676,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
       var im = S.data.meta && S.data.meta.image;
       sys("text    " + (res[0] ? "200 ok · " + ((res[0][0] && res[0][0].name) || "openai-fast") : "연결 실패"));
       sys("image   " + (im && im.status === 200 ? "200 ok · " + im.model : "미확인 (meta.json)"));
-      sys("data    모델 " + models.length + " · keyless " + (liveFree || "-") + " · 딜 " + deals.length);
+      sys("data    모델 " + models.length + " · keyless " + (S.data.keyless != null ? S.data.keyless : "-") + " · 딜 " + deals.length);
       sys("limit   이미지 45초 1장 · 텍스트는 걸리면 402");
       starters();
       var hint = line("mut", "");
