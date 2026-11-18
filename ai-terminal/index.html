@@ -246,7 +246,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
   var COOLDOWN_MS = 45000;
 
   var S = {
-    busy:false, cool:{text:0, img:0}, hist:[], hIdx:-1,
+    busy:false, cool:{text:0, img:0}, hist:[], hIdx:-1, ctx:[],
     data:{models:[], deals:[], live:null, meta:null},
     booted:false, lastImg:null, pendingRetry:null
   };
@@ -302,7 +302,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
   KO_EN.sort(function(a, b){ return b[0].length - a[0].length; });
 
   var HELP_ROWS = [
-    ["/ask <질문>", "무료 텍스트 AI와 대화 (스트리밍)"],
+    ["/ask <질문>", "무료 텍스트 AI와 대화 (스트리밍 · 직전 3턴 문맥 유지, /clear 로 초기화)"],
     ["/img [옵션] <설명>", "이미지 생성 · --ratio 1:1|9:16|16:9|4:5|2:3|3:2 · --style cyber|pixel|water|icon|photo|anime|3d|dark · --ai(프롬프트 AI 다듬기)"],
     ["/sum <글>", "긴 글을 정확히 3줄로 요약"],
     ["/tr [en|ko] <텍스트>", "한↔영 자연스러운 번역 (방향 자동)"],
@@ -725,7 +725,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
 
     switch(cmd){
       case "/help": return cmdHelp();
-      case "/clear": screenEl.innerHTML = ""; line("mut","화면을 지웠습니다. /help"); return;
+      case "/clear": screenEl.innerHTML = ""; S.ctx = []; line("mut","화면과 대화 문맥을 지웠습니다. /help"); return;
       case "/status": return cmdStatus();
       case "/models": return cmdModels(args);
       case "/3d": return cmd3d(args);
@@ -937,7 +937,8 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
     screenEl.appendChild(body); scrollDown();
 
     var first = true, acc = "", box = null;
-    var messages = [{role:"system", content:opts.system}].concat(opts.messages);
+    var ctxMsgs = (opts.ctx && S.ctx.length) ? S.ctx.slice(-4) : [];
+    var messages = [{role:"system", content:opts.system}].concat(ctxMsgs).concat(opts.messages);
 
     streamChat(messages, function(delta){
       if(first){
@@ -963,7 +964,12 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
       body.remove();
       var out = el("div","line out");
       out.appendChild(renderRich(text));
-      var meta = el("div","mut", "· " + ((Date.now()-t0)/1000).toFixed(1) + "s · free keyless · " + opts.label);
+      if(opts.ctx){
+        S.ctx.push({role:"user", content:opts.messages[0].content});
+        S.ctx.push({role:"assistant", content:text});
+        if(S.ctx.length > 6) S.ctx = S.ctx.slice(-6);
+      }
+      var meta = el("div","mut", "· " + ((Date.now()-t0)/1000).toFixed(1) + "s · free keyless · " + opts.label + (ctxMsgs.length ? " · 문맥 " + (ctxMsgs.length/2) + "턴" : ""));
       meta.style.marginTop = "2px"; meta.style.fontSize = "10.5px";
       meta.style.color = "var(--dim2)";
       var cp = el("button","ibtn","결과 복사");
@@ -1001,7 +1007,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
   /* ---------------- /ask /sum /tr /code */
   function cmdAsk(q){
     if(!q) return err("무엇을 물어볼까요? 예) /ask 광주 봉선동 근처 무료로 공부할 곳");
-    runAI({ system:SYS.ask, messages:[{role:"user", content:q}], label:"/ask", maxTokens:700 });
+    runAI({ system:SYS.ask, messages:[{role:"user", content:q}], label:"/ask", maxTokens:700, ctx:true });
     return null;
   }
   function cmdSum(text){
