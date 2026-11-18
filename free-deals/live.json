@@ -1,0 +1,417 @@
+{
+ "schema": 1,
+ "generated_utc": "2026-11-18T13:42:03Z",
+ "generated_kst": "2026-11-18 22:42 KST",
+ "collected_utc": "2026-11-18T13:41:41Z",
+ "collected_kst": "2026-11-18 22:41 KST",
+ "run_id": "deals-20261118T1341Z",
+ "task_id": "deals-20261118T134124Z",
+ "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44316263223",
+ "engine": "strawberry-runner",
+ "collector": "strawberry-runner/scripts/collect_deals.py",
+ "totals": {
+  "sources": 13,
+  "sources_ok": 13,
+  "free_models": 93,
+  "offer_claims": 8,
+  "games_now": 1,
+  "games_soon": 1,
+  "curated_total": 22,
+  "curated_alive": 21,
+  "duration_ms": 12570
+ },
+ "catalogs": [
+  {
+   "id": "kilo",
+   "name": "Kilo AI Gateway",
+   "url": "https://ai-gateway.kilo.ai/api/v1/models",
+   "status": 200,
+   "ms": 283,
+   "ok": true,
+   "total_models": 470,
+   "free_models": 13,
+   "free_ids": [
+    "kilo-auto/free",
+    "baidu/ernie-5.5-flash-preview:free",
+    "liquid/lfm-3-1.7b:free",
+    "particle-ai/particle-1:free",
+    "nvidia/nemotron-3.5-super-vl:free",
+    "dots-studio/dots-3-note-preview:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "cohere/north-mini-code:free"
+   ],
+   "basis": "isFree = true 인 모델만 집계",
+   "error": null
+  },
+  {
+   "id": "nvidia",
+   "name": "NVIDIA NIM (build.nvidia.com)",
+   "url": "https://integrate.api.nvidia.com/v1/models",
+   "status": 200,
+   "ms": 190,
+   "ok": true,
+   "total_models": 32,
+   "free_models": 32,
+   "free_ids": [
+    "bigcode/starcoder2-15b",
+    "google/gemma-3-12b-it",
+    "google/gemma-3-4b-it",
+    "google/gemma-4-31b-it",
+    "meta/muse-glimmer-30b",
+    "minimaxai/minimax-m3.1-flash",
+    "mistralai/mistral-large-4-1t-a52b",
+    "moonshotai/kimi-k3.1-pro"
+   ],
+   "basis": "카탈로그 모델 전체가 무료 크레딧 계정으로 호출 가능(가격표 필드 없음)",
+   "error": null
+  },
+  {
+   "id": "openrouter",
+   "name": "OpenRouter",
+   "url": "https://openrouter.ai/api/v1/models",
+   "status": 200,
+   "ms": 209,
+   "ok": true,
+   "total_models": 478,
+   "free_models": 17,
+   "free_ids": [
+    "inclusionai/ling-3.2-flash:free",
+    "baidu/ernie-5.5-flash-preview:free",
+    "thinkingmachines/inkling-2-small:free",
+    "liquid/lfm-3-1.7b:free",
+    "particle-ai/particle-1:free",
+    "recursive/flint-v1.0:free",
+    "nvidia/nemotron-3.5-super-vl:free",
+    "dots-studio/dots-3-note-preview:free"
+   ],
+   "basis": "pricing.prompt·completion = 0 인 모델만 집계",
+   "error": null
+  },
+  {
+   "id": "ovh",
+   "name": "OVHcloud AI Endpoints",
+   "url": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models",
+   "status": 200,
+   "ms": 892,
+   "ok": true,
+   "total_models": 30,
+   "free_models": 30,
+   "free_ids": [
+    "stable-diffusion-xl-base-v10",
+    "nvr-tts-it-it",
+    "nvr-tts-de-de",
+    "nvr-tts-en-us",
+    "nvr-tts-es-es",
+    "whisper-large-v3",
+    "solaria-3",
+    "whisper-large-v3-turbo"
+   ],
+   "basis": "카탈로그 모델 전체가 무료 한도로 호출 가능(가격표 필드 없음)",
+   "error": null
+  },
+  {
+   "id": "pollinations",
+   "name": "Pollinations",
+   "url": "https://text.pollinations.ai/models",
+   "status": 200,
+   "ms": 192,
+   "ok": true,
+   "total_models": 1,
+   "free_models": 1,
+   "free_ids": [
+    "openai-fast"
+   ],
+   "basis": "키 없이(anonymous tier) 호출 가능한 모델 목록",
+   "error": null
+  }
+ ],
+ "offers": [
+  {
+   "id": "cloudflare-workers-free",
+   "vendor": "Cloudflare Workers",
+   "title": "Workers Free 플랜",
+   "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+   "status": 200,
+   "ok": true,
+   "claims": [
+    {
+     "key": "free_plan",
+     "text": "…Egress Service bindings Fine Print By default, users have access to the Workers Free plan."
+    },
+    {
+     "key": "free_requests_day",
+     "text": "Requests 1, 2, 3, 4 Duration CPU time Free 100,000 per day No charge for duration 10 milliseconds of CPU time per invocation Standard 10 million included per month +$0.30 per additional million No charge or limit for dur"
+    }
+   ],
+   "card_claim": null,
+   "note": null,
+   "ms": 215
+  },
+  {
+   "id": "github-copilot-free",
+   "vendor": "GitHub",
+   "title": "GitHub Copilot Free",
+   "url": "https://github.com/pricing",
+   "status": 200,
+   "ok": true,
+   "claims": [
+    {
+     "key": "copilot_free",
+     "text": "Learn more about Premium Support Recommended Additional add-ons GitHub Copilot Get started for free with up to 2,000 completions per month."
+    }
+   ],
+   "card_claim": null,
+   "note": null,
+   "ms": 432
+  },
+  {
+   "id": "google-cloud-free",
+   "vendor": "Google Cloud",
+   "title": "Google Cloud Free",
+   "url": "https://cloud.google.com/free",
+   "status": 200,
+   "ok": true,
+   "claims": [
+    {
+     "key": "usd_credit",
+     "text": "무료로 시작하기 영업팀에 문의 무료로 시작하는 세 가지 방법 신규 고객을 위한 $300의 무료 크레딧 신규 고객에게는 Google Cloud 제품을 사용해 보고 개념 증명을 빌드할 수 있도록 $300의 무료 크레딧 이 제공됩니다."
+    },
+    {
+     "key": "always_free",
+     "text": "20개 이상의 무료 등급 제품 AI API, Compute Engine , BigQuery , 기타 인기 제품을 월별 한도까지 무료로 사용할 수 있으며 $300 무료 크레딧이 차감되지 않습니다."
+    }
+   ],
+   "card_claim": null,
+   "note": null,
+   "ms": 383
+  },
+  {
+   "id": "kiro-free",
+   "vendor": "AWS Kiro",
+   "title": "Kiro Free 티어",
+   "url": "https://kiro.dev/pricing/",
+   "status": 200,
+   "ok": true,
+   "claims": [
+    {
+     "key": "free_tier",
+     "text": "New users can start with the perpetual Kiro Free tier, which includes 50 credits per month."
+    }
+   ],
+   "card_claim": null,
+   "note": null,
+   "ms": 139
+  },
+  {
+   "id": "oracle-cloud-free",
+   "vendor": "Oracle Cloud",
+   "title": "Oracle Cloud Free Tier",
+   "url": "https://www.oracle.com/cloud/free/",
+   "status": 200,
+   "ok": true,
+   "claims": [
+    {
+     "key": "usd_credit",
+     "text": "…to Oracle Cloud Here is how Oracle Cloud Free Tier works 1 Start with a US$300 cloud credit.* You’ll have 30 days to use it to test your applications on all OCI services, in addition to Always Free Services in your Free"
+    },
+    {
+     "key": "always_free",
+     "text": "…to use it to test your applications on all OCI services, in addition to Always Free Services in your Free Tier account."
+    }
+   ],
+   "card_claim": null,
+   "note": null,
+   "ms": 294
+  }
+ ],
+ "games": [
+  {
+   "title": "Knightica",
+   "store": "Epic Games",
+   "status": "now",
+   "price_krw": 15300,
+   "free_from_utc": "2026-11-12T16:00:00.000Z",
+   "free_until_utc": "2026-11-19T16:00:00.000Z",
+   "url": "https://store.epicgames.com/ko/p/knightica-3be45c"
+  },
+  {
+   "title": "Mark of the Deep",
+   "store": "Epic Games",
+   "status": "soon",
+   "price_krw": 33500,
+   "free_from_utc": "2026-11-19T16:00:00.000Z",
+   "free_until_utc": "2026-11-26T16:00:00.000Z",
+   "url": "https://store.epicgames.com/ko/p/mark-of-the-deep-f7dc08"
+  }
+ ],
+ "curated": {
+  "total": 22,
+  "alive": 21,
+  "broken": [
+   {
+    "id": "gemini-api-free",
+    "title": "Google AI Studio Gemini API 무료 티어",
+    "error": "URLError"
+   }
+  ],
+  "expired": [
+   "itzi-deepseek"
+  ]
+ },
+ "sources": [
+  {
+   "id": "kilo",
+   "name": "Kilo AI Gateway",
+   "kind": "catalog",
+   "status": 200,
+   "ms": 283,
+   "ok": true,
+   "items": 13,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "nvidia",
+   "name": "NVIDIA NIM (build.nvidia.com)",
+   "kind": "catalog",
+   "status": 200,
+   "ms": 190,
+   "ok": true,
+   "items": 32,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "openrouter",
+   "name": "OpenRouter",
+   "kind": "catalog",
+   "status": 200,
+   "ms": 209,
+   "ok": true,
+   "items": 17,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "ovh",
+   "name": "OVHcloud AI Endpoints",
+   "kind": "catalog",
+   "status": 200,
+   "ms": 892,
+   "ok": true,
+   "items": 30,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "pollinations",
+   "name": "Pollinations",
+   "kind": "catalog",
+   "status": 200,
+   "ms": 192,
+   "ok": true,
+   "items": 1,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "curated-deals",
+   "name": "buriburiyj.github.io/free-deals 데이터",
+   "kind": "curated",
+   "status": 200,
+   "ms": 29,
+   "ok": true,
+   "items": 22,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "epic-free",
+   "name": "Epic Games 무료 배포 (KR)",
+   "kind": "free_games",
+   "status": 200,
+   "ms": 45,
+   "ok": true,
+   "items": 2,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "steam-free",
+   "name": "Steam 100% 할인 (KR 스토어)",
+   "kind": "free_games",
+   "status": 200,
+   "ms": 118,
+   "ok": true,
+   "items": 0,
+   "error": null,
+   "note": "지금 100% 할인 항목 없음"
+  },
+  {
+   "id": "cloudflare-workers-free",
+   "name": "Cloudflare Workers",
+   "kind": "offer",
+   "status": 200,
+   "ms": 215,
+   "ok": true,
+   "items": 2,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "github-copilot-free",
+   "name": "GitHub",
+   "kind": "offer",
+   "status": 200,
+   "ms": 432,
+   "ok": true,
+   "items": 1,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "google-cloud-free",
+   "name": "Google Cloud",
+   "kind": "offer",
+   "status": 200,
+   "ms": 383,
+   "ok": true,
+   "items": 2,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "kiro-free",
+   "name": "AWS Kiro",
+   "kind": "offer",
+   "status": 200,
+   "ms": 139,
+   "ok": true,
+   "items": 1,
+   "error": null,
+   "note": null
+  },
+  {
+   "id": "oracle-cloud-free",
+   "name": "Oracle Cloud",
+   "kind": "offer",
+   "status": 200,
+   "ms": 294,
+   "ok": true,
+   "items": 2,
+   "error": null,
+   "note": null
+  }
+ ],
+ "d1": {
+  "latest_key": "deals:latest",
+  "run_key": "deals:run:deals-20261118T1341Z",
+  "history_runs": 1,
+  "server": "strawberry-server (Cloudflare Workers + D1)"
+ },
+ "rules": {
+  "facts_only": "이 파일의 모든 값은 수집 시점에 실제로 받아온 응답에서만 나온다.",
+  "claims": "offers[].claims 는 공식 페이지 문장을 그대로 잘라낸 발췌다(해석·추정 없음).",
+  "unknown": "파싱 실패·문구 없음은 null 또는 빈 배열이며, sources[]에 실패로 남는다."
+ }
+}
