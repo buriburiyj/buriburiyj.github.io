@@ -141,6 +141,22 @@
   #toast.on{opacity:1;transform:translate(-50%,0)}
   footer{margin-top:30px;border-top:1px solid var(--line);padding-top:14px;font-size:11.5px;color:var(--dim2);line-height:1.6}
   footer b{color:var(--dim)}
+
+  /* 24시간 자동 수집 */
+  .autolist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+  .autolist li{background:rgba(10,13,18,.45);border:1px solid var(--line);border-radius:11px;padding:9px 11px;font-size:12.5px}
+  .autolist .nm{font-weight:700;color:var(--txt)}
+  .autolist .meta{color:var(--dim2);font-size:11px;margin-top:2px}
+  .autolist .quote{color:var(--dim);font-size:12px;margin-top:5px;line-height:1.5;border-left:2px solid var(--line2);padding-left:8px}
+  .autolist .quote + .quote{margin-top:4px}
+  .okdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:5px;vertical-align:middle}
+  .baddot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--bad);margin-right:5px;vertical-align:middle}
+  .srctable{width:100%;border-collapse:collapse;font-size:12px}
+  .srctable th,.srctable td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .srctable td.wrap{white-space:normal;color:var(--dim2);font-size:11.5px}
+  .srctable th{color:var(--dim2);font-weight:700;font-size:11px}
+  details.panel summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--txt);outline:none}
+  details.panel summary::marker{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -171,6 +187,7 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
   </header>
 
   <nav class="jump"><div class="in">
+    <a href="#auto">🔄 24시간 자동</a>
     <a href="#board">🎁 보드</a>
     <a href="#endings">⏳ 마감 임박</a>
     <a href="#ended">⛔ 종료</a>
@@ -178,6 +195,43 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
     <a href="/free-cli/">🧪 free-cli</a>
     <a href="/free-ai/">🛰 free-ai</a>
   </div></nav>
+
+  <section id="auto">
+    <div class="sec-head">
+      <h2>🔄 24시간 자동 수집</h2>
+      <p class="lead">GitHub Actions 무료 러너가 주기적으로 직접 열어 확인한 값 → D1 저장 → 이 페이지</p>
+    </div>
+    <div class="panel">
+      <div class="livegrid">
+        <div class="lstat"><div class="v" id="a-sources">—</div><div class="k">정상 소스</div></div>
+        <div class="lstat"><div class="v" id="a-models">—</div><div class="k">무료 모델(합계)</div></div>
+        <div class="lstat"><div class="v" id="a-games">—</div><div class="k">0원 게임 지금</div></div>
+        <div class="lstat"><div class="v" id="a-curated">—</div><div class="k">기존 혜택 생존</div></div>
+      </div>
+      <p class="hint">
+        <span id="a-when">불러오는 중…</span><span id="a-engine"></span>
+        · <a id="a-run" href="https://github.com/buriburiyj/strawberry-runner/actions" target="_blank" rel="noopener">러너 실행 로그</a>
+        · <a href="live.json" target="_blank" rel="noopener">live.json</a>
+        · <span id="a-d1"></span>
+      </p>
+    </div>
+    <div class="panel" id="a-games-panel" hidden>
+      <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">🎮 지금·곧 0원</h2><p class="lead">스토어가 공개한 프로모션 기간 그대로</p></div>
+      <ul class="autolist" id="a-games-list"></ul>
+    </div>
+    <div class="panel" id="a-offers-panel" hidden>
+      <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">📄 공식 페이지에서 그대로 발췌</h2><p class="lead">해석 없이 원문 문장만 · 링크는 출처</p></div>
+      <ul class="autolist" id="a-offers-list"></ul>
+    </div>
+    <div class="panel" id="a-models-panel" hidden>
+      <div class="sec-head" style="margin-bottom:6px"><h2 style="font-size:14px">🧮 무료 모델 카탈로그</h2><p class="lead">가격표가 0인 모델만 집계</p></div>
+      <ul class="autolist" id="a-models-list"></ul>
+    </div>
+    <details class="panel" id="a-src-panel">
+      <summary>🔍 소스 상태 · 실패한 곳까지 그대로</summary>
+      <div class="tscroll" style="margin-top:9px"><table class="srctable" id="a-src-table"></table></div>
+    </details>
+  </section>
 
   <section id="board">
     <div class="sec-head">
@@ -383,6 +437,81 @@ async function loadLive(){
   note.textContent = ok.length ? "실시간: " + ok.join(" · ") + " — 값은 각 서비스가 공개한 것." : "일부 실시간 확인이 차단되었습니다(브라우저 CORS). 아래 보드는 data.json 스냅샷.";
 }
 
+async function loadAuto(){
+  const bust = "?t=" + Date.now();
+  const tries = ["live.json" + bust, "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github.io/main/free-deals/live.json" + bust];
+  let data = null, src = null;
+  for (const url of tries){
+    try{
+      const res = await fetch(url, {cache:"no-store"});
+      if (!res.ok) continue;
+      const j = await res.json();
+      if (!j || !j.totals) continue;
+      data = j; src = url.startsWith("http") ? "raw.githubusercontent" : "live.json";
+      break;
+    } catch(e){}
+  }
+  const when = $("a-when");
+  if (!data){
+    when.textContent = "자동 수집 데이터를 아직 못 불러왔습니다(첫 실행 전이거나 저장소 지연).";
+    return;
+  }
+  const t = data.totals || {};
+  $("a-sources").textContent = (t.sources_ok ?? "—") + "/" + (t.sources ?? "—");
+  $("a-models").textContent = t.free_models ?? "—";
+  $("a-games").textContent = (t.games_now ?? 0) + (t.games_soon ? " (" + t.games_soon + " 예정)" : "");
+  $("a-curated").textContent = (t.curated_alive ?? "—") + "/" + (t.curated_total ?? "—");
+  when.textContent = "수집 " + (data.collected_kst || data.generated_kst || "—") + " · ";
+  $("a-engine").textContent = (data.engine || "") + (data.run_id ? " · " + data.run_id : "");
+  if (data.run_url) $("a-run").href = data.run_url;
+  const d1 = data.d1 || {};
+  $("a-d1").textContent = d1.latest_key ? (d1.latest_key + " · 회차 " + (d1.history_runs ?? "—") + "개 보관") : "";
+
+  const games = data.games || [];
+  if (games.length){
+    $("a-games-panel").hidden = false;
+    $("a-games-list").innerHTML = games.map(g => {
+      const price = g.price_krw ? ('<span class="bdg">원가 ' + g.price_krw.toLocaleString("ko-KR") + '원</span> ') : "";
+      const when = g.status === "now" ? ("지금 0원" + (g.free_until_utc ? " · " + g.free_until_utc.slice(0,10) + "까지" : ""))
+                                       : ("예정 " + (g.free_from_utc ? g.free_from_utc.slice(0,10) : "") + "부터");
+      return '<li><div class="nm">' + esc(g.title) + ' <span class="bdg ' + (g.status==="now"?"nokey":"trial") + '">' + esc(when) + '</span></div>'
+        + '<div class="meta">' + esc(g.store) + ' ' + price + (g.url ? '<a href="' + esc(g.url) + '" target="_blank" rel="noopener">스토어</a>' : '') + '</div></li>';
+    }).join("");
+  }
+
+  const offers = (data.offers || []).filter(o => (o.claims || []).length);
+  if (offers.length){
+    $("a-offers-panel").hidden = false;
+    $("a-offers-list").innerHTML = offers.map(o => {
+      const quotes = (o.claims || []).map(c => '<div class="quote">' + esc(c.text) + '</div>').join("");
+      const card = o.card_claim ? '<div class="quote">카드: ' + esc(o.card_claim) + '</div>' : '';
+      return '<li><div class="nm">' + esc(o.vendor) + ' — ' + esc(o.title) + '</div>'
+        + '<div class="meta"><a href="' + esc(o.url) + '" target="_blank" rel="noopener">' + esc(o.url.replace(/^https?:\/\//, "")) + '</a></div>'
+        + quotes + card + '</li>';
+    }).join("");
+  }
+
+  const models = (data.catalogs || []).filter(c => c.ok);
+  if (models.length){
+    $("a-models-panel").hidden = false;
+    $("a-models-list").innerHTML = models.map(c => {
+      const ids = (c.free_ids || []).slice(0, 4).map(x => '<code>' + esc(x) + '</code>').join(" ");
+      return '<li><div class="nm">' + esc(c.name) + ' — 무료 ' + (c.free_models ?? "—") + ' / 전체 ' + (c.total_models ?? "—") + '</div>'
+        + '<div class="meta">' + esc(c.basis || "") + (ids ? ' · ' + ids : '') + '</div></li>';
+    }).join("");
+  }
+
+  const srcs = data.sources || [];
+  if (srcs.length){
+    $("a-src-table").innerHTML = '<thead><tr><th>소스</th><th>상태</th><th>항목</th><th>비고</th></tr></thead><tbody>'
+      + srcs.map(s => '<tr><td>' + (s.ok ? '<span class="okdot"></span>' : '<span class="baddot"></span>') + esc(s.name) + '</td>'
+          + '<td class="num">' + (s.status || 0) + ' · ' + (s.ms == null ? "—" : s.ms + "ms") + '</td>'
+          + '<td class="num">' + (s.items ?? 0) + '</td>'
+          + '<td class="wrap">' + esc(s.error ? ("실패: " + s.error) : (s.note || "")) + '</td></tr>').join("")
+      + '</tbody>';
+  }
+}
+
 $("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); render(); });
 $("f-nocard").addEventListener("change", (e) => { state.nocard = e.target.checked; render(); });
 $("f-student").addEventListener("change", (e) => { state.student = e.target.checked; render(); });
@@ -391,6 +520,7 @@ $("refresh").addEventListener("click", async (e) => { e.target.classList.add("bu
 
 (async function init(){
   const ok = await loadData();
+  loadAuto();
   if (!ok){ $("gen-at").textContent = "data.json 로드 실패"; return; }
   render(); loadLive();
 })();
