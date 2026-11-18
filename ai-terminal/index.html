@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AI Terminal · 무료 AI 통합 터미널</title>
+<meta name="description" content="키·카드·회원가입 없이 쓰는 무료 AI 터미널. /ask /img /sum /tr /code /models /deals — 하나의 명령창에서 전부." />
+<meta name="theme-color" content="#05090b" />
+<meta property="og:title" content="AI Terminal · 무료 AI 통합 터미널" />
+<meta property="og:description" content="/ask · /img · /sum · /tr · /code · /models · /deals — 무가입·무키 무료 AI를 한 터미널에." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='82'>▮</text></svg>" />
+<style>
+  :root{
+    --bg:#05090b; --bg2:#070d10; --panel:#0b1216; --panel2:#0e171c;
+    --line:#17242b; --line2:#22333c;
+    --txt:#d9e8e6; --dim:#8fa6a6; --dim2:#5d7373;
+    --mint:#5cf2b6; --cyan:#5ad1ff; --violet:#b79bff; --amber:#ffc76b; --red:#ff6f7d;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    background:
+      radial-gradient(1000px 520px at 78% -12%, #0d2b30 0%, transparent 60%),
+      radial-gradient(700px 420px at -8% 110%, #131a35 0%, transparent 58%),
+      var(--bg);
+    color:var(--txt); font-family:var(--mono); font-size:13.5px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow:hidden;
+  }
+  body::after{ /* subtle scanlines */
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:5;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,.014) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
+  }
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer;font-size:inherit}
+
+  .app{display:flex;flex-direction:column;height:100dvh;max-width:1180px;margin:0 auto;position:relative}
+
+  /* top bar */
+  header{
+    flex:0 0 auto; display:flex; align-items:center; gap:10px;
+    padding:calc(9px + env(safe-area-inset-top)) 12px 9px;
+    border-bottom:1px solid var(--line); background:rgba(7,13,16,.86); backdrop-filter:blur(10px);
+    position:relative; z-index:4;
+  }
+  .dots{display:flex;gap:5px}
+  .dots i{width:9px;height:9px;border-radius:50%;display:block;background:#2b3b42}
+  .dots i:nth-child(1){background:#ff5f57} .dots i:nth-child(2){background:#febc2e} .dots i:nth-child(3){background:#28c840}
+  .title{font-size:12px;letter-spacing:.06em;color:var(--dim);display:flex;align-items:center;gap:7px;min-width:0}
+  .title b{color:var(--txt);font-weight:700;letter-spacing:.02em}
+  .title .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint);animation:pulse 2.4s infinite;flex:0 0 auto}
+  .title .dot.off{background:var(--dim2);box-shadow:none;animation:none}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .spacer{flex:1}
+  .topbtn{font-size:11px;color:var(--dim2);border:1px solid var(--line);border-radius:8px;padding:4px 8px;white-space:nowrap}
+  .topbtn:hover{color:var(--txt);border-color:var(--line2)}
+  .cool{font-size:11px;color:var(--amber);border:1px solid rgba(255,199,107,.35);background:rgba(255,199,107,.08);
+    border-radius:8px;padding:3px 8px;white-space:nowrap;display:none}
+  .cool.on{display:inline-block}
+
+  /* main */
+  main{flex:1 1 auto;min-height:0;display:flex;gap:0}
+  .screen{
+    flex:1 1 auto; min-width:0; overflow-y:auto; overscroll-behavior:contain;
+    padding:14px 12px 18px; scroll-behavior:smooth;
+  }
+  .screen::-webkit-scrollbar{width:8px}
+  .screen::-webkit-scrollbar-thumb{background:#1b2a31;border-radius:8px}
+
+  .line{margin:0 0 7px;white-space:pre-wrap;word-break:break-word;animation:fade .18s ease-out}
+  @keyframes fade{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:none}}
+  .line .pfx{color:var(--mint);font-weight:700}
+  .line.user{color:#eef7f5}
+  .line.out{color:#c3d6d3}
+  .line.sys{color:var(--cyan);font-size:12px}
+  .line.mut{color:var(--dim2);font-size:12px}
+  .line.err{color:var(--red);font-size:12.5px}
+  .line.warn{color:var(--amber);font-size:12.5px}
+  .line.head{color:var(--txt);font-weight:700;margin-top:14px}
+  .line.think{color:var(--dim2);font-size:11.5px;font-style:italic;border-left:2px solid var(--line2);padding-left:8px}
+
+  .block{border-left:2px solid var(--line2);padding:8px 0 8px 10px;margin:0 0 10px}
+  .block.ok{border-left-color:rgba(92,242,182,.5)}
+  .block.bad{border-left-color:rgba(255,111,125,.55)}
+
+  .cmdbar{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 9px}
+  .tag{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--dim2)}
+  .tag.on{color:var(--mint);border-color:rgba(92,242,182,.4);background:rgba(92,242,182,.07)}
+
+  /* code */
+  pre{margin:8px 0;background:#080f12;border:1px solid var(--line);border-radius:10px;padding:9px 10px;
+    overflow-x:auto;font-size:12.5px;line-height:1.55;position:relative}
+  pre code{font-family:var(--mono);white-space:pre;color:#cfe7e2}
+  .codewrap{position:relative}
+  .copybtn{position:absolute;top:6px;right:6px;font-size:10.5px;color:var(--dim);background:rgba(10,17,20,.9);
+    border:1px solid var(--line2);border-radius:7px;padding:3px 7px;z-index:1}
+  .copybtn:hover{color:var(--mint);border-color:rgba(92,242,182,.5)}
+  .copybtn.done{color:var(--mint);border-color:rgba(92,242,182,.5)}
+  code.inline{background:#0d161a;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12.5px;color:#bfe9df}
+  .line b{color:#f0fbf8}
+
+  /* quick starters */
+  .starters{display:grid;grid-template-columns:1fr;gap:6px;margin:12px 0 2px}
+  @media(min-width:560px){.starters{grid-template-columns:1fr 1fr}}
+  .starter{display:flex;gap:8px;align-items:baseline;text-align:left;border:1px solid var(--line);
+    border-radius:10px;padding:8px 10px;background:#0a1216;transition:.14s;overflow:hidden}
+  .starter:hover{border-color:rgba(92,242,182,.45);background:#0c171b}
+  .starter .k{color:var(--mint);font-size:11.5px;font-weight:700;flex:0 0 auto}
+  .starter .v{color:var(--dim);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* tables */
+  .tablewrap{overflow-x:auto;margin:8px 0 4px;border:1px solid var(--line);border-radius:10px;max-width:100%}
+  table{border-collapse:collapse;width:100%;font-size:12px;min-width:520px}
+  th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{color:var(--dim2);font-weight:600;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:#0a1215;position:sticky;top:0}
+  tr:last-child td{border-bottom:0}
+  td.mono{font-family:var(--mono)}
+  td.wrap{white-space:normal;min-width:180px;color:var(--dim)}
+  .pill{display:inline-block;font-size:10px;border-radius:999px;padding:1px 7px;border:1px solid var(--line2);color:var(--dim)}
+  .pill.ok{color:var(--mint);border-color:rgba(92,242,182,.35)}
+  .pill.k{color:var(--cyan);border-color:rgba(90,209,255,.35)}
+  .pill.warn{color:var(--amber);border-color:rgba(255,199,107,.35)}
+
+  /* image result */
+  .imgcard{margin:10px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#080f12;max-width:420px}
+  .imgcard img{display:block;width:100%;height:auto;background:#0b1418;min-height:60px}
+  .imgmeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 9px;border-top:1px solid var(--line);font-size:11px;color:var(--dim2)}
+  .imgmeta .grow{flex:1;min-width:120px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ibtn{font-size:11px;border:1px solid var(--line2);border-radius:8px;padding:4px 9px;color:var(--dim)}
+  .ibtn:hover{color:var(--mint);border-color:rgba(92,242,182,.5)}
+  .spinner{display:inline-block;width:11px;height:11px;border:2px solid var(--line2);border-top-color:var(--mint);
+    border-radius:50%;animation:spin .8s linear infinite;vertical-align:-1px;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* input area */
+  footer{flex:0 0 auto;border-top:1px solid var(--line);background:rgba(7,13,16,.94);backdrop-filter:blur(10px);
+    padding:8px 10px calc(9px + env(safe-area-inset-bottom));z-index:4}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:7px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-size:11.5px;font-weight:700;color:var(--dim);background:#0c1519;border:1px solid var(--line);
+    border-radius:8px;padding:6px 9px;transition:.14s;white-space:nowrap}
+  .chip:hover{color:var(--mint);border-color:rgba(92,242,182,.45)}
+  .chip:active{transform:scale(.97)}
+  .inrow{display:flex;align-items:center;gap:8px;background:#081013;border:1px solid var(--line2);border-radius:11px;padding:7px 9px;
+    transition:border-color .15s}
+  .inrow:focus-within{border-color:rgba(92,242,182,.55);box-shadow:0 0 0 3px rgba(92,242,182,.07)}
+  .ps1{color:var(--mint);font-weight:700;font-size:12.5px;white-space:nowrap}
+  #inp{flex:1;min-width:0;background:none;border:0;outline:none;color:var(--txt);font-family:var(--mono);font-size:13.5px;padding:2px 0}
+  #inp::placeholder{color:#41565c}
+  .send{width:30px;height:30px;border-radius:8px;background:rgba(92,242,182,.12);border:1px solid rgba(92,242,182,.35);
+    color:var(--mint);display:grid;place-items:center;font-size:13px;flex:0 0 auto}
+  .send:disabled{opacity:.4}
+  .hintbar{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--dim2);margin-top:6px}
+  .hintbar b{color:var(--dim)}
+
+  /* side panel (desktop) */
+  aside{display:none}
+  @media(min-width:1000px){
+    aside{display:block;flex:0 0 250px;border-left:1px solid var(--line);padding:14px 13px;overflow-y:auto;background:rgba(8,14,17,.5)}
+    .side-h{font-size:10px;letter-spacing:.1em;color:var(--dim2);text-transform:uppercase;margin:0 0 7px}
+    .side-h:not(:first-child){margin-top:18px}
+    .kv{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;padding:3px 0;color:var(--dim)}
+    .kv b{color:var(--txt);font-weight:600;text-align:right;word-break:break-all}
+    .kv b.ok{color:var(--mint)} .kv b.warn{color:var(--amber)} .kv b.bad{color:var(--red)}
+    .sidecmd{display:block;width:100%;text-align:left;font-size:11.5px;color:var(--dim);padding:3px 0}
+    .sidecmd:hover{color:var(--mint)}
+    .sidecmd span{color:var(--cyan)}
+  }
+  @media(max-width:520px){
+    body{font-size:13px}
+    .screen{padding:12px 10px 14px}
+    table{min-width:100%;font-size:11.5px}
+    th,td{white-space:normal;overflow-wrap:anywhere;padding:5px 7px}
+    .title span.long{display:none}
+  }
+</style>
+</head>
+<body>
+<script>
+/* 진단용: 이 페이지에서 난 JS 오류를 html[data-js-error] 에 남긴다(화면에는 안 보임). */
+window.addEventListener('error', function(e){ var h=document.documentElement; h.dataset.jsError=(h.dataset.jsError||'')+' | '+(e.message||'error'); });
+window.addEventListener('unhandledrejection', function(e){ var h=document.documentElement; h.dataset.jsError=(h.dataset.jsError||'')+' | reject:'+((e.reason&&e.reason.message)||e.reason); });
+</script>
+
+<div class="app">
+  <header>
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div class="title"><span class="dot off" id="live-dot"></span><b>ai-terminal</b><span class="long">· 무료 AI 통합 터미널</span></div>
+    <div class="spacer"></div>
+    <span class="cool" id="cool">⏳ 0s</span>
+    <button class="topbtn" id="btn-help">/help</button>
+    <a class="topbtn" href="/">← hub</a>
+  </header>
+
+  <main>
+    <div class="screen" id="screen" role="log" aria-live="polite"></div>
+    <aside>
+      <p class="side-h">backend</p>
+      <div class="kv"><span>text</span><b id="kv-text">probe…</b></div>
+      <div class="kv"><span>image</span><b id="kv-img">probe…</b></div>
+      <div class="kv"><span>model</span><b id="kv-model">—</b></div>
+      <div class="kv"><span>한도</span><b id="kv-limit">—</b></div>
+      <p class="side-h">free catalogs</p>
+      <div class="kv"><span>무료 모델</span><b id="kv-models">—</b></div>
+      <div class="kv"><span>실시간 keyless</span><b id="kv-live">—</b></div>
+      <div class="kv"><span>딜</span><b id="kv-deals">—</b></div>
+      <div class="kv"><span>D1 기록</span><b id="kv-d1">—</b></div>
+      <p class="side-h">commands</p>
+      <button class="sidecmd" data-cmd="/ask "><span>/ask</span> 질문·대화</button>
+      <button class="sidecmd" data-cmd="/img "><span>/img</span> 이미지 생성</button>
+      <button class="sidecmd" data-cmd="/sum "><span>/sum</span> 3줄 요약</button>
+      <button class="sidecmd" data-cmd="/tr "><span>/tr</span> 번역</button>
+      <button class="sidecmd" data-cmd="/code "><span>/code</span> 코드 디버깅</button>
+      <button class="sidecmd" data-cmd="/models "><span>/models</span> 무료 모델</button>
+      <button class="sidecmd" data-cmd="/3d"><span>/3d</span> 3D·이미지</button>
+      <button class="sidecmd" data-cmd="/deals"><span>/deals</span> 무료 딜</button>
+      <button class="sidecmd" data-cmd="/status"><span>/status</span> 상태 점검</button>
+      <p class="side-h">note</p>
+      <div class="kv" style="display:block;color:var(--dim2);font-size:10.5px;line-height:1.6">
+        키·카드·회원가입 없이 브라우저에서 직접 호출합니다. 이미지는 IP당 45초에 1장, 텍스트는 연속 호출이 되다가 한도에 걸리면 402로 알려줍니다.
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="chips" id="chips"></div>
+    <div class="inrow">
+      <span class="ps1">❯</span>
+      <input id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="/ask 오늘 뭐 먹지?  ·  그냥 입력하면 /ask" />
+      <button class="send" id="send" aria-label="실행">↵</button>
+    </div>
+    <div class="hintbar"><span>↑↓ 히스토리 · Tab 자동완성</span><span><b id="hint-model">free</b> · key 0</span></div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+  var screenEl = $("screen"), inp = $("inp"), sendBtn = $("send"), chipsEl = $("chips");
+  var LS = "aiterm:v1";
+  var COOLDOWN_MS = 45000;
+
+  var S = {
+    busy:false, cool:{text:0, img:0}, hist:[], hIdx:-1,
+    data:{models:[], deals:[], live:null, meta:null},
+    booted:false, lastImg:null, pendingRetry:null
+  };
+
+  var CMDS = [
+    {c:"/ask",   d:"질문·대화",           ex:"/ask 광주에서 무료로 갈 만한 곳"},
+    {c:"/img",   d:"이미지 생성",         ex:"/img --ratio 9:16 --style cyber 밤의 네온 도시"},
+    {c:"/sum",   d:"3줄 요약",            ex:"/sum <글 붙여넣기>"},
+    {c:"/tr",    d:"번역(한↔영)",          ex:"/tr en 오늘 너무 피곤해"},
+    {c:"/code",  d:"코드 디버깅·설명",      ex:"/code <코드 또는 에러>"},
+    {c:"/models",d:"무료 모델 검색",        ex:"/models qwen"},
+    {c:"/3d",    d:"3D·이미지 도구",        ex:"/3d"},
+    {c:"/deals", d:"무료 프로모션",         ex:"/deals"},
+    {c:"/status",d:"백엔드·한도 점검",      ex:"/status"},
+    {c:"/help",  d:"명령어 목록",           ex:"/help"},
+    {c:"/clear", d:"화면 지우기",           ex:"/clear"}
+  ];
+
+  var STYLES = {
+    cyber:"cyberpunk neon city, rain, neon signs, cinematic, high detail",
+    pixel:"pixel art, 16-bit, crisp pixels, limited palette",
+    water:"soft watercolor painting, paper texture, gentle light",
+    icon:"flat vector icon, minimal, centered, clean background, no text",
+    photo:"professional photograph, natural light, 50mm, shallow depth of field",
+    anime:"anime illustration, clean line art, vibrant colors",
+    "3d":"3d render, octane, soft studio lighting, clay material",
+    dark:"dark moody atmosphere, dramatic lighting, high contrast"
+  };
+  var RATIOS = { "1:1":[768,768], "9:16":[576,1024], "16:9":[1024,576], "4:5":[688,856], "2:3":[624,936], "3:2":[936,624] };
+
+  /* 한→영 단어장 (키워드 매핑 · AI 호출 없이 즉시) */
+  var KO_EN = [
+    ["고양이","cat"],["강아지","dog"],["개","dog"],["토끼","rabbit"],["새","bird"],["드래곤","dragon"],["로봇","robot"],
+    ["우주","outer space"],["은하","galaxy"],["별","stars"],["달","moon"],["태양","sun"],["구름","clouds"],["비","rain"],
+    ["눈","snow"],["바다","ocean"],["파도","waves"],["산","mountain"],["숲","forest"],["나무","tree"],["꽃","flowers"],
+    ["사막","desert"],["호수","lake"],["강","river"],["섬","island"],["도시","city"],["마을","village"],["집","house"],
+    ["방","room"],["카페","cafe"],["학교","school"],["도서관","library"],["지하철","subway"],["기차","train"],["자동차","car"],
+    ["자전거","bicycle"],["우주선","spaceship"],["비행기","airplane"],["성","castle"],["사원","temple"],["다리","bridge"],
+    ["시장","market"],["거리","street"],["골목","alley"],["노을","sunset"],["일출","sunrise"],["밤","at night"],["아침","morning"],
+    ["저녁","evening"],["겨울","winter"],["여름","summer"],["봄","spring"],["가을","autumn"],["안개","mist"],["불","fire"],
+    ["빛","glowing light"],["네온","neon"],["사이버펑크","cyberpunk"],["픽셀","pixel art"],["수채화","watercolor"],
+    ["아이콘","icon"],["배경화면","wallpaper"],["일러스트","illustration"],["만화","cartoon"],["애니","anime"],["3d","3d render"],
+    ["미니멀","minimal"],["귀여운","cute"],["무서운","creepy"],["신비한","mystical"],["평화로운","peaceful"],["화려한","vibrant"],
+    ["어두운","dark"],["밝은","bright"],["따뜻한","warm"],["차가운","cold"],["커피","coffee"],["책","books"],["음악","music"],
+    ["게임","video game art"],["우주비행사","astronaut"],["여우","fox"],["곰","bear"],["판다","panda"],["펭귄","penguin"],
+    ["물고기","fish"],["나비","butterfly"],["불꽃","fireworks"],["번개","lightning"],["폭풍","storm"],["무지개","rainbow"],
+    ["컴퓨터","computer"],["코드","code"],["해커","hacker"],["로켓","rocket"],["행성","planet"],["토성","saturn"],["지구","earth"],
+    ["성당","cathedral"],["탑","tower"],["문","door"],["창문","window"],["계단","stairs"],["정원","garden"],["연못","pond"],
+    ["하늘","sky"],["노란","yellow"],["파란","blue"],["빨간","red"],["초록","green"],["보라","purple"],["검은","black"],["하얀","white"]
+  ];
+
+  /* 긴 단어 우선 치환 (예: "강아지"가 "강"보다 먼저) */
+  KO_EN.sort(function(a, b){ return b[0].length - a[0].length; });
+
+  var HELP_ROWS = [
+    ["/ask <질문>", "무료 텍스트 AI와 대화 (스트리밍)"],
+    ["/img [옵션] <설명>", "이미지 생성 · --ratio 1:1|9:16|16:9|4:5|2:3|3:2 · --style cyber|pixel|water|icon|photo|anime|3d|dark · --ai(프롬프트 AI 다듬기)"],
+    ["/sum <글>", "긴 글을 정확히 3줄로 요약"],
+    ["/tr [en|ko] <텍스트>", "한↔영 자연스러운 번역 (방향 자동)"],
+    ["/code <코드|에러>", "버그 원인·수정 코드·설명"],
+    ["/models [검색어]", "무료 모델 카탈로그 실시간 검색 (제공사·컨텍스트·keyless)"],
+    ["/3d", "이미지·3D 출력이 되는 무료 모델과 툴"],
+    ["/deals", "무료 프로모션·체험 크레딧 실시간 목록"],
+    ["/status", "백엔드 응답·남은 한도·카탈로그 점검"],
+    ["/help", "이 목록"], ["/clear", "화면 지우기"]
+  ];
+
+  /* ------------------------------------------------------------ 저장소 */
+  function loadStore(){
+    try{ var o = JSON.parse(localStorage.getItem(LS) || "{}"); return o && typeof o === "object" ? o : {}; }
+    catch(e){ return {}; }
+  }
+  function saveStore(patch){
+    try{ var o = loadStore(); for(var k in patch) o[k] = patch[k]; localStorage.setItem(LS, JSON.stringify(o)); }catch(e){}
+  }
+
+  /* ------------------------------------------------------------ 유틸 */
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function el(tag, cls, text){ var n = document.createElement(tag); if(cls) n.className = cls; if(text!=null) n.textContent = text; return n; }
+  function scrollDown(){ screenEl.scrollTop = screenEl.scrollHeight; }
+  function nowClock(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  }
+
+  function line(kind, textOrNode, opts){
+    var n = document.createElement("div");
+    n.className = "line " + (kind||"out");
+    if(textOrNode instanceof Node){ n.appendChild(textOrNode); }
+    else if(opts && opts.html){ n.innerHTML = textOrNode; }
+    else { n.textContent = textOrNode; }
+    if(opts && opts.pfx){
+      var p = el("span","pfx",opts.pfx); p.style.marginRight = "6px"; n.insertBefore(p, n.firstChild);
+    }
+    screenEl.appendChild(n);
+    scrollDown();
+    return n;
+  }
+  function sys(text){ return line("sys", text); }
+  function err(text, detail){
+    var n = line("err", text);
+    if(detail){
+      var d = el("div","mut", detail); d.style.marginTop = "3px"; d.style.color = "var(--dim2)";
+      n.appendChild(d);
+    }
+    return n;
+  }
+
+  function addCopy(container, getText, label){
+    var wrap = el("div","codewrap");
+    var btn = el("button","copybtn", label || "복사");
+    btn.addEventListener("click", function(){
+      var t = typeof getText === "function" ? getText() : getText;
+      copyText(t).then(function(ok){
+        btn.textContent = ok ? "복사됨" : "실패";
+        btn.classList.toggle("done", ok);
+        setTimeout(function(){ btn.textContent = label || "복사"; btn.classList.remove("done"); }, 1400);
+      });
+    });
+    wrap.appendChild(btn);
+    return wrap;
+  }
+
+  function copyText(t){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(t).then(function(){ return true; }).catch(function(){ return legacyCopy(t); });
+    }
+    return Promise.resolve(legacyCopy(t));
+  }
+  function legacyCopy(t){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){ return false; }
+  }
+
+  /* 마크다운 최소 렌더: 코드펜스, 인라인코드, 굵게, 링크, 목록 */
+  function renderRich(text){
+    var frag = document.createDocumentFragment();
+    var parts = String(text).split(/```/);
+    parts.forEach(function(part, i){
+      if(i % 2 === 1){
+        var firstNl = part.indexOf("\n");
+        var lang = firstNl > -1 ? part.slice(0, firstNl).trim() : "";
+        var codeText = firstNl > -1 ? part.slice(firstNl+1) : part;
+        var wrap = el("div","codewrap");
+        var pre = el("pre");
+        var code = el("code", null, codeText.replace(/\s+$/,""));
+        if(lang) code.setAttribute("data-lang", lang);
+        pre.appendChild(code); wrap.appendChild(pre);
+        var btn = el("button","copybtn","복사");
+        btn.addEventListener("click", function(){
+          copyText(codeText.trim()).then(function(ok){
+            btn.textContent = ok ? "복사됨" : "실패"; btn.classList.toggle("done", ok);
+            setTimeout(function(){ btn.textContent = "복사"; btn.classList.remove("done"); }, 1400);
+          });
+        });
+        wrap.appendChild(btn);
+        frag.appendChild(wrap);
+      }else{
+        var sec = el("div");
+        sec.innerHTML = mdInline(part);
+        frag.appendChild(sec);
+      }
+    });
+    return frag;
+  }
+
+  function mdInline(t){
+    var s = esc(t);
+    s = s.replace(/`([^`\n]+)`/g, '<code class="inline">$1</code>');
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>");
+    s = s.replace(/(^|\n)### (.+)/g, "$1<b>$2</b>");
+    s = s.replace(/(^|\n)## (.+)/g, "$1<b>$2</b>");
+    s = s.replace(/(^|\n)# (.+)/g, "$1<b>$2</b>");
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    s = s.replace(/(^|\n)[-*] /g, "$1· ");
+    return s;
+  }
+
+  function table(headers, rows, opts){
+    var wrap = el("div","tablewrap");
+    var t = el("table");
+    var thead = el("thead"), tr = el("tr");
+    headers.forEach(function(h){ tr.appendChild(el("th", null, h)); });
+    thead.appendChild(tr); t.appendChild(thead);
+    var tb = el("tbody");
+    rows.forEach(function(r){
+      var row = el("tr");
+      r.forEach(function(c, i){
+        var td = el("td", i === 0 ? "mono" : null);
+        if(c && typeof c === "object"){
+          if(c.html){ td.innerHTML = c.html; }
+          else if(c.node){ td.appendChild(c.node); }
+          else { td.textContent = c.text || ""; if(c.cls) td.className = c.cls; }
+        }else{
+          td.textContent = c == null ? "" : String(c);
+        }
+        row.appendChild(td);
+      });
+      tb.appendChild(row);
+    });
+    t.appendChild(tb); wrap.appendChild(t);
+    if(opts && opts.max){
+      var shown = Math.min(opts.max, rows.length);
+      if(rows.length > shown){
+        var more = el("button","ibtn","더 보기 +" + (rows.length - shown));
+        more.style.margin = "6px 8px 8px";
+        more.addEventListener("click", function(){
+          var rest = rows.slice(shown);
+          rest.forEach(function(r){
+            var row = el("tr");
+            r.forEach(function(c, i){
+              var td = el("td", i === 0 ? "mono" : null);
+              if(c && typeof c === "object"){
+                if(c.html) td.innerHTML = c.html;
+                else if(c.node) td.appendChild(c.node);
+                else { td.textContent = c.text || ""; if(c.cls) td.className = c.cls; }
+              }else{ td.textContent = c == null ? "" : String(c); }
+              row.appendChild(td);
+            });
+            tb.appendChild(row);
+          });
+          more.remove();
+        });
+        wrap.appendChild(more);
+      }
+    }
+    return wrap;
+  }
+
+  /* ------------------------------------------------------------ 한도 */
+  function setCooldown(kind, ms){
+    var k = (kind === "img") ? "img" : "text";
+    S.cool[k] = Date.now() + ms;
+    var patch = {}; patch["cool_" + k] = S.cool[k]; saveStore(patch);
+    tickCool();
+  }
+  function remainSec(kind){
+    var k = (kind === "img") ? "img" : "text";
+    return Math.max(0, Math.ceil((S.cool[k] - Date.now())/1000));
+  }
+  function tickCool(){
+    var ti = remainSec("img"), tx = remainSec("text"), c = $("cool");
+    if(ti > 0){ c.textContent = "🖼 " + ti + "s"; c.classList.add("on"); }
+    else if(tx > 0){ c.textContent = "✎ " + tx + "s"; c.classList.add("on"); }
+    else{ c.classList.remove("on"); }
+    document.documentElement.setAttribute("data-cool-img", String(ti));
+    document.documentElement.setAttribute("data-cool-text", String(tx));
+  }
+  setInterval(tickCool, 500);
+
+  function parseRetry(body, fallbackSec){
+    var sec = fallbackSec || 45;
+    try{
+      var j = JSON.parse(body);
+      var msg = (j.error && j.error.message) || j.message || "";
+      var m = /retry after (\d+)\s*s/i.exec(msg) || /(\d+)\s*seconds?/i.exec(msg);
+      if(m) sec = Math.min(120, Math.max(1, parseInt(m[1], 10)));
+      return {sec:sec, msg:msg};
+    }catch(e){ return {sec:sec, msg:""}; }
+  }
+
+  /* ------------------------------------------------------------ API */
+  var TEXT_URL = "https://text.pollinations.ai/openai?referrer=buriburiyj.github.io";
+
+  function apiError(status, body){
+    var e = new Error("http " + status);
+    e.status = status; e.body = body;
+    return e;
+  }
+
+  function streamChat(messages, onDelta, onReasoning, opts){
+    opts = opts || {};
+    var ctrl = new AbortController();
+    var timer = setTimeout(function(){ try{ ctrl.abort(); }catch(e){} }, opts.timeout || 120000);
+    return fetch(TEXT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ model:"openai", messages:messages, stream:true, max_tokens:opts.maxTokens || 900 }),
+      signal: ctrl.signal
+    }).then(function(res){
+      if(!res.ok){
+        return res.text().then(function(b){ throw apiError(res.status, b); });
+      }
+      var ctype = res.headers.get("content-type") || "";
+      if(ctype.indexOf("event-stream") === -1 || !res.body || !res.body.getReader){
+        return res.json().then(function(j){
+          var t = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+          if(t && onDelta) onDelta(t);
+          return t;
+        });
+      }
+      var reader = res.body.getReader(), dec = new TextDecoder("utf-8"), buf = "", full = "";
+      function pump(){
+        return reader.read().then(function(r){
+          if(r.done) return full;
+          buf += dec.decode(r.value, {stream:true});
+          var idx;
+          while((idx = buf.indexOf("\n")) >= 0){
+            var ln = buf.slice(0, idx).trim();
+            buf = buf.slice(idx + 1);
+            if(ln.indexOf("data:") !== 0) continue;
+            var payload = ln.slice(5).trim();
+            if(!payload || payload === "[DONE]") continue;
+            try{
+              var j = JSON.parse(payload);
+              var d = j.choices && j.choices[0] && j.choices[0].delta;
+              if(!d) continue;
+              if(d.reasoning && onReasoning) onReasoning(d.reasoning);
+              if(d.content){ full += d.content; if(onDelta) onDelta(d.content); }
+            }catch(e){}
+          }
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function(v){ clearTimeout(timer); return v; }, function(e){ clearTimeout(timer); throw e; });
+  }
+
+  /* GET 폴백 (스트리밍이 막혔을 때) */
+  function getText(prompt, opts){
+    var url = "https://text.pollinations.ai/" + encodeURIComponent(String(prompt).slice(0, 3500)) +
+              "?model=openai&referrer=buriburiyj.github.io";
+    return fetch(url, {method:"GET"}).then(function(res){
+      if(!res.ok) return res.text().then(function(b){ throw apiError(res.status, b); });
+      return res.text();
+    });
+  }
+
+  var SYS = {
+    ask: "너는 사용자의 개인 AI 조수다. 한국어로 짧고 정확하게 답한다. 확인하지 않은 사실은 추측하지 말고 '확인 못 함'이라고 밝힌다. 필요하면 표나 번호 목록을 쓴다. 서론·인사말은 생략한다.",
+    sum: "너는 요약 도우미다. 사용자가 준 글의 핵심만 정확히 3줄로 요약한다. 각 줄은 20자 안팎의 짧은 문장. 원문에 없는 내용은 넣지 않는다. 다른 말은 하지 않는다.",
+    tr:  "너는 번역가다. 의역을 곁들여 자연스럽게 번역한다. 번역문만 출력하고 설명은 붙이지 않는다.",
+    code:"너는 시니어 개발자다. 한국어로 답한다. (1) 원인 (2) 수정 코드 (3) 확인 방법 순서로 짧게 정리한다. 코드는 실행 가능한 완성형으로 주고 생략(...)을 쓰지 않는다."
+  };
+
+  function starters(){
+    var box = el("div","starters");
+    var items = [
+      ["/ask", "무료 AI로 뭐든 물어보기", "/ask 무료 AI로 할 수 있는 일 3가지 알려줘"],
+      ["/img", "비율·스타일 지정해 그림", "/img --ratio 9:16 --style cyber 밤의 네온 골목"],
+      ["/sum", "긴 글 3줄 요약", "/sum "],
+      ["/models", "무료 모델 107개 검색", "/models keyless"]
+    ];
+    items.forEach(function(it){
+      var b = el("button","starter");
+      b.appendChild(el("span","k",it[0]));
+      b.appendChild(el("span","v",it[1]));
+      b.addEventListener("click", function(){
+        if(/\/$/.test(it[2])){ inp.value = it[2]; inp.focus(); placeCaretEnd(); }
+        else run(it[2]);
+      });
+      box.appendChild(b);
+    });
+    screenEl.appendChild(box);
+    scrollDown();
+  }
+
+  /* ------------------------------------------------------------ 부트 */
+  function boot(){
+    var t = nowClock();
+    line("mut", "v1.0 · " + t + " · key 0 · card 0 · signup 0", {pfx:"●"});
+    var loading = sys("probe  무료 백엔드 확인 중…");
+    var done = 0;
+
+    // 1) 텍스트 모델 목록 (한도 소모 없음)
+    var pModels = fetch("https://text.pollinations.ai/models", {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(list){
+        var m = (list && list[0]) || {};
+        S.data.tModels = list || [];
+        setKV("kv-text","200 ok","ok"); setKV("kv-model", m.name || "openai", "");
+        if(m.tier) setKV("kv-limit", "45s / IP", "warn");
+        $("live-dot").classList.remove("off");
+        return list;
+      }).catch(function(){
+        setKV("kv-text","연결 실패","bad"); return null;
+      });
+
+    // 2) 무료 카탈로그 (같은 사이트 데이터)
+    var pFree = fetch("/free-ai/data.json?ts=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(d){
+        S.data.models = (d.live_models || []).slice();
+        setKV("kv-models", String((d.totals && d.totals.free_models) || S.data.models.length), "ok");
+        var keyless = (d.totals && d.totals.keyless_models);
+        if(keyless != null) setKV("kv-live", String(keyless), "");
+        return d;
+      }).catch(function(){ return null; });
+
+    var pDeals = fetch("/free-deals/data.json?ts=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(d){ S.data.deals = d.deals || []; setKV("kv-deals", String((d.totals && d.totals.deals) || S.data.deals.length), ""); return d; })
+      .catch(function(){ return null; });
+
+    var pLive = fetch("/free-deals/live.json?ts=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(d){
+        S.data.live = d;
+        var n = d.totals && d.totals.free_models;
+        if(n) setKV("kv-live", String(n), "ok");
+        return d;
+      }).catch(function(){ return null; });
+
+    var pMeta = fetch("meta.json?ts=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(d){
+        S.data.meta = d;
+        var im = d.image || {};
+        if(im.status === 200){
+          setKV("kv-img","200 ok","ok");
+          if(im.model) setKV("kv-model", (d.text && d.text.model ? d.text.model : "openai") + " / " + im.model, "");
+        }else{ setKV("kv-img", im.status ? String(im.status) : "미확인", "warn"); }
+        setKV("kv-d1", (d.recorded_at || d.built_at || "").slice(0,16).replace("T"," "), "");
+        return d;
+      }).catch(function(){ setKV("kv-img","meta 없음","warn"); return null; });
+
+    Promise.all([pModels, pFree, pDeals, pLive, pMeta]).then(function(res){
+      loading.remove();
+      var models = S.data.models, deals = S.data.deals, live = S.data.live;
+      var liveFree = live && live.totals ? live.totals.free_models : null;
+      var im = S.data.meta && S.data.meta.image;
+      sys("text    " + (res[0] ? "200 ok · " + ((res[0][0] && res[0][0].name) || "openai-fast") : "연결 실패"));
+      sys("image   " + (im && im.status === 200 ? "200 ok · " + im.model : "미확인 (meta.json)"));
+      sys("data    모델 " + models.length + " · keyless " + (liveFree || "-") + " · 딜 " + deals.length);
+      sys("limit   이미지 45초 1장 · 텍스트는 걸리면 402");
+      starters();
+      var hint = line("mut", "");
+      hint.style.marginTop = "10px";
+      hint.innerHTML = "<code class=\"inline\">/help</code> 전체 명령 · ↑↓ 히스토리 · Tab 자동완성 · 결과는 [복사]로 바로";
+      S.booted = true;
+      document.documentElement.setAttribute("data-ready","1");
+      inp.focus();
+    });
+  }
+  function setKV(id, text, cls){
+    var n = $(id); if(!n) return; n.textContent = text;
+    n.className = cls || "";
+  }
+
+  /* ------------------------------------------------------------ 명령 */
+  function chips(){
+    ["/ask","/img","/sum","/tr","/code","/models","/3d","/deals","/status","/help","/clear"].forEach(function(c){
+      var b = el("button","chip",c);
+      b.addEventListener("click", function(){
+        if(c === "/3d" || c === "/deals" || c === "/status" || c === "/help" || c === "/clear"){ run(c); return; }
+        inp.value = c + " "; inp.focus(); placeCaretEnd();
+      });
+      chipsEl.appendChild(b);
+    });
+  }
+  function placeCaretEnd(){ try{ var v = inp.value; inp.setSelectionRange(v.length, v.length); }catch(e){} }
+
+  function parseCommand(raw){
+    var s = String(raw).trim();
+    if(!s) return null;
+    var m = /^\/([a-z0-9가-힣]+)\s*([\s\S]*)$/i.exec(s);
+    if(!m) return {cmd:"/ask", args:s};
+    return {cmd:"/" + m[1].toLowerCase(), args:m[2].trim()};
+  }
+
+  function run(raw){
+    var p = parseCommand(raw);
+    if(!p) return;
+    // 터미널에 입력 표시
+    var echo = line("user", "", {pfx:"yune@ai:"});
+    echo.appendChild(document.createTextNode(" " + raw));
+
+    pushHist(raw);
+    var cmd = p.cmd, args = p.args;
+
+    switch(cmd){
+      case "/help": return cmdHelp();
+      case "/clear": screenEl.innerHTML = ""; line("mut","화면을 지웠습니다. /help"); return;
+      case "/status": return cmdStatus();
+      case "/models": return cmdModels(args);
+      case "/3d": return cmd3d(args);
+      case "/deals": return cmdDeals(args);
+      case "/img": return cmdImg(args);
+      case "/ask": return cmdAsk(args || "너는 무엇을 할 수 있어? 한 줄로.");
+      case "/sum": return cmdSum(args);
+      case "/tr": return cmdTr(args);
+      case "/code": return cmdCode(args);
+      default:
+        return err("모르는 명령이에요: " + cmd, "/help 로 목록을 볼 수 있어요. 슬래시 없이 입력하면 /ask 로 처리됩니다.");
+    }
+  }
+
+  function pushHist(raw){
+    var h = loadStore().hist || [];
+    if(h[h.length-1] !== raw){ h.push(raw); if(h.length > 60) h = h.slice(-60); saveStore({hist:h}); }
+    S.hist = h; S.hIdx = h.length;
+  }
+
+  function cmdHelp(){
+    line("head", "명령어");
+    var rows = HELP_ROWS.map(function(r){ return [r[0], {text:r[1], cls:"wrap"}]; });
+    screenEl.appendChild(table(["명령", "설명"], rows));
+    line("mut", "예시");
+    CMDS.slice(0,6).forEach(function(c){ line("mut", "  " + c.ex); });
+    line("mut", "↑ / ↓ 로 이전 명령, Tab 으로 명령 자동완성. 결과 코드 블록은 우측 상단 [복사].");
+    return null;
+  }
+
+  function cmdStatus(){
+    var box = line("sys","점검 중…");
+    var out = [];
+    var t0 = Date.now();
+    var p1 = fetch("https://text.pollinations.ai/models", {cache:"no-store"})
+      .then(function(r){ return r.json().then(function(j){ out.push(["text · models", String(r.status), (Date.now()-t0)+"ms", r.ok ? "ok" : "bad"]); }); })
+      .catch(function(){ out.push(["text · models", "ERR", "-", "bad"]); });
+
+    var p2 = fetch("meta.json?ts=" + Date.now(), {cache:"no-store"})
+      .then(function(r){ return r.json().then(function(j){
+        var im = j.image || {};
+        out.push(["image · " + (im.model || "?"), String(im.status || "?"), (im.ms != null ? im.ms + "s" : "-"), im.status === 200 ? "ok" : "warn"]);
+        out.push(["image · verified", (j.verified_at || "?").replace("KST","").trim(), "-", ""]);
+      }); })
+      .catch(function(){ out.push(["image · meta", "ERR", "-", "bad"]); });
+
+    Promise.all([p1,p2]).then(function(){
+      box.remove();
+      line("head","상태");
+      var rows = out.map(function(r){
+        var cls = r[3] === "ok" ? "ok" : (r[3] === "bad" ? "bad" : (r[3] === "warn" ? "warn" : ""));
+        var lat = (r[2] && r[2] !== "-") ? "  (" + r[2] + ")" : "";
+        return [r[0], {text:String(r[1]) + lat, cls:"mono"}, {html:'<span class="pill ' + cls + '">' + esc(r[3] || "-") + "</span>"}];
+      });
+      screenEl.appendChild(table(["항목","결과","상태"], rows));
+      var r = remainSec("img");
+      line("sys", "이미지 한도 " + (r > 0 ? r + "초 대기" : "지금 호출 가능") + " · 무료 모델 " + S.data.models.length + "개 · 딜 " + S.data.deals.length + "건");
+      line("mut", "한도는 IP(네트워크) 기준이라 같은 Wi-Fi의 다른 기기와 공유됩니다. 공식 문서 수치는 확인 못 함 — 응답 본문의 FREE_LIMIT 문구를 근거로 표시합니다.");
+    });
+  }
+
+  /* ---------------- /models */
+  function cmdModels(q){
+    if(!S.data.models.length){
+      var w = line("sys","카탈로그를 아직 못 불러왔어요. 잠시 후 다시 시도합니다…");
+      fetch("/free-ai/data.json?ts=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+        S.data.models = d.live_models || []; w.remove(); cmdModels(q);
+      }).catch(function(){ w.remove(); err("free-ai/data.json 을 불러오지 못했어요."); });
+      return;
+    }
+    var list = S.data.models.slice();
+    var query = (q || "").trim().toLowerCase();
+    if(query === "keyless" || query === "무키"){
+      list = list.filter(function(m){ return !!m.keyless; });
+    }else if(query){
+      list = list.filter(function(m){
+        return (m.id + " " + (m.name||"") + " " + (m.pn||"") + " " + (m.tags||[]).join(" ")).toLowerCase().indexOf(query) >= 0;
+      });
+    }
+    var total = S.data.models.length;
+    var keyless = list.filter(function(m){ return m.keyless; }).length;
+    line("head", "무료 모델 " + list.length + " / " + total + (query ? "  ·  검색 \"" + query + "\"" : ""));
+    var rows = list.slice(0, 60).map(function(m){
+      var tags = (m.tags || []).slice(0,2).join("·");
+      var ctx = m.ctx ? (m.ctx >= 1000000 ? (Math.round(m.ctx/100000)/10) + "M" : Math.round(m.ctx/1000) + "k") : "-";
+      var kl = m.keyless ? '<span class="pill k">keyless</span>' : '<span class="pill">키 필요</span>';
+      return [m.id, {text:m.pn || m.p || "-", cls:"wrap"}, ctx, {text:tags, cls:"wrap"}, {html:kl}];
+    });
+    screenEl.appendChild(table(["model id","제공사","ctx","태그","키"], rows));
+    line("mut", list.length + "개 중 " + Math.min(60, list.length) + "개 표시 · keyless " + keyless + "개 · 데이터: free-ai/data.json (사이트 자체 실측 카탈로그)");
+    line("mut", "더 좁히려면: /models <검색어>   예) /models qwen · /models vision · /models keyless");
+    return null;
+  }
+
+  /* ---------------- /3d */
+  function cmd3d(){
+    line("head","3D · 이미지 무료 도구");
+    line("out","브라우저에서 키 없이 바로 이미지를 만드는 건 아래 한 곳이 실측 200입니다. 3D 출력 모델은 무료 카탈로그에서 골라 보여드려요.");
+    var rows = [
+      ["image.pollinations.ai", {text:"이미지 생성", cls:"wrap"}, {html:'<span class="pill ok">200 실측</span>'}, {html:'<code class="inline">/img</code> 로 바로 사용'}],
+      ["/neon-core/", {text:"3D 데일리 시드 게임", cls:"wrap"}, {html:'<span class="pill">3D 웹</span>'}, {html:'<a href="/neon-core/">열기 →</a>'}],
+      ["/free-ai/", {text:"무료 모델 전체 지도", cls:"wrap"}, {html:'<span class="pill">실시간</span>'}, {html:'<a href="/free-ai/">열기 →</a>'}]
+    ];
+    screenEl.appendChild(table(["이름","무엇","상태","열기"], rows));
+
+    var m3 = S.data.models.filter(function(m){
+      var out = (m.out || []).join(" ").toLowerCase();
+      var tags = (m.tags || []).join(" ");
+      return /image|video|3d/i.test(out) || /이미지|비디오|3D/i.test(tags);
+    });
+    line("head","이미지·비디오 출력이 되는 모델 (" + m3.length + ")");
+    if(!m3.length){
+      line("mut","카탈로그에 image/video 출력 모델이 없어요. /models 로 전체를 볼 수 있습니다.");
+    }else{
+      var rows2 = m3.slice(0, 25).map(function(m){
+        var out = (m.out || []).join(",");
+        return [m.id, {text:m.pn || m.p, cls:"wrap"}, {text:out || "-", cls:"wrap"}, {html: m.keyless ? '<span class="pill k">keyless</span>' : '<span class="pill">키 필요</span>'}];
+      });
+      screenEl.appendChild(table(["model","제공사","출력","키"], rows2));
+    }
+    line("mut","3D 생성 전용 무료 API는 이 사이트 카탈로그에 아직 없습니다(확인 못 함). 이미지로 뽑아 삼면도를 만드는 방법: /img --style 3d ...");
+    return null;
+  }
+
+  /* ---------------- /deals */
+  function cmdDeals(){
+    if(!S.data.deals.length){
+      var w = line("sys","딜 목록을 불러오는 중…");
+      fetch("/free-deals/data.json?ts=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+        S.data.deals = d.deals || []; w.remove(); cmdDeals();
+      }).catch(function(){ w.remove(); err("free-deals/data.json 을 불러오지 못했어요."); });
+      return;
+    }
+    var d = S.data.deals.slice();
+    line("head","무료 프로모션 " + d.length + "건");
+    var rows = d.slice(0, 30).map(function(x){
+      var tier = x.tier === "now" ? '<span class="pill ok">지금</span>' : x.tier === "verify" ? '<span class="pill warn">인증</span>' : x.tier === "ended" ? '<span class="pill">종료</span>' : '<span class="pill">주의</span>';
+      return [
+        {html:'<a href="' + esc(x.url || "#") + '" target="_blank" rel="noopener">' + esc(x.title || x.id) + "</a>", cls:"wrap"},
+        {text:x.vendor || "-", cls:"wrap"},
+        {html:tier},
+        {text:x.value || "-", cls:"wrap"}
+      ];
+    });
+    screenEl.appendChild(table(["제목","제공","구분","혜택"], rows));
+    line("mut","출처: free-deals/data.json · 카드 필요 여부는 항목마다 달라요. 자세한 조건은 /free-deals/ 에서.");
+    return null;
+  }
+
+  /* ---------------- 공통: 한도/에러 처리 */
+  function guard(kind){
+    if(kind === "img"){
+      var r = remainSec("img");
+      if(r > 0){
+        err("이미지는 아직 " + r + "초 남았어요. 익명 무료 이미지 한도는 IP당 45초에 1장입니다.",
+            "텍스트(/ask·/sum·/tr·/code)는 별도 한도라 지금도 쓸 수 있어요. ↑ 키로 방금 명령을 불러올 수 있습니다.");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function handleApiFailure(e, kind){
+    var k = kind === "img" ? "img" : "text";
+    if(e && e.name === "AbortError"){ err("응답이 너무 늦어 중단했어요.", "잠시 뒤 다시 시도해 주세요."); return; }
+    if(e && e.status === 402){
+      var info = parseRetry(e.body || "", 45);
+      setCooldown(k, info.sec * 1000);
+      err("무료 한도에 걸렸어요 (" + info.sec + "초 뒤 다시).", info.msg ? info.msg : "익명 IP당 45초에 1회 제한입니다.");
+      line("mut","· 잠시 뒤 같은 명령을 다시 실행하면 됩니다. 입력창에서 ↑ 를 누르면 방금 명령이 나와요.");
+      return;
+    }
+    if(e && e.status){
+      err("요청이 거부됐어요 (HTTP " + e.status + ").", String(e.body || "").slice(0, 200));
+      return;
+    }
+    err("네트워크 오류로 응답을 못 받았어요.", (e && e.message) || "");
+  }
+
+  function thinkLine(){
+    var n = el("div","line think");
+    n.innerHTML = '<span class="spinner"></span><span class="js-t">생각 중…</span>';
+    screenEl.appendChild(n); scrollDown();
+    return {
+      node:n,
+      reasoning:function(txt){
+        var t = n.querySelector(".js-t");
+        if(!t) return;
+        var s = String(txt).replace(/\s+/g," ").trim();
+        if(s) t.textContent = s.slice(-90);
+      },
+      text:function(){
+        var t = n.querySelector(".js-t");
+        if(t) t.textContent = "작성 중…";
+      },
+      done:function(){ n.remove(); }
+    };
+  }
+
+  function runAI(opts){
+    if(!guard()) return;
+    if(S.busy){ err("이전 요청이 아직 진행 중이에요."); return; }
+    S.busy = true; setBusy(true);
+    var t0 = Date.now();
+    var indicator = thinkLine();
+    var body = el("div","line out");
+    var rich = document.createElement("div");
+    body.appendChild(rich);
+    screenEl.appendChild(body); scrollDown();
+
+    var first = true, acc = "", box = null;
+    var messages = [{role:"system", content:opts.system}].concat(opts.messages);
+
+    streamChat(messages, function(delta){
+      if(first){
+        first = false; indicator.done();
+        box = document.createElement("div");
+        rich.appendChild(box);
+      }
+      acc += delta;
+      if(box){
+        box.innerHTML = mdInline(acc);
+        scrollDown();
+      }
+    }, function(r){ indicator.reasoning(r); }, {maxTokens:opts.maxTokens || 900})
+    .then(function(full){
+      var text = (full && full.length ? full : acc) || "";
+      if(!text.trim()){
+        indicator.done();
+        body.remove();
+        err("빈 응답이 왔어요. 같은 명령을 한 번 더 시도해 주세요.");
+        return;
+      }
+      indicator.done();
+      body.remove();
+      var out = el("div","line out");
+      out.appendChild(renderRich(text));
+      var meta = el("div","mut", "· " + ((Date.now()-t0)/1000).toFixed(1) + "s · free keyless · " + opts.label);
+      meta.style.marginTop = "2px"; meta.style.fontSize = "10.5px";
+      meta.style.color = "var(--dim2)";
+      var cp = el("button","ibtn","결과 복사");
+      cp.style.marginLeft = "6px"; cp.style.fontSize = "10px"; cp.style.padding = "2px 7px";
+      cp.addEventListener("click", function(){ copyText(text).then(function(ok){ cp.textContent = ok ? "복사됨" : "실패"; }); });
+      meta.appendChild(cp);
+      out.appendChild(meta);
+      screenEl.appendChild(out);
+      scrollDown();
+      S.busy = false; setBusy(false);
+    })
+    .catch(function(e){
+      indicator.done(); body.remove();
+      // GET 폴백
+      if(!(e && e.status === 402) && e && (e.status === 0 || !e.status)){
+        return getText(opts.system + "\n\n" + opts.messages.map(function(m){ return m.content; }).join("\n"), {})
+          .then(function(txt){
+            var out = el("div","line out");
+            out.appendChild(renderRich(txt));
+            screenEl.appendChild(out); scrollDown();
+          })
+          .catch(function(e2){ handleApiFailure(e2); })
+          .then(function(){ S.busy = false; setBusy(false); });
+      }
+      handleApiFailure(e);
+      S.busy = false; setBusy(false);
+    });
+  }
+
+  function setBusy(b){
+    sendBtn.disabled = b;
+    $("hint-model").textContent = b ? "generating…" : "free";
+  }
+
+  /* ---------------- /ask /sum /tr /code */
+  function cmdAsk(q){
+    if(!q) return err("무엇을 물어볼까요? 예) /ask 광주 봉선동 근처 무료로 공부할 곳");
+    runAI({ system:SYS.ask, messages:[{role:"user", content:q}], label:"/ask", maxTokens:700 });
+    return null;
+  }
+  function cmdSum(text){
+    if(!text){ return err("요약할 글을 붙여넣어 주세요. 예) /sum <글>", "긴 글도 괜찮아요. 3500자까지 그대로 전달됩니다."); }
+    runAI({ system:SYS.sum, messages:[{role:"user", content:"다음 글을 3줄로 요약해줘:\n\n" + text}], label:"/sum", maxTokens:400 });
+    return null;
+  }
+  function cmdTr(args){
+    if(!args) return err("번역할 문장을 넣어 주세요. 예) /tr en 오늘 너무 피곤해", "방향은 자동이에요: 한글이면 영어로, 영어면 한국어로. /tr en ... 처럼 강제할 수도 있어요.");
+    var dir = "auto", text = args;
+    var m = /^(en|ko|영어|한국어)\s+([\s\S]+)$/i.exec(args);
+    if(m){ dir = /^(en|영어)$/i.test(m[1]) ? "en" : "ko"; text = m[2]; }
+    var hasKo = /[가-힣]/.test(text);
+    var target = dir === "auto" ? (hasKo ? "영어" : "한국어") : (dir === "en" ? "영어" : "한국어");
+    runAI({ system:SYS.tr, messages:[{role:"user", content:"다음을 자연스러운 " + target + "로 번역해줘. 원문만 옮기지 말고 자연스럽게:\n\n" + text}], label:"/tr → " + target, maxTokens:700 });
+    return null;
+  }
+  function cmdCode(code){
+    if(!code) return err("코드나 에러 메시지를 붙여넣어 주세요. 예) /code <에러 전문 + 코드>", "에러가 길면 핵심 줄만 있어도 됩니다.");
+    runAI({ system:SYS.code, messages:[{role:"user", content:"아래 코드/에러를 분석해줘:\n\n" + code}], label:"/code", maxTokens:1400 });
+    return null;
+  }
+
+  /* ---------------- /img */
+  function koToEn(prompt){
+    var s = prompt;
+    var used = [];
+    KO_EN.forEach(function(pair){
+      if(s.indexOf(pair[0]) >= 0){ s = s.split(pair[0]).join(pair[1]); used.push(pair[0]); }
+    });
+    return { text:s, used:used };
+  }
+
+  function parseImgArgs(args){
+    var ratio = "9:16", style = null, ai = false, seed = null, rest = [];
+    var tokens = args.split(/\s+/);
+    for(var i=0;i<tokens.length;i++){
+      var t = tokens[i];
+      if(t === "--ratio" || t === "-r"){ ratio = tokens[++i] || ratio; }
+      else if(t === "--style" || t === "-s"){ style = tokens[++i] || null; }
+      else if(t === "--ai"){ ai = true; }
+      else if(t === "--seed"){ seed = parseInt(tokens[++i], 10); }
+      else rest.push(t);
+    }
+    return { ratio: RATIOS[ratio] ? ratio : "9:16", style: style && STYLES[style] ? style : null, ai: ai, seed: seed, prompt: rest.join(" ").trim() };
+  }
+
+  function cmdImg(args){
+    if(!args) {
+      err("무엇을 그릴까요? 예) /img 사이버펑크 고양이", "옵션: --ratio 1:1|9:16|16:9|4:5|2:3|3:2  --style cyber|pixel|water|icon|photo|anime|3d|dark  --ai(프롬프트를 AI가 다듬기)");
+      return null;
+    }
+    var a = parseImgArgs(args);
+    if(!a.prompt) return err("그릴 내용이 비어 있어요. 예) /img --style water 안개 낀 호수");
+    if(!guard("img")) return null;
+    if(S.busy){ err("이전 요청이 아직 진행 중이에요."); return; }
+
+    var mapped = koToEn(a.prompt);
+    var english = mapped.text;
+    var suffix = a.style ? STYLES[a.style] : STYLES.photo;
+    var finalPrompt = english + (a.style ? ", " + suffix : (/(photo|photograph|art|render)/i.test(english) ? "" : ", " + suffix));
+
+    line("mut", "prompt  " + finalPrompt + (mapped.used.length ? "   (한글 " + mapped.used.slice(0,4).join(",") + " → 자동 변환)" : ""));
+
+    if(a.ai && !mapped.used.length){
+      // 텍스트 AI로 프롬프트 번역 (한도 1회 사용)
+      S.busy = true; setBusy(true);
+      var ind = thinkLine();
+      streamChat([
+        {role:"system", content:"Translate the user's image idea into a vivid English image prompt. Output only the prompt, no quotes, max 60 words."},
+        {role:"user", content:a.prompt}
+      ], function(){}, null, {maxTokens:200}).then(function(txt){
+        ind.done(); S.busy = false; setBusy(false);
+        var p = String(txt || "").trim().replace(/^["']|["']$/g,"");
+        if(p){
+          line("mut","AI prompt  " + p);
+          return afterAi(p);
+        }
+        afterAi(finalPrompt);
+      }).catch(function(e){ ind.done(); S.busy = false; setBusy(false); handleApiFailure(e); });
+      return null;
+    }
+
+    afterAi(finalPrompt);
+    return null;
+
+    function afterAi(prompt){
+      makeImage(prompt, a);
+    }
+  }
+
+  function makeImage(prompt, a){
+    var wh = RATIOS[a.ratio] || RATIOS["9:16"];
+    var seed = (a.seed != null && !isNaN(a.seed)) ? a.seed : Math.floor(Math.random()*1000000);
+    var url = "https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt) +
+      "?width=" + wh[0] + "&height=" + wh[1] + "&nologo=true&seed=" + seed + "&model=sana&referrer=buriburiyj.github.io";
+
+    var card = document.createElement("div");
+    card.className = "imgcard";
+    card.style.maxWidth = a.ratio === "16:9" || a.ratio === "3:2" ? "520px" : (a.ratio === "1:1" ? "420px" : "360px");
+    var holder = el("div");
+    holder.style.cssText = "position:relative;display:grid;place-items:center;min-height:120px;background:#081013";
+    var spin = el("div","mut");
+    spin.innerHTML = '<span class="spinner"></span>그리는 중… <span class="js-el">0</span>s';
+    spin.style.cssText = "color:var(--dim);font-size:12px;padding:26px 0";
+    holder.appendChild(spin);
+    card.appendChild(holder);
+
+    var meta = el("div","imgmeta");
+    var grow = el("div","grow", prompt);
+    grow.title = prompt;
+    meta.appendChild(grow);
+    var save = el("button","ibtn","저장");
+    var re = el("button","ibtn","다시");
+    meta.appendChild(save); meta.appendChild(re);
+    card.appendChild(meta);
+    screenEl.appendChild(card); scrollDown();
+
+    var t0 = Date.now();
+    setCooldown("img", COOLDOWN_MS);
+    var timer = setInterval(function(){
+      var s = card.querySelector(".js-el");
+      if(s) s.textContent = String(Math.round((Date.now()-t0)/1000));
+    }, 500);
+
+    var attempt = 0;
+    function tryFetch(){
+      attempt++;
+      return fetch(url).then(function(res){
+        var ct = res.headers.get("content-type") || "";
+        if(!res.ok || ct.indexOf("image/") === -1){
+          return res.text().then(function(body){
+            var e2 = apiError(res.status === 200 ? 415 : res.status, body);
+            if(res.status === 503 && attempt < 4){
+              var wait = 10;
+              spin.innerHTML = '<span class="spinner"></span>서버 혼잡 · ' + wait + '초 뒤 자동 재시도 (' + attempt + '/3)';
+              return new Promise(function(ok){ setTimeout(ok, wait * 1000); }).then(tryFetch);
+            }
+            throw e2;
+          });
+        }
+        return res.blob();
+      });
+    }
+    tryFetch().then(function(blob){
+      clearInterval(timer);
+      var obj = URL.createObjectURL(blob);
+      var img = new Image();
+      img.src = obj; img.alt = prompt; img.loading = "lazy";
+      img.style.cssText = "display:block;width:100%;height:auto";
+      holder.innerHTML = "";
+      holder.style.minHeight = "0";
+      holder.appendChild(img);
+      scrollDown();
+
+      S.lastImg = {url:url, blob:blob, obj:obj, prompt:prompt};
+
+      save.addEventListener("click", function(){ saveImage(blob, prompt, img.src); });
+      re.addEventListener("click", function(){
+        if(remainSec("img") > 0){ err("이미지는 아직 " + remainSec("img") + "초 남았어요."); return; }
+        makeImage(prompt, a);
+      });
+
+      var m2 = el("div","mut", "· " + wh[0] + "x" + wh[1] + " · sana · seed " + seed + " · " + ((Date.now()-t0)/1000).toFixed(1) + "s");
+      m2.style.cssText = "font-size:10.5px;color:var(--dim2);margin-top:2px";
+      card.appendChild(m2);
+    }).catch(function(e){
+      clearInterval(timer);
+      holder.innerHTML = "";
+      var box = el("div","line err");
+      if(e && e.status === 402){
+        var info = parseRetry(e.body || "", 45);
+        setCooldown("img", info.sec * 1000);
+        box.textContent = "이미지 무료 한도에 걸렸어요. " + info.sec + "초 뒤 다시 시도해 주세요.";
+        var sub = el("div","mut", info.msg || "");
+        sub.style.color = "var(--dim2)"; sub.style.marginTop = "3px";
+        box.appendChild(sub);
+      }else if(e && e.status){
+        box.textContent = "이미지 생성 실패 (HTTP " + e.status + ").";
+        var d = el("div","mut", String(e.body||"").slice(0,160));
+        d.style.color = "var(--dim2)"; box.appendChild(d);
+      }else{
+        box.textContent = "이미지를 못 받았어요. 네트워크를 확인하고 다시 시도해 주세요.";
+      }
+      holder.appendChild(box);
+      card.querySelector(".imgmeta").style.display = "none";
+    });
+  }
+
+  function saveImage(blob, prompt, objUrl){
+    var name = "ai-terminal-" + prompt.replace(/[^a-z0-9]+/gi,"-").slice(0,32).replace(/^-|-$/g,"").toLowerCase() + "-" + Date.now().toString(36) + ".jpg";
+    try{
+      if(navigator.canShare){
+        var f = new File([blob], name, {type: blob.type || "image/jpeg"});
+        if(navigator.canShare({files:[f]})){
+          navigator.share({files:[f], title:"AI Terminal", text:prompt}).catch(function(){});
+          return;
+        }
+      }
+    }catch(e){}
+    var a = document.createElement("a");
+    a.href = objUrl || URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ a.remove(); }, 400);
+  }
+
+  /* ------------------------------------------------------------ 입력 */
+  function submit(){
+    var v = inp.value;
+    if(!v.trim()) return;
+    inp.value = "";
+    run(v);
+  }
+
+  sendBtn.addEventListener("click", submit);
+  inp.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); submit(); return; }
+    if(e.key === "ArrowUp"){
+      e.preventDefault();
+      var h = S.hist.length ? S.hist : (loadStore().hist || []);
+      if(!h.length) return;
+      if(S.hIdx === -1 || S.hIdx > h.length) S.hIdx = h.length;
+      S.hIdx = Math.max(0, S.hIdx - 1);
+      inp.value = h[S.hIdx] || ""; placeCaretEnd();
+      return;
+    }
+    if(e.key === "ArrowDown"){
+      e.preventDefault();
+      var h2 = S.hist.length ? S.hist : (loadStore().hist || []);
+      if(!h2.length) return;
+      S.hIdx = Math.min(h2.length, S.hIdx + 1);
+      inp.value = h2[S.hIdx] || ""; placeCaretEnd();
+      return;
+    }
+    if(e.key === "Tab"){
+      e.preventDefault();
+      var v = inp.value;
+      if(v.indexOf("/") !== 0) return;
+      var match = CMDS.map(function(c){ return c.c; }).filter(function(c){ return c.indexOf(v.toLowerCase().split(" ")[0]) === 0; });
+      if(match.length === 1){ inp.value = match[0] + " "; placeCaretEnd(); }
+      else if(match.length > 1){
+        line("mut", match.join("   "));
+      }
+    }
+  });
+
+  document.querySelectorAll(".sidecmd").forEach(function(b){
+    b.addEventListener("click", function(){
+      var c = b.getAttribute("data-cmd");
+      if(/ $/.test(c)){ inp.value = c; inp.focus(); placeCaretEnd(); }
+      else { run(c.trim()); }
+    });
+  });
+  $("btn-help").addEventListener("click", function(){ run("/help"); });
+
+  /* ------------------------------------------------------------ 시작 */
+  var saved = loadStore();
+  ["text","img"].forEach(function(k){
+    var v = saved["cool_" + k];
+    if(v && v > Date.now()) S.cool[k] = v;
+  });
+  S.hist = saved.hist || []; S.hIdx = S.hist.length;
+  chips();
+  tickCool();
+  boot();
+  window.addEventListener("resize", function(){ scrollDown(); });
+})();
+</script>
+</body>
+</html>

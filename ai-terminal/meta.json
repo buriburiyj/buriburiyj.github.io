@@ -1,0 +1,61 @@
+{
+  "built_at": "2026-11-19T02:03:52+09:00",
+  "verified_at": "2026-11-19 02:03 KST",
+  "site": "https://buriburiyj.github.io/ai-terminal/",
+  "text": {
+    "url": "https://text.pollinations.ai/openai?referrer=buriburiyj.github.io",
+    "status": 200,
+    "ms": 0.31,
+    "model": "openai-fast (gpt-oss-20b)",
+    "sample": "PONG",
+    "cors": "*"
+  },
+  "image": {
+    "url": "https://image.pollinations.ai/prompt/",
+    "status": 200,
+    "ms": 0.37,
+    "model": "sana",
+    "content_type": "image/jpeg",
+    "dims": "576x1024",
+    "bytes": 41488,
+    "cors": "*",
+    "ok": true
+  },
+  "catalogs": {
+    "free_models": 107,
+    "live_models": 107,
+    "keyless_models": 48,
+    "free_ai_generated_kst": "2026-11-18 16:38 KST",
+    "live_free_models": 93,
+    "live_collected_kst": "2026-11-18 22:44 KST",
+    "deals": 22,
+    "deals_verified": "2026-11-16"
+  },
+  "limits": {
+    "observed": "익명 IP당 45초에 1회 (텍스트·이미지 합산). 2회 연속 호출 시 402 FREE_LIMIT 응답 본문에서 확인.",
+    "official": "공식 문서 수치는 확인 못 함 (응답 본문 기준).",
+    "image_pixels": "요청 해상도와 무관하게 589,824px(768x768) 예산으로 축소됨 (576x1024 등 실측)"
+  },
+  "commands": [
+    "/ask",
+    "/img",
+    "/sum",
+    "/tr",
+    "/code",
+    "/models",
+    "/3d",
+    "/deals",
+    "/status",
+    "/help",
+    "/clear"
+  ],
+  "model_list_url": "https://text.pollinations.ai/models",
+  "image_models": [
+    "sana"
+  ],
+  "checks_ok": true,
+  "recorded_at": "2026-11-19T02:03:52+09:00",
+  "record": {
+    "target": "strawberry-server D1 · kv aiterminal:meta + notes"
+  }
+}
