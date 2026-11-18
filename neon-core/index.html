@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#05030a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>NEON CORE — 오늘의 24시간 시드 아레나</title>
+<meta name="description" content="strawberry-runner가 매일 만드는 시드로 열리는 3D 네온 아레나. 오늘의 보스와 모디파이어는 하루에 한 번만.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307030f'/%3E%3Cpath d='M32 9l19 11v22L32 53 13 42V20z' fill='none' stroke='%23ff2e93' stroke-width='3'/%3E%3Ccircle cx='32' cy='31' r='6' fill='%2322e3ff'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#050308; --panel:rgba(10,7,18,.82); --line:rgba(255,255,255,.10);
+  --txt:#eef0ff; --dim:#9aa0c0; --dim2:#6b7090;
+  --p:#8b5cff; --s:#22e3ff; --a:#ff2e93;
+  --ok:#2effa0; --warn:#ffcc44; --bad:#ff4d6a;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,"DejaVu Sans Mono","Liberation Mono",Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Noto Sans CJK KR","Noto Sans CJK JP","FreeSans","Helvetica Neue",Arial,system-ui,sans-serif;
+  --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px); --safe-r:env(safe-area-inset-right,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);
+  font-family:var(--sans);overscroll-behavior:none}
+body{position:fixed;inset:0;touch-action:none;user-select:none;-webkit-user-select:none}
+canvas{display:block;position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.hidden{display:none!important}
+button{font-family:var(--sans);color:inherit;background:none;border:0;cursor:pointer}
+
+/* ---------- HUD ---------- */
+#hud{position:absolute;inset:0;pointer-events:none;padding:calc(8px + var(--safe-t)) calc(10px + var(--safe-r)) calc(8px + var(--safe-b)) calc(10px + var(--safe-l));
+  display:flex;flex-direction:column;gap:6px;opacity:0;transition:opacity .35s}
+#hud.on{opacity:1}
+#fxv{position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.45;transition:opacity .5s;
+  background:radial-gradient(120% 90% at 50% 46%,rgba(0,0,0,0) 42%,rgba(0,0,0,.40) 78%,rgba(0,0,0,.70) 100%)}
+body.playing #fxv{opacity:1}
+#hitfx{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .45s;
+  background:radial-gradient(120% 90% at 50% 50%,rgba(255,0,40,0) 38%,rgba(255,0,50,.30) 80%,rgba(255,0,60,.58) 100%)}
+#hitfx.on{opacity:1;transition:opacity .04s}
+#fxv::after{content:"";position:absolute;inset:0;opacity:.05;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.5) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+.topbar{display:flex;align-items:flex-start;gap:8px}
+.stat{display:flex;flex-direction:column;gap:1px}
+.stat .k{font:600 9px/1 var(--mono);letter-spacing:.18em;color:var(--dim2)}
+.stat b{font:700 22px/1.05 var(--mono);letter-spacing:-.02em;text-shadow:0 0 18px rgba(139,92,255,.55)}
+.stat.score{flex:1}
+.stat.score b{color:#fff}
+.combo{font:700 11px/1 var(--mono);color:var(--a);opacity:0;transform:translateY(-2px);transition:.15s}
+.combo.on{opacity:1;transform:none}
+.stat.center{flex:1.15;text-align:center;align-items:center;gap:4px;padding-top:2px}
+.stat.center span{font:600 9.5px/1 var(--mono);letter-spacing:.14em;color:var(--dim)}
+.bar{width:100%;height:3px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden}
+.bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--s),var(--p));transition:width .25s}
+.stat.right{flex:1;align-items:flex-end;flex-direction:row;gap:8px;justify-content:flex-end;padding-top:1px}
+.stat.right .k{display:none}
+.stat.right b{font-size:13px;color:var(--dim);text-shadow:none}
+.iconbtn{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);
+  display:grid;place-items:center;font-size:12px;color:var(--dim);pointer-events:auto}
+.iconbtn:active{background:rgba(255,255,255,.12)}
+.hpwrap{display:flex;align-items:center;gap:7px;margin-top:1px}
+.hp{flex:1;height:5px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.hp i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--s),#2effa0);transition:width .12s,background .3s}
+.hp.low i{background:linear-gradient(90deg,#ff4d6a,#ffcc44)}
+#hHpText{font:600 10px/1 var(--mono);color:var(--dim);min-width:26px;text-align:right}
+.bossbar{margin-top:4px;display:flex;flex-direction:column;gap:3px;opacity:0;transition:opacity .3s}
+.bossbar.on{opacity:1}
+.bossbar .row{display:flex;justify-content:space-between;font:600 9.5px/1 var(--mono);letter-spacing:.12em;color:var(--dim)}
+.bossbar .row b{color:#fff;font-weight:700;letter-spacing:.04em}
+.bossbar .track{height:6px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.bossbar .track i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff2e93,#ffcc44);
+  box-shadow:0 0 14px rgba(255,46,147,.7);transition:width .18s}
+.phase{display:flex;gap:3px;justify-content:flex-end}
+.phase span{width:16px;height:2px;border-radius:2px;background:rgba(255,255,255,.15)}
+.phase span.on{background:var(--a);box-shadow:0 0 8px var(--a)}
+
+#touch{position:absolute;inset:0;pointer-events:none}
+#joyBase{position:absolute;width:112px;height:112px;margin:-56px 0 0 -56px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.18);background:radial-gradient(circle,rgba(255,255,255,.07),rgba(255,255,255,0) 70%);
+  opacity:0;transition:opacity .12s;left:-200px;top:-200px}
+#joyBase.on{opacity:1}
+#joyKnob{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.85),rgba(139,92,255,.55) 60%,rgba(139,92,255,.1));
+  box-shadow:0 0 22px rgba(139,92,255,.6)}
+#btnDash{position:absolute;right:calc(18px + var(--safe-r));bottom:calc(26px + var(--safe-b));
+  width:86px;height:86px;border-radius:50%;pointer-events:auto;
+  border:1px solid rgba(34,227,255,.45);color:#cfeaff;font:700 12px/1 var(--mono);letter-spacing:.14em;
+  background:radial-gradient(circle at 50% 60%,rgba(34,227,255,.20),rgba(34,227,255,.03) 70%);
+  box-shadow:0 0 26px rgba(34,227,255,.22),inset 0 0 22px rgba(34,227,255,.10);transition:transform .08s,opacity .2s}
+#btnDash:active{transform:scale(.94)}
+#btnDash.cool{opacity:.35}
+#toast{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;
+  font:700 13px/1.5 var(--mono);letter-spacing:.16em;color:#fff;text-shadow:0 0 22px rgba(255,46,147,.8);
+  opacity:0;transition:opacity .25s;pointer-events:none;white-space:pre-line}
+#toast.on{opacity:1}
+
+/* ---------- screens ---------- */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:calc(14px + var(--safe-t)) 16px calc(14px + var(--safe-b));overflow-y:auto;z-index:5;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(28,10,54,.32),rgba(5,3,8,.70) 55%,rgba(5,3,8,.90));
+  -webkit-overflow-scrolling:touch;touch-action:pan-y}
+.screen.dim{background:rgba(4,2,8,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.card{width:min(440px,100%);border:1px solid var(--line);border-radius:20px;padding:16px;
+  background:linear-gradient(180deg,rgba(18,12,32,.92),rgba(9,6,16,.94));
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02) inset}
+.kicker{display:flex;align-items:center;gap:7px;font:600 9.5px/1 var(--mono);letter-spacing:.22em;color:var(--s)}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1.title{margin:8px 0 2px;font-size:clamp(34px,11vw,52px);line-height:.92;letter-spacing:-.045em;font-weight:800;
+  background:linear-gradient(100deg,var(--s) 0%,#fff 38%,var(--a) 78%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 28px rgba(139,92,255,.45))}
+.subline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:var(--dim);font:500 11.5px/1.4 var(--mono);margin-bottom:12px}
+.tagpill{border:1px solid rgba(255,255,255,.16);border-radius:6px;padding:2px 6px;color:#fff;background:rgba(255,255,255,.05)}
+.seedbox{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:11px 12px;background:rgba(255,255,255,.025);margin-bottom:10px}
+.seedbox .boss{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.seedbox .boss b{font-size:19px;letter-spacing:-.02em;color:#fff}
+.seedbox .boss span{font:600 10px/1 var(--mono);letter-spacing:.12em;color:var(--a)}
+.seedbox p{margin:5px 0 0;font-size:11.5px;line-height:1.5;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{font:500 10.5px/1.35 var(--sans);border:1px solid rgba(139,92,255,.35);background:rgba(139,92,255,.12);
+  color:#d9d0ff;border-radius:7px;padding:3px 7px}
+.chip.alt{border-color:rgba(34,227,255,.3);background:rgba(34,227,255,.09);color:#bdf0ff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.cell{border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:7px 9px;background:rgba(255,255,255,.02)}
+.cell .k{font:600 8.5px/1 var(--mono);letter-spacing:.15em;color:var(--dim2)}
+.cell .v{font:700 15px/1.2 var(--mono);margin-top:3px;color:#fff}
+.cell .v small{font-size:10px;color:var(--dim);font-weight:500}
+.src{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);
+  font:500 10px/1.4 var(--mono);color:var(--dim2)}
+.src a{color:var(--s);text-decoration:none}
+.badge-ok{display:inline-flex;align-items:center;gap:4px;color:var(--ok)}
+.btn{display:block;width:100%;margin-top:13px;padding:15px;border-radius:14px;text-align:center;
+  font:700 14px/1 var(--sans);letter-spacing:.06em;color:#0a0410;
+  background:linear-gradient(100deg,var(--s),#b9a0ff 45%,var(--a));box-shadow:0 14px 40px rgba(139,92,255,.4)}
+.btn:active{transform:scale(.985)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--dim);box-shadow:none;font-weight:600}
+.hint{display:flex;justify-content:space-between;gap:8px;margin-top:9px;font:500 9.5px/1.4 var(--mono);color:var(--dim2)}
+.hint b{color:var(--dim);font-weight:600}
+.best{margin-top:9px;text-align:center;font:600 10.5px/1.4 var(--mono);color:var(--dim)}
+.best b{color:var(--warn)}
+.hist{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.hist span{font:500 9.5px/1 var(--mono);color:var(--dim2);border:1px solid rgba(255,255,255,.08);
+  border-radius:5px;padding:3px 5px}
+.hist span.now{color:#fff;border-color:rgba(34,227,255,.5);background:rgba(34,227,255,.10)}
+.count{font:600 10px/1 var(--mono);color:var(--dim);letter-spacing:.08em}
+.over-title{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:4px 0 2px}
+.over-title.win{background:linear-gradient(100deg,var(--s),#fff 50%,var(--ok));-webkit-background-clip:text;background-clip:text;color:transparent}
+.over-title.lose{background:linear-gradient(100deg,#ff4d6a,#ffcc44);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rank{font:800 46px/1 var(--mono);letter-spacing:-.05em;text-align:center;margin:8px 0 2px;
+  background:linear-gradient(100deg,var(--s),var(--a));-webkit-background-clip:text;background-clip:text;color:transparent}
+.share{font:500 10.5px/1.5 var(--mono);color:var(--dim);text-align:center;margin-top:8px;
+  border:1px dashed rgba(255,255,255,.14);border-radius:9px;padding:8px;white-space:pre-line}
+.foot{position:absolute;bottom:calc(6px + var(--safe-b));left:0;right:0;text-align:center;
+  font:500 9px/1.4 var(--mono);color:#4b4f6b;pointer-events:auto}
+.foot a{color:#6b7090;text-decoration:none}
+#loader{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);z-index:9;
+  font:600 10px/1 var(--mono);letter-spacing:.3em;color:var(--dim)}
+#loader .ring{width:34px;height:34px;border:2px solid rgba(139,92,255,.2);border-top-color:var(--p);
+  border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (max-height:700px){
+  h1.title{font-size:34px} .card{padding:13px}
+  .seedbox{padding:9px 10px} .cell .v{font-size:13px}
+}
+@media (min-width:820px){
+  .card{width:min(520px,100%)}
+  #btnDash{width:76px;height:76px}
+}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="fxv"></div>
+<div id="hitfx"></div>
+
+<div id="hud">
+  <div class="topbar">
+    <div class="stat score">
+      <span class="k">SCORE</span>
+      <b id="hScore">0</b>
+      <span class="combo" id="hCombo"></span>
+    </div>
+    <div class="stat center">
+      <span id="hWave">WAVE 1</span>
+      <div class="bar"><i id="hProgress"></i></div>
+    </div>
+    <div class="stat right">
+      <span class="k">BEST</span><b id="hBest">0</b>
+      <button class="iconbtn" id="btnSound" aria-label="sound">♪</button>
+      <button class="iconbtn" id="btnPause" aria-label="pause">❚❚</button>
+    </div>
+  </div>
+  <div class="hpwrap">
+    <div class="hp" id="hpBox"><i id="hHp"></i></div>
+    <span id="hHpText">100</span>
+  </div>
+  <div class="bossbar" id="bossBar">
+    <div class="row"><span id="bossName">BOSS</span><span class="phase" id="bossPhase"><span></span><span></span><span></span></span></div>
+    <div class="track"><i id="bossHp"></i></div>
+  </div>
+  <div id="toast"></div>
+  <div id="touch">
+    <div id="joyBase"><div id="joyKnob"></div></div>
+    <button id="btnDash">DASH</button>
+  </div>
+</div>
+
+<div id="loader"><div style="text-align:center"><div class="ring"></div>INITIALISING CORE</div></div>
+
+<!-- ---------------- LOBBY ---------------- -->
+<div id="lobby" class="screen hidden">
+  <div class="card">
+    <div class="kicker"><span class="dot"></span> DAILY SEED ARENA <span id="lobbyDate" style="color:var(--dim2)"></span></div>
+    <h1 class="title">NEON CORE</h1>
+    <div class="subline">
+      <span>오늘의 시드</span><span class="tagpill" id="lobbyTag">----</span>
+      <span id="lobbyTheme">테마</span><span>·</span>
+      <span id="lobbyArena">아레나</span>
+    </div>
+
+    <div class="seedbox">
+      <div class="boss"><b id="lobbyBoss">보스</b><span id="lobbyBehavior">패턴</span></div>
+      <p id="lobbyBossDesc"></p>
+      <div class="chips" id="lobbyMods"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="cell"><div class="k">TARGET SCORE</div><div class="v" id="lobbyTarget">0</div></div>
+      <div class="cell"><div class="k">WAVES · BOSS HP</div><div class="v" id="lobbyWaves">0</div></div>
+    </div>
+
+    <div class="src" id="lobbySrc">
+      <span class="badge-ok"><span class="dot"></span> 시드 엔진</span>
+      <span id="lobbyEngine">불러오는 중…</span>
+    </div>
+
+    <div class="hist" id="lobbyHist"></div>
+
+    <button class="btn" id="btnStart">▶ 오늘의 아레나 입장</button>
+    <div class="best">최고 기록 <b id="lobbyBest">0</b> · 오늘 기록 <b id="lobbyToday">0</b> <span class="count" id="lobbyCount"></span></div>
+    <div class="hint">
+      <span><b>WASD</b> 이동 · <b>Space</b> 대시</span>
+      <span><b>드래그</b> 이동 · <b>DASH</b> 버튼</span>
+    </div>
+  </div>
+  <div class="foot"><a href="/">← 허브</a> · 시드 생성 strawberry-runner · 저장 strawberry-server · 렌더 three.js</div>
+</div>
+
+<!-- ---------------- PAUSE ---------------- -->
+<div id="pause" class="screen dim hidden">
+  <div class="card" style="text-align:center">
+    <div class="kicker" style="justify-content:center">PAUSED</div>
+    <div class="over-title">잠시 정지</div>
+    <p style="color:var(--dim);font-size:12px;line-height:1.6" id="pauseInfo"></p>
+    <button class="btn" id="btnResume">계속하기</button>
+    <button class="btn ghost" id="btnQuit">로비로</button>
+  </div>
+</div>
+
+<!-- ---------------- OVER ---------------- -->
+<div id="over" class="screen dim hidden">
+  <div class="card">
+    <div class="kicker" id="overKicker"><span class="dot"></span> RUN COMPLETE</div>
+    <div class="over-title" id="overTitle">생존 실패</div>
+    <div class="rank" id="overRank">C</div>
+    <div class="grid2">
+      <div class="cell"><div class="k">SCORE</div><div class="v" id="overScore">0</div></div>
+      <div class="cell"><div class="k">TARGET</div><div class="v" id="overTarget">0</div></div>
+      <div class="cell"><div class="k">TIME</div><div class="v" id="overTime">0s</div></div>
+      <div class="cell"><div class="k">BEST</div><div class="v" id="overBest">0</div></div>
+    </div>
+    <div class="share" id="overShare"></div>
+    <button class="btn" id="btnRetry">↻ 다시 도전</button>
+    <button class="btn ghost" id="btnLobby">로비로</button>
+  </div>
+</div>
+
+<script src="seed-tables.js"></script>
+<script type="module" src="game.js"></script>
+<script>
+  window.addEventListener('error',function(e){
+    document.documentElement.dataset.jsError=(document.documentElement.dataset.jsError||'')+' | '+(e.message||'error');
+  });
+  window.addEventListener('unhandledrejection',function(e){
+    document.documentElement.dataset.jsError=(document.documentElement.dataset.jsError||'')+' | reject:'+((e.reason&&e.reason.message)||e.reason);
+  });
+</script>
+</body>
+</html>

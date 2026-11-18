@@ -182,6 +182,11 @@ window.addEventListener('unhandledrejection', function(e){ var h=document.docume
       <p class="lead">예전에 만든 것들</p>
     </div>
     <div class="grid2">
+      <a class="mini" href="/neon-core/" id="nc-card">
+        <div class="top"><h3>🍓 NEON CORE</h3><span class="badge">매일 새 시드</span></div>
+        <div class="cat" id="nc-cat">오늘의 시드 불러오는 중…</div>
+        <p>strawberry-runner가 매일 새로 만드는 3D 네온 아레나. 보스·모디파이어·목표 점수가 날마다 바뀌고, 최고 기록은 이 기기에 남습니다. 터치·키보드 지원.</p>
+      </a>
       <a class="mini" href="/runner/">
         <div class="top"><h3>사슬팔 · CHAIN ARM</h3><span class="badge">게임</span></div>
         <div class="cat">네온 사이버펑크 사슬 와이어 액션</div>
@@ -299,6 +304,18 @@ const RAW_BASE = "https://raw.githubusercontent.com/buriburiyj/buriburiyj.github
         : "24시간 자동";
       setText("fd-status", base + " · 자동 " + (live.collected_kst || "—").replace(" KST", "")
         + " · 소스 " + (t.sources_ok ?? "—") + "/" + (t.sources ?? "—"));
+    }
+  } catch(e){}
+  // NEON CORE 오늘의 시드 (러너가 D1에 넣고 사이트로 내보낸 값)
+  try{
+    const seed = await getJSON(["/neon-core/daily.json", RAW_BASE + "neon-core/daily.json"]);
+    if (seed && seed.boss){
+      const mods = (seed.modifiers || []).map(m => m.name).join("·");
+      setText("nc-cat", seed.date_kst + " · " + seed.tag + " · " + seed.boss.name
+        + (mods ? " · " + mods : ""));
+      if (seed.server && seed.server.published_kst) stamps.push(seed.server.published_kst);
+    } else {
+      setText("nc-cat", "오늘의 시드 확인 실패 — 게임은 로컬 계산으로 열립니다");
     }
   } catch(e){}
   if (stamps.length){
