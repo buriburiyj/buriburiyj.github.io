@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "version": "1.0.0",
+ "date_kst": "2026-11-19",
+ "weekday_kr": "목",
+ "seed_hex": "948969ee3509499f",
+ "seed_int": 10703202461235628447,
+ "tag": "QR4U",
+ "generated_utc": "2026-11-18T16:50:58Z",
+ "title": "NEON CORE — 2026-11-19",
+ "theme": {
+  "id": "chrome-dawn",
+  "name": "크로뮴 여명",
+  "primary": "#cfd8ff",
+  "secondary": "#7a8cff",
+  "accent": "#00ffe1",
+  "floor": "#121420",
+  "fog": "#07080f",
+  "sky": "#040409",
+  "boss": "#00ffe1"
+ },
+ "arena": {
+  "id": "ring",
+  "name": "링 아레나",
+  "radius": 27.0,
+  "grid": 2.0,
+  "cover": 0
+ },
+ "boss": {
+  "codename": "PULSE",
+  "name": "잊힌 PULSE",
+  "behavior": "radial",
+  "behaviorName": "방사 폭격",
+  "desc": "고리를 겹쳐 쏜다. 사이로 걸어 나가면 된다.",
+  "hp": 1100,
+  "phases": 3,
+  "color": "#00ffe1",
+  "scale": 1.1
+ },
+ "modifiers": [
+  {
+   "id": "iron-skin",
+   "name": "강철 껍질",
+   "desc": "적 체력 +25%, 대신 점수 +10%.",
+   "effects": {
+    "enemy_hp": 1.25,
+    "score_mul": 1.1
+   }
+  },
+  {
+   "id": "gravity-well",
+   "name": "중력 우물",
+   "desc": "아레나 중심이 초당 1.4만큼 끌어당긴다.",
+   "effects": {
+    "gravity": 1.4
+   }
+  },
+  {
+   "id": "dampener",
+   "name": "감쇠 장",
+   "desc": "대시 쿨다운 +35%.",
+   "effects": {
+    "dash_cd": 1.35
+   }
+  }
+ ],
+ "waves": 5,
+ "target_score": 15800,
+ "boss_hp": 1100,
+ "spawn": {
+  "enemy_hp": 1.25,
+  "enemy_speed": 1.0,
+  "enemy_fire": 1.0,
+  "player_hp": 1.0,
+  "player_bullet_speed": 1.0,
+  "dash_cd": 1.35,
+  "score_mul": 1.1,
+  "spawn_mul": 1.0,
+  "elite_add": 0.0,
+  "gravity": 1.4,
+  "meteor": 0.0,
+  "bounce": 0,
+  "boss_regen": 0.0
+ },
+ "music": {
+  "scale": "pentatonic",
+  "scaleName": "펜타토닉",
+  "steps": [
+   0,
+   3,
+   5,
+   7,
+   10
+  ],
+  "root": 126,
+  "tempo": 124,
+  "mode": "major"
+ },
+ "quote": "기록은 저장되고, 자만은 저장되지 않는다.",
+ "rules": {
+  "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
+  "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
+  "goal": "웨이브를 버티고 잊힌 PULSE를 쓰러뜨린다"
+ },
+ "server": {
+  "engine": "strawberry-runner",
+  "collector": "strawberry-runner/scripts/daily_seed.py",
+  "task_id": "seed-20261119-20261118T165050Z",
+  "run_id": 44351936863,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44351936863",
+  "conclusion": "success",
+  "matched_local": true,
+  "stored_at": "2026-11-18T16:51:04Z",
+  "d1_key": "surprise:daily",
+  "published_utc": "2026-11-18T16:51:04Z",
+  "published_kst": "2026-11-19 01:51 KST"
+ },
+ "history": [
+  "2026-11-19"
+ ],
+ "next_rotation_kst": "매일 00:05 KST"
+}
