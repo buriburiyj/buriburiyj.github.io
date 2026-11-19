@@ -1,24 +1,24 @@
 {
  "schema": 1,
- "generated_utc": "2026-11-19T07:47:32Z",
- "generated_kst": "2026-11-19 16:47 KST",
- "collected_utc": "2026-11-19T07:47:01Z",
- "collected_kst": "2026-11-19 16:47 KST",
- "run_id": "deals-20261119T0747Z",
- "task_id": "deals-20261119T074653Z",
- "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44482252808",
+ "generated_utc": "2026-11-19T13:47:33Z",
+ "generated_kst": "2026-11-19 22:47 KST",
+ "collected_utc": "2026-11-19T13:47:26Z",
+ "collected_kst": "2026-11-19 22:47 KST",
+ "run_id": "deals-20261119T1347Z",
+ "task_id": "deals-20261119T134709Z",
+ "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44536912289",
  "engine": "strawberry-runner",
  "collector": "strawberry-runner/scripts/collect_deals.py",
  "totals": {
   "sources": 13,
-  "sources_ok": 12,
-  "free_models": 65,
+  "sources_ok": 13,
+  "free_models": 97,
   "offer_claims": 8,
   "games_now": 1,
   "games_soon": 2,
   "curated_total": 22,
   "curated_alive": 22,
-  "duration_ms": 20786
+  "duration_ms": 3389
  },
  "catalogs": [
   {
@@ -26,7 +26,7 @@
    "name": "Kilo AI Gateway",
    "url": "https://ai-gateway.kilo.ai/api/v1/models",
    "status": 200,
-   "ms": 490,
+   "ms": 348,
    "ok": true,
    "total_models": 473,
    "free_models": 15,
@@ -48,7 +48,7 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "url": "https://integrate.api.nvidia.com/v1/models",
    "status": 200,
-   "ms": 258,
+   "ms": 189,
    "ok": true,
    "total_models": 32,
    "free_models": 32,
@@ -70,19 +70,19 @@
    "name": "OpenRouter",
    "url": "https://openrouter.ai/api/v1/models",
    "status": 200,
-   "ms": 247,
+   "ms": 219,
    "ok": true,
-   "total_models": 480,
-   "free_models": 17,
+   "total_models": 479,
+   "free_models": 16,
    "free_ids": [
     "inclusionai/ling-3.2-flash:free",
     "baidu/ernie-5.5-flash-preview:free",
-    "thinkingmachines/inkling-2-small:free",
     "liquid/lfm-3-1.7b:free",
     "particle-ai/particle-1:free",
     "recursive/flint-v1.0:free",
     "nvidia/nemotron-3.5-super-vl:free",
-    "dots-studio/dots-3-note-preview:free"
+    "dots-studio/dots-3-note-preview:free",
+    "nvidia/nemotron-3.5-lightning:free"
    ],
    "basis": "pricing.prompt·completion = 0 인 모델만 집계",
    "error": null
@@ -91,21 +91,30 @@
    "id": "ovh",
    "name": "OVHcloud AI Endpoints",
    "url": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models",
-   "status": 0,
-   "ms": 20776,
-   "ok": false,
-   "total_models": null,
-   "free_models": null,
-   "free_ids": [],
+   "status": 200,
+   "ms": 885,
+   "ok": true,
+   "total_models": 33,
+   "free_models": 33,
+   "free_ids": [
+    "solaria-3",
+    "whisper-large-v3-turbo",
+    "whisper-large-v3",
+    "stable-diffusion-xl-base-v10",
+    "nvr-tts-en-us",
+    "nvr-tts-it-it",
+    "nvr-tts-de-de",
+    "nvr-tts-es-es"
+   ],
    "basis": "카탈로그 모델 전체가 무료 한도로 호출 가능(가격표 필드 없음)",
-   "error": "TimeoutError"
+   "error": null
   },
   {
    "id": "pollinations",
    "name": "Pollinations",
    "url": "https://text.pollinations.ai/models",
    "status": 200,
-   "ms": 255,
+   "ms": 194,
    "ok": true,
    "total_models": 1,
    "free_models": 1,
@@ -136,7 +145,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 224
+   "ms": 204
   },
   {
    "id": "github-copilot-free",
@@ -153,7 +162,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 409
+   "ms": 482
   },
   {
    "id": "google-cloud-free",
@@ -174,7 +183,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 457
+   "ms": 858
   },
   {
    "id": "kiro-free",
@@ -191,7 +200,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 136
+   "ms": 114
   },
   {
    "id": "oracle-cloud-free",
@@ -212,7 +221,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 264
+   "ms": 230
   }
  ],
  "games": [
@@ -258,7 +267,7 @@
    "name": "Kilo AI Gateway",
    "kind": "catalog",
    "status": 200,
-   "ms": 490,
+   "ms": 348,
    "ok": true,
    "items": 15,
    "error": null,
@@ -269,7 +278,7 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "kind": "catalog",
    "status": 200,
-   "ms": 258,
+   "ms": 189,
    "ok": true,
    "items": 32,
    "error": null,
@@ -280,9 +289,9 @@
    "name": "OpenRouter",
    "kind": "catalog",
    "status": 200,
-   "ms": 247,
+   "ms": 219,
    "ok": true,
-   "items": 17,
+   "items": 16,
    "error": null,
    "note": null
   },
@@ -290,11 +299,11 @@
    "id": "ovh",
    "name": "OVHcloud AI Endpoints",
    "kind": "catalog",
-   "status": 0,
-   "ms": 20776,
-   "ok": false,
-   "items": 0,
-   "error": "TimeoutError",
+   "status": 200,
+   "ms": 885,
+   "ok": true,
+   "items": 33,
+   "error": null,
    "note": null
   },
   {
@@ -302,7 +311,7 @@
    "name": "Pollinations",
    "kind": "catalog",
    "status": 200,
-   "ms": 255,
+   "ms": 194,
    "ok": true,
    "items": 1,
    "error": null,
@@ -313,7 +322,7 @@
    "name": "buriburiyj.github.io/free-deals 데이터",
    "kind": "curated",
    "status": 200,
-   "ms": 152,
+   "ms": 272,
    "ok": true,
    "items": 22,
    "error": null,
@@ -324,7 +333,7 @@
    "name": "Epic Games 무료 배포 (KR)",
    "kind": "free_games",
    "status": 200,
-   "ms": 627,
+   "ms": 567,
    "ok": true,
    "items": 3,
    "error": null,
@@ -335,7 +344,7 @@
    "name": "Steam 100% 할인 (KR 스토어)",
    "kind": "free_games",
    "status": 200,
-   "ms": 184,
+   "ms": 127,
    "ok": true,
    "items": 0,
    "error": null,
@@ -346,7 +355,7 @@
    "name": "Cloudflare Workers",
    "kind": "offer",
    "status": 200,
-   "ms": 224,
+   "ms": 204,
    "ok": true,
    "items": 2,
    "error": null,
@@ -357,7 +366,7 @@
    "name": "GitHub",
    "kind": "offer",
    "status": 200,
-   "ms": 409,
+   "ms": 482,
    "ok": true,
    "items": 1,
    "error": null,
@@ -368,7 +377,7 @@
    "name": "Google Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 457,
+   "ms": 858,
    "ok": true,
    "items": 2,
    "error": null,
@@ -379,7 +388,7 @@
    "name": "AWS Kiro",
    "kind": "offer",
    "status": 200,
-   "ms": 136,
+   "ms": 114,
    "ok": true,
    "items": 1,
    "error": null,
@@ -390,7 +399,7 @@
    "name": "Oracle Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 264,
+   "ms": 230,
    "ok": true,
    "items": 2,
    "error": null,
@@ -399,7 +408,7 @@
  ],
  "d1": {
   "latest_key": "deals:latest",
-  "run_key": "deals:run:deals-20261119T0747Z",
+  "run_key": "deals:run:deals-20261119T1347Z",
   "history_runs": 2,
   "server": "strawberry-server (Cloudflare Workers + D1)"
  },
