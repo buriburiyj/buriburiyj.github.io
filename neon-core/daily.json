@@ -6,7 +6,7 @@
  "seed_hex": "c4908dcaac20c9e6",
  "seed_int": 14163976729690950118,
  "tag": "LQDB",
- "generated_utc": "2026-11-20T15:05:52Z",
+ "generated_utc": "2026-11-20T15:08:20Z",
  "title": "NEON CORE — 2026-11-21",
  "theme": {
   "id": "ember-rain",
@@ -105,17 +105,17 @@
   "goal": "웨이브를 버티고 백열의 RAZOR를 쓰러뜨린다"
  },
  "server": {
-  "engine": "local (dispatch failed)",
+  "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": null,
-  "run_id": null,
-  "run_url": null,
-  "conclusion": null,
-  "matched_local": false,
-  "stored_at": "2026-11-20T15:05:53Z",
+  "task_id": "seed-20261121-20261120T150802Z",
+  "run_id": 44760206442,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44760206442",
+  "conclusion": "success",
+  "matched_local": true,
+  "stored_at": "2026-11-20T15:08:21Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-20T15:05:53Z",
-  "published_kst": "2026-11-21 00:05 KST"
+  "published_utc": "2026-11-20T15:08:21Z",
+  "published_kst": "2026-11-21 00:08 KST"
  },
  "history": [
   "2026-11-19",
