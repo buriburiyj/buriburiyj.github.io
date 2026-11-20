@@ -1,124 +1,126 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-20",
- "weekday_kr": "금",
- "seed_hex": "3fbdb4978ca6355f",
- "seed_int": 4593025757980538207,
- "tag": "ZEP5",
- "generated_utc": "2026-11-19T15:05:44Z",
- "title": "NEON CORE — 2026-11-20",
+ "date_kst": "2026-11-21",
+ "weekday_kr": "토",
+ "seed_hex": "c4908dcaac20c9e6",
+ "seed_int": 14163976729690950118,
+ "tag": "LQDB",
+ "generated_utc": "2026-11-20T15:05:52Z",
+ "title": "NEON CORE — 2026-11-21",
  "theme": {
-  "id": "acid-bloom",
-  "name": "산성 개화",
-  "primary": "#b8ff2f",
-  "secondary": "#00ffb0",
-  "accent": "#e03bff",
-  "floor": "#101c05",
-  "fog": "#040a02",
-  "sky": "#020601",
-  "boss": "#e03bff"
+  "id": "ember-rain",
+  "name": "홍염의 비",
+  "primary": "#ff5a2e",
+  "secondary": "#ffc32e",
+  "accent": "#ff2e6e",
+  "floor": "#2a0c05",
+  "fog": "#120401",
+  "sky": "#0a0200",
+  "boss": "#ff2e6e"
  },
  "arena": {
-  "id": "cross",
-  "name": "십자 회랑",
-  "radius": 25.0,
-  "grid": 2.5,
-  "cover": 4
+  "id": "ring",
+  "name": "링 아레나",
+  "radius": 27.0,
+  "grid": 2.0,
+  "cover": 0
  },
  "boss": {
-  "codename": "ECLIPSE",
-  "name": "뒤틀린 ECLIPSE",
-  "behavior": "spiral",
-  "behaviorName": "나선 탄막",
-  "desc": "시계·반시계를 번갈아 감는다. 리듬을 읽어라.",
-  "hp": 1330,
+  "codename": "RAZOR",
+  "name": "백열의 RAZOR",
+  "behavior": "hunter",
+  "behaviorName": "추적 돌진",
+  "desc": "플레이어를 직선으로 파고든다. 대시로 흘려야 한다.",
+  "hp": 1300,
   "phases": 3,
-  "color": "#e03bff",
-  "scale": 1.1
+  "color": "#ff2e6e",
+  "scale": 1.15
  },
  "modifiers": [
   {
-   "id": "meteor-shower",
-   "name": "유성우",
-   "desc": "약 2.6초마다 아레나에 유성이 떨어진다.",
+   "id": "dampener",
+   "name": "감쇠 장",
+   "desc": "대시 쿨다운 +35%.",
    "effects": {
-    "meteor": 1.0
+    "dash_cd": 1.35
    }
   },
   {
-   "id": "bounty",
-   "name": "현상금",
-   "desc": "점수 +22%.",
+   "id": "iron-skin",
+   "name": "강철 껍질",
+   "desc": "적 체력 +25%, 대신 점수 +10%.",
    "effects": {
-    "score_mul": 1.22
+    "enemy_hp": 1.25,
+    "score_mul": 1.1
    }
   },
   {
-   "id": "regeneration",
-   "name": "재생",
-   "desc": "보스가 8초마다 최대 체력의 0.8%를 회복한다.",
+   "id": "ultrasound",
+   "name": "초음파",
+   "desc": "적 탄속 +30%.",
    "effects": {
-    "boss_regen": 0.008
+    "enemy_fire": 1.3
    }
   }
  ],
  "waves": 7,
- "target_score": 17800,
- "boss_hp": 1330,
+ "target_score": 15800,
+ "boss_hp": 1300,
  "spawn": {
-  "enemy_hp": 1.0,
+  "enemy_hp": 1.25,
   "enemy_speed": 1.0,
-  "enemy_fire": 1.0,
+  "enemy_fire": 1.3,
   "player_hp": 1.0,
   "player_bullet_speed": 1.0,
-  "dash_cd": 1.0,
-  "score_mul": 1.22,
+  "dash_cd": 1.35,
+  "score_mul": 1.1,
   "spawn_mul": 1.0,
   "elite_add": 0.0,
   "gravity": 0.0,
-  "meteor": 1.0,
+  "meteor": 0.0,
   "bounce": 0,
-  "boss_regen": 0.008
+  "boss_regen": 0.0
  },
  "music": {
-  "scale": "dorian",
-  "scaleName": "도리안",
+  "scale": "phrygian",
+  "scaleName": "프리지안",
   "steps": [
    0,
-   2,
+   1,
    3,
    5,
    7,
-   9,
+   8,
    10
   ],
-  "root": 103,
-  "tempo": 118,
+  "root": 144,
+  "tempo": 121,
   "mode": "dark"
  },
- "quote": "오늘의 탄막은 오늘만 존재한다.",
+ "quote": "코어를 지키는 건 손이 아니라 리듬이다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 뒤틀린 ECLIPSE를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 백열의 RAZOR를 쓰러뜨린다"
  },
  "server": {
-  "engine": "strawberry-runner",
+  "engine": "local (dispatch failed)",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261120-20261119T150528Z",
-  "run_id": 44550867529,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44550867529",
-  "conclusion": "success",
-  "matched_local": true,
-  "stored_at": "2026-11-19T15:05:46Z",
+  "task_id": null,
+  "run_id": null,
+  "run_url": null,
+  "conclusion": null,
+  "matched_local": false,
+  "stored_at": "2026-11-20T15:05:53Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-19T15:05:46Z",
-  "published_kst": "2026-11-20 00:05 KST"
+  "published_utc": "2026-11-20T15:05:53Z",
+  "published_kst": "2026-11-21 00:05 KST"
  },
  "history": [
   "2026-11-19",
-  "2026-11-20"
+  "2026-11-20",
+  "2026-11-21"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
