@@ -1,24 +1,24 @@
 {
  "schema": 1,
- "generated_utc": "2026-11-19T19:47:24Z",
- "generated_kst": "2026-11-20 04:47 KST",
- "collected_utc": "2026-11-19T19:47:08Z",
- "collected_kst": "2026-11-20 04:47 KST",
- "run_id": "deals-20261119T1947Z",
- "task_id": "deals-20261119T194659Z",
- "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44601885751",
+ "generated_utc": "2026-11-20T01:47:28Z",
+ "generated_kst": "2026-11-20 10:47 KST",
+ "collected_utc": "2026-11-20T01:47:14Z",
+ "collected_kst": "2026-11-20 10:47 KST",
+ "run_id": "deals-20261120T0147Z",
+ "task_id": "deals-20261120T014704Z",
+ "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44656115476",
  "engine": "strawberry-runner",
  "collector": "strawberry-runner/scripts/collect_deals.py",
  "totals": {
   "sources": 13,
   "sources_ok": 13,
-  "free_models": 97,
+  "free_models": 96,
   "offer_claims": 8,
   "games_now": 1,
   "games_soon": 2,
   "curated_total": 22,
   "curated_alive": 22,
-  "duration_ms": 4508
+  "duration_ms": 2586
  },
  "catalogs": [
   {
@@ -26,10 +26,10 @@
    "name": "Kilo AI Gateway",
    "url": "https://ai-gateway.kilo.ai/api/v1/models",
    "status": 200,
-   "ms": 542,
+   "ms": 180,
    "ok": true,
-   "total_models": 473,
-   "free_models": 15,
+   "total_models": 471,
+   "free_models": 14,
    "free_ids": [
     "kilo-auto/free",
     "inclusionai/ling-3.2-flash:free",
@@ -48,19 +48,19 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "url": "https://integrate.api.nvidia.com/v1/models",
    "status": 200,
-   "ms": 98,
+   "ms": 156,
    "ok": true,
-   "total_models": 32,
-   "free_models": 32,
+   "total_models": 33,
+   "free_models": 33,
    "free_ids": [
     "bigcode/starcoder2-15b",
+    "fastino/gliner2-pii",
     "google/gemma-3-12b-it",
     "google/gemma-3-4b-it",
     "google/gemma-4-31b-it",
     "meta/muse-glimmer-30b",
     "minimaxai/minimax-m3.1-flash",
-    "mistralai/mistral-large-4-1t-a52b",
-    "moonshotai/kimi-k3.1-pro"
+    "mistralai/mistral-large-4-1t-a52b"
    ],
    "basis": "카탈로그 모델 전체가 무료 크레딧 계정으로 호출 가능(가격표 필드 없음)",
    "error": null
@@ -70,10 +70,10 @@
    "name": "OpenRouter",
    "url": "https://openrouter.ai/api/v1/models",
    "status": 200,
-   "ms": 209,
+   "ms": 161,
    "ok": true,
-   "total_models": 479,
-   "free_models": 16,
+   "total_models": 477,
+   "free_models": 15,
    "free_ids": [
     "inclusionai/ling-3.2-flash:free",
     "baidu/ernie-5.5-flash-preview:free",
@@ -92,7 +92,7 @@
    "name": "OVHcloud AI Endpoints",
    "url": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models",
    "status": 200,
-   "ms": 435,
+   "ms": 1000,
    "ok": true,
    "total_models": 33,
    "free_models": 33,
@@ -114,7 +114,7 @@
    "name": "Pollinations",
    "url": "https://text.pollinations.ai/models",
    "status": 200,
-   "ms": 122,
+   "ms": 127,
    "ok": true,
    "total_models": 1,
    "free_models": 1,
@@ -145,7 +145,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 136
+   "ms": 184
   },
   {
    "id": "github-copilot-free",
@@ -162,7 +162,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 246
+   "ms": 415
   },
   {
    "id": "google-cloud-free",
@@ -183,7 +183,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 442
+   "ms": 757
   },
   {
    "id": "kiro-free",
@@ -200,7 +200,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 111
+   "ms": 147
   },
   {
    "id": "oracle-cloud-free",
@@ -221,7 +221,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 244
+   "ms": 167
   }
  ],
  "games": [
@@ -267,9 +267,9 @@
    "name": "Kilo AI Gateway",
    "kind": "catalog",
    "status": 200,
-   "ms": 542,
+   "ms": 180,
    "ok": true,
-   "items": 15,
+   "items": 14,
    "error": null,
    "note": null
   },
@@ -278,9 +278,9 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "kind": "catalog",
    "status": 200,
-   "ms": 98,
+   "ms": 156,
    "ok": true,
-   "items": 32,
+   "items": 33,
    "error": null,
    "note": null
   },
@@ -289,9 +289,9 @@
    "name": "OpenRouter",
    "kind": "catalog",
    "status": 200,
-   "ms": 209,
+   "ms": 161,
    "ok": true,
-   "items": 16,
+   "items": 15,
    "error": null,
    "note": null
   },
@@ -300,7 +300,7 @@
    "name": "OVHcloud AI Endpoints",
    "kind": "catalog",
    "status": 200,
-   "ms": 435,
+   "ms": 1000,
    "ok": true,
    "items": 33,
    "error": null,
@@ -311,7 +311,7 @@
    "name": "Pollinations",
    "kind": "catalog",
    "status": 200,
-   "ms": 122,
+   "ms": 127,
    "ok": true,
    "items": 1,
    "error": null,
@@ -322,7 +322,7 @@
    "name": "buriburiyj.github.io/free-deals 데이터",
    "kind": "curated",
    "status": 200,
-   "ms": 120,
+   "ms": 207,
    "ok": true,
    "items": 22,
    "error": null,
@@ -333,7 +333,7 @@
    "name": "Epic Games 무료 배포 (KR)",
    "kind": "free_games",
    "status": 200,
-   "ms": 318,
+   "ms": 570,
    "ok": true,
    "items": 3,
    "error": null,
@@ -344,7 +344,7 @@
    "name": "Steam 100% 할인 (KR 스토어)",
    "kind": "free_games",
    "status": 200,
-   "ms": 162,
+   "ms": 206,
    "ok": true,
    "items": 0,
    "error": null,
@@ -355,7 +355,7 @@
    "name": "Cloudflare Workers",
    "kind": "offer",
    "status": 200,
-   "ms": 136,
+   "ms": 184,
    "ok": true,
    "items": 2,
    "error": null,
@@ -366,7 +366,7 @@
    "name": "GitHub",
    "kind": "offer",
    "status": 200,
-   "ms": 246,
+   "ms": 415,
    "ok": true,
    "items": 1,
    "error": null,
@@ -377,7 +377,7 @@
    "name": "Google Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 442,
+   "ms": 757,
    "ok": true,
    "items": 2,
    "error": null,
@@ -388,7 +388,7 @@
    "name": "AWS Kiro",
    "kind": "offer",
    "status": 200,
-   "ms": 111,
+   "ms": 147,
    "ok": true,
    "items": 1,
    "error": null,
@@ -399,7 +399,7 @@
    "name": "Oracle Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 244,
+   "ms": 167,
    "ok": true,
    "items": 2,
    "error": null,
@@ -408,7 +408,7 @@
  ],
  "d1": {
   "latest_key": "deals:latest",
-  "run_key": "deals:run:deals-20261119T1947Z",
+  "run_key": "deals:run:deals-20261120T0147Z",
   "history_runs": 2,
   "server": "strawberry-server (Cloudflare Workers + D1)"
  },
