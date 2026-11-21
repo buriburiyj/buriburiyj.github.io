@@ -1,13 +1,13 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-21",
- "weekday_kr": "토",
- "seed_hex": "c4908dcaac20c9e6",
- "seed_int": 14163976729690950118,
- "tag": "LQDB",
- "generated_utc": "2026-11-20T15:08:20Z",
- "title": "NEON CORE — 2026-11-21",
+ "date_kst": "2026-11-22",
+ "weekday_kr": "일",
+ "seed_hex": "d42b6bca543ddcda",
+ "seed_int": 15288431876780186842,
+ "tag": "L84Y",
+ "generated_utc": "2026-11-21T15:05:44Z",
+ "title": "NEON CORE — 2026-11-22",
  "theme": {
   "id": "ember-rain",
   "name": "홍염의 비",
@@ -27,100 +27,93 @@
   "cover": 0
  },
  "boss": {
-  "codename": "RAZOR",
-  "name": "백열의 RAZOR",
-  "behavior": "hunter",
-  "behaviorName": "추적 돌진",
-  "desc": "플레이어를 직선으로 파고든다. 대시로 흘려야 한다.",
-  "hp": 1300,
+  "codename": "PULSE",
+  "name": "백열의 PULSE",
+  "behavior": "radial",
+  "behaviorName": "방사 폭격",
+  "desc": "고리를 겹쳐 쏜다. 사이로 걸어 나가면 된다.",
+  "hp": 1230,
   "phases": 3,
   "color": "#ff2e6e",
-  "scale": 1.15
+  "scale": 1.1
  },
  "modifiers": [
   {
-   "id": "dampener",
-   "name": "감쇠 장",
-   "desc": "대시 쿨다운 +35%.",
+   "id": "swarm",
+   "name": "군체",
+   "desc": "잡몹 +30%, 엘리트 확률 +8%.",
    "effects": {
-    "dash_cd": 1.35
+    "spawn_mul": 1.3,
+    "elite_add": 0.08
    }
   },
   {
-   "id": "iron-skin",
-   "name": "강철 껍질",
-   "desc": "적 체력 +25%, 대신 점수 +10%.",
+   "id": "meteor-shower",
+   "name": "유성우",
+   "desc": "약 2.6초마다 아레나에 유성이 떨어진다.",
    "effects": {
-    "enemy_hp": 1.25,
-    "score_mul": 1.1
-   }
-  },
-  {
-   "id": "ultrasound",
-   "name": "초음파",
-   "desc": "적 탄속 +30%.",
-   "effects": {
-    "enemy_fire": 1.3
+    "meteor": 1.0
    }
   }
  ],
- "waves": 7,
- "target_score": 15800,
- "boss_hp": 1300,
+ "waves": 6,
+ "target_score": 13800,
+ "boss_hp": 1230,
  "spawn": {
-  "enemy_hp": 1.25,
+  "enemy_hp": 1.0,
   "enemy_speed": 1.0,
-  "enemy_fire": 1.3,
+  "enemy_fire": 1.0,
   "player_hp": 1.0,
   "player_bullet_speed": 1.0,
-  "dash_cd": 1.35,
-  "score_mul": 1.1,
-  "spawn_mul": 1.0,
-  "elite_add": 0.0,
+  "dash_cd": 1.0,
+  "score_mul": 1.0,
+  "spawn_mul": 1.3,
+  "elite_add": 0.08,
   "gravity": 0.0,
-  "meteor": 0.0,
+  "meteor": 1.0,
   "bounce": 0,
   "boss_regen": 0.0
  },
  "music": {
-  "scale": "phrygian",
-  "scaleName": "프리지안",
+  "scale": "minor",
+  "scaleName": "단조",
   "steps": [
    0,
-   1,
+   2,
    3,
    5,
    7,
    8,
    10
   ],
-  "root": 144,
-  "tempo": 121,
+  "root": 129,
+  "tempo": 131,
   "mode": "dark"
  },
- "quote": "코어를 지키는 건 손이 아니라 리듬이다.",
+ "quote": "0.1초의 판단이 10초의 생존을 만든다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 백열의 RAZOR를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 백열의 PULSE를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261121-20261120T150802Z",
-  "run_id": 44760206442,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44760206442",
+  "task_id": "seed-20261122-20261121T150531Z",
+  "run_id": 44917315911,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44917315911",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-20T15:08:21Z",
+  "stored_at": "2026-11-21T15:05:50Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-20T15:08:21Z",
-  "published_kst": "2026-11-21 00:08 KST"
+  "published_utc": "2026-11-21T15:05:50Z",
+  "published_kst": "2026-11-22 00:05 KST"
  },
  "history": [
   "2026-11-19",
   "2026-11-20",
-  "2026-11-21"
+  "2026-11-21",
+  "2026-11-22"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
