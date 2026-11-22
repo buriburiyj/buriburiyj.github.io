@@ -1,119 +1,118 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-22",
- "weekday_kr": "일",
- "seed_hex": "d42b6bca543ddcda",
- "seed_int": 15288431876780186842,
- "tag": "L84Y",
- "generated_utc": "2026-11-21T15:05:44Z",
- "title": "NEON CORE — 2026-11-22",
+ "date_kst": "2026-11-23",
+ "weekday_kr": "월",
+ "seed_hex": "6ba1f0ddbd699e93",
+ "seed_int": 7755744868464959123,
+ "tag": "7G6D",
+ "generated_utc": "2026-11-22T15:05:29Z",
+ "title": "NEON CORE — 2026-11-23",
  "theme": {
-  "id": "ember-rain",
-  "name": "홍염의 비",
-  "primary": "#ff5a2e",
-  "secondary": "#ffc32e",
-  "accent": "#ff2e6e",
-  "floor": "#2a0c05",
-  "fog": "#120401",
-  "sky": "#0a0200",
-  "boss": "#ff2e6e"
+  "id": "ultraviolet",
+  "name": "자외선 성운",
+  "primary": "#8b5cff",
+  "secondary": "#22e3ff",
+  "accent": "#ff2e93",
+  "floor": "#160a2e",
+  "fog": "#08010f",
+  "sky": "#04010a",
+  "boss": "#ff2e93"
  },
  "arena": {
-  "id": "ring",
-  "name": "링 아레나",
-  "radius": 27.0,
-  "grid": 2.0,
-  "cover": 0
+  "id": "well",
+  "name": "우물",
+  "radius": 24.0,
+  "grid": 1.8,
+  "cover": 2
  },
  "boss": {
-  "codename": "PULSE",
-  "name": "백열의 PULSE",
-  "behavior": "radial",
-  "behaviorName": "방사 폭격",
-  "desc": "고리를 겹쳐 쏜다. 사이로 걸어 나가면 된다.",
-  "hp": 1230,
+  "codename": "HELIX",
+  "name": "벙어리 HELIX",
+  "behavior": "spiral",
+  "behaviorName": "나선 탄막",
+  "desc": "회전하는 두 팔의 탄막. 중심에서 바깥으로 비틀린다.",
+  "hp": 1270,
   "phases": 3,
-  "color": "#ff2e6e",
-  "scale": 1.1
+  "color": "#ff2e93",
+  "scale": 1.15
  },
  "modifiers": [
   {
-   "id": "swarm",
-   "name": "군체",
-   "desc": "잡몹 +30%, 엘리트 확률 +8%.",
+   "id": "glass-cannon",
+   "name": "유리 대포",
+   "desc": "플레이어 체력 -25%, 탄속 +25%.",
    "effects": {
-    "spawn_mul": 1.3,
-    "elite_add": 0.08
+    "player_hp": 0.75,
+    "player_bullet_speed": 1.25
    }
   },
   {
-   "id": "meteor-shower",
-   "name": "유성우",
-   "desc": "약 2.6초마다 아레나에 유성이 떨어진다.",
+   "id": "dampener",
+   "name": "감쇠 장",
+   "desc": "대시 쿨다운 +35%.",
    "effects": {
-    "meteor": 1.0
+    "dash_cd": 1.35
    }
   }
  ],
- "waves": 6,
- "target_score": 13800,
- "boss_hp": 1230,
+ "waves": 7,
+ "target_score": 16600,
+ "boss_hp": 1270,
  "spawn": {
   "enemy_hp": 1.0,
   "enemy_speed": 1.0,
   "enemy_fire": 1.0,
-  "player_hp": 1.0,
-  "player_bullet_speed": 1.0,
-  "dash_cd": 1.0,
+  "player_hp": 0.75,
+  "player_bullet_speed": 1.25,
+  "dash_cd": 1.35,
   "score_mul": 1.0,
-  "spawn_mul": 1.3,
-  "elite_add": 0.08,
+  "spawn_mul": 1.0,
+  "elite_add": 0.0,
   "gravity": 0.0,
-  "meteor": 1.0,
+  "meteor": 0.0,
   "bounce": 0,
   "boss_regen": 0.0
  },
  "music": {
-  "scale": "minor",
-  "scaleName": "단조",
+  "scale": "pentatonic",
+  "scaleName": "펜타토닉",
   "steps": [
    0,
-   2,
    3,
    5,
    7,
-   8,
    10
   ],
-  "root": 129,
-  "tempo": 131,
-  "mode": "dark"
+  "root": 132,
+  "tempo": 130,
+  "mode": "major"
  },
- "quote": "0.1초의 판단이 10초의 생존을 만든다.",
+ "quote": "탄막의 끝에는 항상 빈틈이 있다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 백열의 PULSE를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 벙어리 HELIX를 쓰러뜨린다"
  },
  "server": {
-  "engine": "strawberry-runner",
+  "engine": "local (dispatch failed)",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261122-20261121T150531Z",
-  "run_id": 44917315911,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/44917315911",
-  "conclusion": "success",
-  "matched_local": true,
-  "stored_at": "2026-11-21T15:05:50Z",
+  "task_id": null,
+  "run_id": null,
+  "run_url": null,
+  "conclusion": null,
+  "matched_local": false,
+  "stored_at": "2026-11-22T15:05:30Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-21T15:05:50Z",
-  "published_kst": "2026-11-22 00:05 KST"
+  "published_utc": "2026-11-22T15:05:30Z",
+  "published_kst": "2026-11-23 00:05 KST"
  },
  "history": [
   "2026-11-19",
   "2026-11-20",
   "2026-11-21",
-  "2026-11-22"
+  "2026-11-22",
+  "2026-11-23"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
