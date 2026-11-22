@@ -6,7 +6,7 @@
  "seed_hex": "6ba1f0ddbd699e93",
  "seed_int": 7755744868464959123,
  "tag": "7G6D",
- "generated_utc": "2026-11-22T15:05:29Z",
+ "generated_utc": "2026-11-22T15:07:49Z",
  "title": "NEON CORE — 2026-11-23",
  "theme": {
   "id": "ultraviolet",
@@ -95,17 +95,17 @@
   "goal": "웨이브를 버티고 벙어리 HELIX를 쓰러뜨린다"
  },
  "server": {
-  "engine": "local (dispatch failed)",
+  "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": null,
-  "run_id": null,
-  "run_url": null,
-  "conclusion": null,
-  "matched_local": false,
-  "stored_at": "2026-11-22T15:05:30Z",
+  "task_id": "seed-20261123-20261122T150735Z",
+  "run_id": 45036558429,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45036558429",
+  "conclusion": "success",
+  "matched_local": true,
+  "stored_at": "2026-11-22T15:07:53Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-22T15:05:30Z",
-  "published_kst": "2026-11-23 00:05 KST"
+  "published_utc": "2026-11-22T15:07:53Z",
+  "published_kst": "2026-11-23 00:07 KST"
  },
  "history": [
   "2026-11-19",
