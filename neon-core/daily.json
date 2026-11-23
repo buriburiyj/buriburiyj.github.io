@@ -1,43 +1,51 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-23",
- "weekday_kr": "월",
- "seed_hex": "6ba1f0ddbd699e93",
- "seed_int": 7755744868464959123,
- "tag": "7G6D",
- "generated_utc": "2026-11-22T15:07:49Z",
- "title": "NEON CORE — 2026-11-23",
+ "date_kst": "2026-11-24",
+ "weekday_kr": "화",
+ "seed_hex": "739f84288dd87240",
+ "seed_int": 8331523145372037696,
+ "tag": "JBB9",
+ "generated_utc": "2026-11-23T15:05:23Z",
+ "title": "NEON CORE — 2026-11-24",
  "theme": {
-  "id": "ultraviolet",
-  "name": "자외선 성운",
-  "primary": "#8b5cff",
-  "secondary": "#22e3ff",
-  "accent": "#ff2e93",
-  "floor": "#160a2e",
-  "fog": "#08010f",
-  "sky": "#04010a",
-  "boss": "#ff2e93"
+  "id": "neon-park",
+  "name": "네온 파크",
+  "primary": "#ff2ea6",
+  "secondary": "#2effd5",
+  "accent": "#faff00",
+  "floor": "#1e0722",
+  "fog": "#0b0210",
+  "sky": "#06010a",
+  "boss": "#faff00"
  },
  "arena": {
-  "id": "well",
-  "name": "우물",
-  "radius": 24.0,
-  "grid": 1.8,
-  "cover": 2
+  "id": "plateau",
+  "name": "고원",
+  "radius": 29.0,
+  "grid": 2.2,
+  "cover": 3
  },
  "boss": {
-  "codename": "HELIX",
-  "name": "벙어리 HELIX",
-  "behavior": "spiral",
-  "behaviorName": "나선 탄막",
-  "desc": "회전하는 두 팔의 탄막. 중심에서 바깥으로 비틀린다.",
+  "codename": "HIVE",
+  "name": "새벽의 HIVE",
+  "behavior": "summon",
+  "behaviorName": "드론 소환",
+  "desc": "드론을 낳는다. 놓아두면 화면이 가득 찬다.",
   "hp": 1270,
   "phases": 3,
-  "color": "#ff2e93",
-  "scale": 1.15
+  "color": "#faff00",
+  "scale": 1.05
  },
  "modifiers": [
+  {
+   "id": "dampener",
+   "name": "감쇠 장",
+   "desc": "대시 쿨다운 +35%.",
+   "effects": {
+    "dash_cd": 1.35
+   }
+  },
   {
    "id": "glass-cannon",
    "name": "유리 대포",
@@ -48,16 +56,16 @@
    }
   },
   {
-   "id": "dampener",
-   "name": "감쇠 장",
-   "desc": "대시 쿨다운 +35%.",
+   "id": "bounty",
+   "name": "현상금",
+   "desc": "점수 +22%.",
    "effects": {
-    "dash_cd": 1.35
+    "score_mul": 1.22
    }
   }
  ],
  "waves": 7,
- "target_score": 16600,
+ "target_score": 18400,
  "boss_hp": 1270,
  "spawn": {
   "enemy_hp": 1.0,
@@ -66,7 +74,7 @@
   "player_hp": 0.75,
   "player_bullet_speed": 1.25,
   "dash_cd": 1.35,
-  "score_mul": 1.0,
+  "score_mul": 1.22,
   "spawn_mul": 1.0,
   "elite_add": 0.0,
   "gravity": 0.0,
@@ -75,44 +83,47 @@
   "boss_regen": 0.0
  },
  "music": {
-  "scale": "pentatonic",
-  "scaleName": "펜타토닉",
+  "scale": "dorian",
+  "scaleName": "도리안",
   "steps": [
    0,
+   2,
    3,
    5,
    7,
+   9,
    10
   ],
-  "root": 132,
-  "tempo": 130,
-  "mode": "major"
+  "root": 94,
+  "tempo": 137,
+  "mode": "dark"
  },
  "quote": "탄막의 끝에는 항상 빈틈이 있다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 벙어리 HELIX를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 새벽의 HIVE를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261123-20261122T150735Z",
-  "run_id": 45036558429,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45036558429",
+  "task_id": "seed-20261124-20261123T150514Z",
+  "run_id": 45201236899,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45201236899",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-22T15:07:53Z",
+  "stored_at": "2026-11-23T15:05:29Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-22T15:07:53Z",
-  "published_kst": "2026-11-23 00:07 KST"
+  "published_utc": "2026-11-23T15:05:29Z",
+  "published_kst": "2026-11-24 00:05 KST"
  },
  "history": [
   "2026-11-19",
   "2026-11-20",
   "2026-11-21",
   "2026-11-22",
-  "2026-11-23"
+  "2026-11-23",
+  "2026-11-24"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
