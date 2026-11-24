@@ -1,12 +1,12 @@
 {
  "schema": 1,
- "generated_utc": "2026-11-23T19:47:41Z",
- "generated_kst": "2026-11-24 04:47 KST",
- "collected_utc": "2026-11-23T19:47:35Z",
- "collected_kst": "2026-11-24 04:47 KST",
- "run_id": "deals-20261123T1947Z",
- "task_id": "deals-20261123T194716Z",
- "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45252549514",
+ "generated_utc": "2026-11-24T01:47:43Z",
+ "generated_kst": "2026-11-24 10:47 KST",
+ "collected_utc": "2026-11-24T01:47:31Z",
+ "collected_kst": "2026-11-24 10:47 KST",
+ "run_id": "deals-20261124T0147Z",
+ "task_id": "deals-20261124T014718Z",
+ "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45307621851",
  "engine": "strawberry-runner",
  "collector": "strawberry-runner/scripts/collect_deals.py",
  "totals": {
@@ -17,8 +17,8 @@
   "games_now": 1,
   "games_soon": 2,
   "curated_total": 22,
-  "curated_alive": 22,
-  "duration_ms": 5558
+  "curated_alive": 21,
+  "duration_ms": 1845
  },
  "catalogs": [
   {
@@ -26,7 +26,7 @@
    "name": "Kilo AI Gateway",
    "url": "https://ai-gateway.kilo.ai/api/v1/models",
    "status": 200,
-   "ms": 349,
+   "ms": 585,
    "ok": true,
    "total_models": 470,
    "free_models": 14,
@@ -48,7 +48,7 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "url": "https://integrate.api.nvidia.com/v1/models",
    "status": 200,
-   "ms": 224,
+   "ms": 133,
    "ok": true,
    "total_models": 32,
    "free_models": 32,
@@ -70,7 +70,7 @@
    "name": "OpenRouter",
    "url": "https://openrouter.ai/api/v1/models",
    "status": 200,
-   "ms": 241,
+   "ms": 188,
    "ok": true,
    "total_models": 476,
    "free_models": 15,
@@ -92,19 +92,19 @@
    "name": "OVHcloud AI Endpoints",
    "url": "https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models",
    "status": 200,
-   "ms": 820,
+   "ms": 560,
    "ok": true,
    "total_models": 33,
    "free_models": 33,
    "free_ids": [
-    "nvr-tts-es-es",
+    "clef-flash",
+    "whisper-large-v3-turbo",
+    "whisper-large-v3",
+    "solaria-3",
+    "stable-diffusion-xl-base-v10",
     "nvr-tts-en-us",
     "nvr-tts-it-it",
-    "nvr-tts-de-de",
-    "whisper-large-v3-turbo",
-    "solaria-3",
-    "whisper-large-v3",
-    "clef-flash"
+    "nvr-tts-es-es"
    ],
    "basis": "카탈로그 모델 전체가 무료 한도로 호출 가능(가격표 필드 없음)",
    "error": null
@@ -114,7 +114,7 @@
    "name": "Pollinations",
    "url": "https://text.pollinations.ai/models",
    "status": 200,
-   "ms": 248,
+   "ms": 199,
    "ok": true,
    "total_models": 1,
    "free_models": 1,
@@ -145,7 +145,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 253
+   "ms": 197
   },
   {
    "id": "github-copilot-free",
@@ -162,7 +162,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 328
+   "ms": 216
   },
   {
    "id": "google-cloud-free",
@@ -183,7 +183,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 765
+   "ms": 490
   },
   {
    "id": "kiro-free",
@@ -200,7 +200,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 168
+   "ms": 17
   },
   {
    "id": "oracle-cloud-free",
@@ -221,7 +221,7 @@
    ],
    "card_claim": null,
    "note": null,
-   "ms": 336
+   "ms": 235
   }
  ],
  "games": [
@@ -255,8 +255,14 @@
  ],
  "curated": {
   "total": 22,
-  "alive": 22,
-  "broken": [],
+  "alive": 21,
+  "broken": [
+   {
+    "id": "cline-free",
+    "title": "Cline 무료 모델 프로모",
+    "error": "HTTP 503"
+   }
+  ],
   "expired": [
    "itzi-deepseek"
   ]
@@ -267,7 +273,7 @@
    "name": "Kilo AI Gateway",
    "kind": "catalog",
    "status": 200,
-   "ms": 349,
+   "ms": 585,
    "ok": true,
    "items": 14,
    "error": null,
@@ -278,7 +284,7 @@
    "name": "NVIDIA NIM (build.nvidia.com)",
    "kind": "catalog",
    "status": 200,
-   "ms": 224,
+   "ms": 133,
    "ok": true,
    "items": 32,
    "error": null,
@@ -289,7 +295,7 @@
    "name": "OpenRouter",
    "kind": "catalog",
    "status": 200,
-   "ms": 241,
+   "ms": 188,
    "ok": true,
    "items": 15,
    "error": null,
@@ -300,7 +306,7 @@
    "name": "OVHcloud AI Endpoints",
    "kind": "catalog",
    "status": 200,
-   "ms": 820,
+   "ms": 560,
    "ok": true,
    "items": 33,
    "error": null,
@@ -311,7 +317,7 @@
    "name": "Pollinations",
    "kind": "catalog",
    "status": 200,
-   "ms": 248,
+   "ms": 199,
    "ok": true,
    "items": 1,
    "error": null,
@@ -322,7 +328,7 @@
    "name": "buriburiyj.github.io/free-deals 데이터",
    "kind": "curated",
    "status": 200,
-   "ms": 250,
+   "ms": 95,
    "ok": true,
    "items": 22,
    "error": null,
@@ -333,7 +339,7 @@
    "name": "Epic Games 무료 배포 (KR)",
    "kind": "free_games",
    "status": 200,
-   "ms": 546,
+   "ms": 659,
    "ok": true,
    "items": 3,
    "error": null,
@@ -344,7 +350,7 @@
    "name": "Steam 100% 할인 (KR 스토어)",
    "kind": "free_games",
    "status": 200,
-   "ms": 209,
+   "ms": 141,
    "ok": true,
    "items": 0,
    "error": null,
@@ -355,7 +361,7 @@
    "name": "Cloudflare Workers",
    "kind": "offer",
    "status": 200,
-   "ms": 253,
+   "ms": 197,
    "ok": true,
    "items": 2,
    "error": null,
@@ -366,7 +372,7 @@
    "name": "GitHub",
    "kind": "offer",
    "status": 200,
-   "ms": 328,
+   "ms": 216,
    "ok": true,
    "items": 1,
    "error": null,
@@ -377,7 +383,7 @@
    "name": "Google Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 765,
+   "ms": 490,
    "ok": true,
    "items": 2,
    "error": null,
@@ -388,7 +394,7 @@
    "name": "AWS Kiro",
    "kind": "offer",
    "status": 200,
-   "ms": 168,
+   "ms": 17,
    "ok": true,
    "items": 1,
    "error": null,
@@ -399,7 +405,7 @@
    "name": "Oracle Cloud",
    "kind": "offer",
    "status": 200,
-   "ms": 336,
+   "ms": 235,
    "ok": true,
    "items": 2,
    "error": null,
@@ -408,7 +414,7 @@
  ],
  "d1": {
   "latest_key": "deals:latest",
-  "run_key": "deals:run:deals-20261123T1947Z",
+  "run_key": "deals:run:deals-20261124T0147Z",
   "history_runs": 2,
   "server": "strawberry-server (Cloudflare Workers + D1)"
  },
