@@ -1,128 +1,122 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-25",
- "weekday_kr": "수",
- "seed_hex": "f4b8b252ebc17612",
- "seed_int": 17634040410181563922,
- "tag": "UUNT",
- "generated_utc": "2026-11-24T15:05:52Z",
- "title": "NEON CORE — 2026-11-25",
+ "date_kst": "2026-11-26",
+ "weekday_kr": "목",
+ "seed_hex": "f327e1835582c3a8",
+ "seed_int": 17521220829499802536,
+ "tag": "DN2R",
+ "generated_utc": "2026-11-25T15:07:52Z",
+ "title": "NEON CORE — 2026-11-26",
  "theme": {
-  "id": "magenta-static",
-  "name": "마젠타 노이즈",
-  "primary": "#ff35d0",
-  "secondary": "#38f0ff",
-  "accent": "#fff04a",
-  "floor": "#210725",
-  "fog": "#0d0210",
-  "sky": "#07010a",
-  "boss": "#fff04a"
+  "id": "chrome-dawn",
+  "name": "크로뮴 여명",
+  "primary": "#cfd8ff",
+  "secondary": "#7a8cff",
+  "accent": "#00ffe1",
+  "floor": "#121420",
+  "fog": "#07080f",
+  "sky": "#040409",
+  "boss": "#00ffe1"
  },
  "arena": {
-  "id": "cross",
-  "name": "십자 회랑",
-  "radius": 25.0,
-  "grid": 2.5,
-  "cover": 4
+  "id": "well",
+  "name": "우물",
+  "radius": 24.0,
+  "grid": 1.8,
+  "cover": 2
  },
  "boss": {
-  "codename": "HIVE",
-  "name": "되감기는 HIVE",
+  "codename": "TWIN",
+  "name": "되감기는 TWIN",
   "behavior": "summon",
   "behaviorName": "드론 소환",
-  "desc": "드론을 낳는다. 놓아두면 화면이 가득 찬다.",
-  "hp": 1220,
+  "desc": "분신을 남긴다. 본체의 색이 진하다.",
+  "hp": 1400,
   "phases": 3,
-  "color": "#fff04a",
-  "scale": 1.1
+  "color": "#00ffe1",
+  "scale": 1.05
  },
  "modifiers": [
   {
-   "id": "ultrasound",
-   "name": "초음파",
-   "desc": "적 탄속 +30%.",
+   "id": "sniper",
+   "name": "저격",
+   "desc": "적이 조준 사격을 섞는다(사격 빈도 +20%).",
    "effects": {
-    "enemy_fire": 1.3
+    "enemy_fire": 1.2
    }
   },
   {
-   "id": "iron-skin",
-   "name": "강철 껍질",
-   "desc": "적 체력 +25%, 대신 점수 +10%.",
+   "id": "glass-cannon",
+   "name": "유리 대포",
+   "desc": "플레이어 체력 -25%, 탄속 +25%.",
    "effects": {
-    "enemy_hp": 1.25,
-    "score_mul": 1.1
-   }
-  },
-  {
-   "id": "gravity-well",
-   "name": "중력 우물",
-   "desc": "아레나 중심이 초당 1.4만큼 끌어당긴다.",
-   "effects": {
-    "gravity": 1.4
+    "player_hp": 0.75,
+    "player_bullet_speed": 1.25
    }
   }
  ],
- "waves": 5,
- "target_score": 14200,
- "boss_hp": 1220,
+ "waves": 6,
+ "target_score": 15300,
+ "boss_hp": 1400,
  "spawn": {
-  "enemy_hp": 1.25,
+  "enemy_hp": 1.0,
   "enemy_speed": 1.0,
-  "enemy_fire": 1.3,
-  "player_hp": 1.0,
-  "player_bullet_speed": 1.0,
+  "enemy_fire": 1.2,
+  "player_hp": 0.75,
+  "player_bullet_speed": 1.25,
   "dash_cd": 1.0,
-  "score_mul": 1.1,
+  "score_mul": 1.0,
   "spawn_mul": 1.0,
   "elite_add": 0.0,
-  "gravity": 1.4,
+  "gravity": 0.0,
   "meteor": 0.0,
   "bounce": 0,
   "boss_regen": 0.0
  },
  "music": {
-  "scale": "pentatonic",
-  "scaleName": "펜타토닉",
+  "scale": "minor",
+  "scaleName": "단조",
   "steps": [
    0,
+   2,
    3,
    5,
    7,
+   8,
    10
   ],
-  "root": 106,
-  "tempo": 130,
-  "mode": "major"
+  "root": 108,
+  "tempo": 125,
+  "mode": "dark"
  },
  "quote": "기록은 저장되고, 자만은 저장되지 않는다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 되감기는 HIVE를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 되감기는 TWIN를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261125-20261124T150531Z",
-  "run_id": 45421451767,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45421451767",
+  "task_id": "seed-20261126-20261125T150734Z",
+  "run_id": 45641616706,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45641616706",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-24T15:05:55Z",
+  "stored_at": "2026-11-25T15:07:54Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-24T15:05:55Z",
-  "published_kst": "2026-11-25 00:05 KST"
+  "published_utc": "2026-11-25T15:07:54Z",
+  "published_kst": "2026-11-26 00:07 KST"
  },
  "history": [
-  "2026-11-19",
   "2026-11-20",
   "2026-11-21",
   "2026-11-22",
   "2026-11-23",
   "2026-11-24",
-  "2026-11-25"
+  "2026-11-25",
+  "2026-11-26"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
