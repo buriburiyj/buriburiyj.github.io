@@ -1,122 +1,121 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-26",
- "weekday_kr": "목",
- "seed_hex": "f327e1835582c3a8",
- "seed_int": 17521220829499802536,
- "tag": "DN2R",
- "generated_utc": "2026-11-25T15:07:52Z",
- "title": "NEON CORE — 2026-11-26",
+ "date_kst": "2026-11-27",
+ "weekday_kr": "금",
+ "seed_hex": "9aca429745a0e5b5",
+ "seed_int": 11153800644612122037,
+ "tag": "ZWSW",
+ "generated_utc": "2026-11-26T15:06:48Z",
+ "title": "NEON CORE — 2026-11-27",
  "theme": {
-  "id": "chrome-dawn",
-  "name": "크로뮴 여명",
-  "primary": "#cfd8ff",
-  "secondary": "#7a8cff",
-  "accent": "#00ffe1",
-  "floor": "#121420",
-  "fog": "#07080f",
-  "sky": "#040409",
-  "boss": "#00ffe1"
+  "id": "ultraviolet",
+  "name": "자외선 성운",
+  "primary": "#8b5cff",
+  "secondary": "#22e3ff",
+  "accent": "#ff2e93",
+  "floor": "#160a2e",
+  "fog": "#08010f",
+  "sky": "#04010a",
+  "boss": "#ff2e93"
  },
  "arena": {
-  "id": "well",
-  "name": "우물",
-  "radius": 24.0,
-  "grid": 1.8,
-  "cover": 2
+  "id": "plateau",
+  "name": "고원",
+  "radius": 29.0,
+  "grid": 2.2,
+  "cover": 3
  },
  "boss": {
-  "codename": "TWIN",
-  "name": "되감기는 TWIN",
-  "behavior": "summon",
-  "behaviorName": "드론 소환",
-  "desc": "분신을 남긴다. 본체의 색이 진하다.",
-  "hp": 1400,
+  "codename": "ECLIPSE",
+  "name": "뒤틀린 ECLIPSE",
+  "behavior": "spiral",
+  "behaviorName": "나선 탄막",
+  "desc": "시계·반시계를 번갈아 감는다. 리듬을 읽어라.",
+  "hp": 1320,
   "phases": 3,
-  "color": "#00ffe1",
-  "scale": 1.05
+  "color": "#ff2e93",
+  "scale": 1.1
  },
  "modifiers": [
   {
-   "id": "sniper",
-   "name": "저격",
-   "desc": "적이 조준 사격을 섞는다(사격 빈도 +20%).",
+   "id": "gravity-well",
+   "name": "중력 우물",
+   "desc": "아레나 중심이 초당 1.4만큼 끌어당긴다.",
    "effects": {
-    "enemy_fire": 1.2
+    "gravity": 1.4
    }
   },
   {
-   "id": "glass-cannon",
-   "name": "유리 대포",
-   "desc": "플레이어 체력 -25%, 탄속 +25%.",
+   "id": "overload",
+   "name": "과부하",
+   "desc": "적 이동 속도 +18%.",
    "effects": {
-    "player_hp": 0.75,
-    "player_bullet_speed": 1.25
+    "enemy_speed": 1.18
    }
   }
  ],
- "waves": 6,
- "target_score": 15300,
- "boss_hp": 1400,
+ "waves": 7,
+ "target_score": 16700,
+ "boss_hp": 1320,
  "spawn": {
   "enemy_hp": 1.0,
-  "enemy_speed": 1.0,
-  "enemy_fire": 1.2,
-  "player_hp": 0.75,
-  "player_bullet_speed": 1.25,
+  "enemy_speed": 1.18,
+  "enemy_fire": 1.0,
+  "player_hp": 1.0,
+  "player_bullet_speed": 1.0,
   "dash_cd": 1.0,
   "score_mul": 1.0,
   "spawn_mul": 1.0,
   "elite_add": 0.0,
-  "gravity": 0.0,
+  "gravity": 1.4,
   "meteor": 0.0,
   "bounce": 0,
   "boss_regen": 0.0
  },
  "music": {
-  "scale": "minor",
-  "scaleName": "단조",
+  "scale": "dorian",
+  "scaleName": "도리안",
   "steps": [
    0,
    2,
    3,
    5,
    7,
-   8,
+   9,
    10
   ],
-  "root": 108,
-  "tempo": 125,
+  "root": 107,
+  "tempo": 120,
   "mode": "dark"
  },
- "quote": "기록은 저장되고, 자만은 저장되지 않는다.",
+ "quote": "대시는 공격이 아니라 호흡이다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 되감기는 TWIN를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 뒤틀린 ECLIPSE를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261126-20261125T150734Z",
-  "run_id": 45641616706,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45641616706",
+  "task_id": "seed-20261127-20261126T150639Z",
+  "run_id": 45845754836,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45845754836",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-25T15:07:54Z",
+  "stored_at": "2026-11-26T15:06:53Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-25T15:07:54Z",
-  "published_kst": "2026-11-26 00:07 KST"
+  "published_utc": "2026-11-26T15:06:53Z",
+  "published_kst": "2026-11-27 00:06 KST"
  },
  "history": [
-  "2026-11-20",
   "2026-11-21",
   "2026-11-22",
   "2026-11-23",
   "2026-11-24",
   "2026-11-25",
-  "2026-11-26"
+  "2026-11-26",
+  "2026-11-27"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
