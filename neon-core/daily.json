@@ -1,23 +1,23 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-27",
- "weekday_kr": "금",
- "seed_hex": "9aca429745a0e5b5",
- "seed_int": 11153800644612122037,
- "tag": "ZWSW",
- "generated_utc": "2026-11-26T15:06:48Z",
- "title": "NEON CORE — 2026-11-27",
+ "date_kst": "2026-11-28",
+ "weekday_kr": "토",
+ "seed_hex": "684f17013406a3df",
+ "seed_int": 7516251597039903711,
+ "tag": "B2F8",
+ "generated_utc": "2026-11-27T15:13:30Z",
+ "title": "NEON CORE — 2026-11-28",
  "theme": {
-  "id": "ultraviolet",
-  "name": "자외선 성운",
-  "primary": "#8b5cff",
-  "secondary": "#22e3ff",
-  "accent": "#ff2e93",
-  "floor": "#160a2e",
-  "fog": "#08010f",
-  "sky": "#04010a",
-  "boss": "#ff2e93"
+  "id": "deep-pulse",
+  "name": "심해 맥동",
+  "primary": "#22b8ff",
+  "secondary": "#00ffd5",
+  "accent": "#ff4d7a",
+  "floor": "#04162a",
+  "fog": "#010a14",
+  "sky": "#00050b",
+  "boss": "#ff4d7a"
  },
  "arena": {
   "id": "plateau",
@@ -27,51 +27,59 @@
   "cover": 3
  },
  "boss": {
-  "codename": "ECLIPSE",
-  "name": "뒤틀린 ECLIPSE",
-  "behavior": "spiral",
-  "behaviorName": "나선 탄막",
-  "desc": "시계·반시계를 번갈아 감는다. 리듬을 읽어라.",
-  "hp": 1320,
+  "codename": "PULSE",
+  "name": "벙어리 PULSE",
+  "behavior": "radial",
+  "behaviorName": "방사 폭격",
+  "desc": "고리를 겹쳐 쏜다. 사이로 걸어 나가면 된다.",
+  "hp": 1330,
   "phases": 3,
-  "color": "#ff2e93",
-  "scale": 1.1
+  "color": "#ff4d7a",
+  "scale": 1.05
  },
  "modifiers": [
   {
-   "id": "gravity-well",
-   "name": "중력 우물",
-   "desc": "아레나 중심이 초당 1.4만큼 끌어당긴다.",
+   "id": "mirror",
+   "name": "거울",
+   "desc": "플레이어 탄이 벽에서 한 번 튕긴다.",
    "effects": {
-    "gravity": 1.4
+    "bounce": 1
    }
   },
   {
-   "id": "overload",
-   "name": "과부하",
-   "desc": "적 이동 속도 +18%.",
+   "id": "regeneration",
+   "name": "재생",
+   "desc": "보스가 8초마다 최대 체력의 0.8%를 회복한다.",
    "effects": {
-    "enemy_speed": 1.18
+    "boss_regen": 0.008
+   }
+  },
+  {
+   "id": "dampener",
+   "name": "감쇠 장",
+   "desc": "대시 쿨다운 +35%.",
+   "effects": {
+    "dash_cd": 1.35
    }
   }
  ],
- "waves": 7,
- "target_score": 16700,
- "boss_hp": 1320,
+ "waves": 6,
+ "target_score": 14100,
+ "boss_hp": 1330,
  "spawn": {
   "enemy_hp": 1.0,
-  "enemy_speed": 1.18,
+  "enemy_speed": 1.0,
   "enemy_fire": 1.0,
   "player_hp": 1.0,
   "player_bullet_speed": 1.0,
-  "dash_cd": 1.0,
+  "dash_cd": 1.35,
   "score_mul": 1.0,
   "spawn_mul": 1.0,
   "elite_add": 0.0,
-  "gravity": 1.4,
+  "gravity": 0.0,
   "meteor": 0.0,
-  "bounce": 0,
-  "boss_regen": 0.0
+  "bounce": 1,
+  "boss_regen": 0.008
  },
  "music": {
   "scale": "dorian",
@@ -85,37 +93,37 @@
    9,
    10
   ],
-  "root": 107,
-  "tempo": 120,
+  "root": 122,
+  "tempo": 117,
   "mode": "dark"
  },
- "quote": "대시는 공격이 아니라 호흡이다.",
+ "quote": "새벽 4시에 한도는 초기화되고, 아레나는 남는다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 뒤틀린 ECLIPSE를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 벙어리 PULSE를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261127-20261126T150639Z",
-  "run_id": 45845754836,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/45845754836",
+  "task_id": "seed-20261128-20261127T151315Z",
+  "run_id": 46022933348,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/46022933348",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-26T15:06:53Z",
+  "stored_at": "2026-11-27T15:13:34Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-26T15:06:53Z",
-  "published_kst": "2026-11-27 00:06 KST"
+  "published_utc": "2026-11-27T15:13:34Z",
+  "published_kst": "2026-11-28 00:13 KST"
  },
  "history": [
-  "2026-11-21",
   "2026-11-22",
   "2026-11-23",
   "2026-11-24",
   "2026-11-25",
   "2026-11-26",
-  "2026-11-27"
+  "2026-11-27",
+  "2026-11-28"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
