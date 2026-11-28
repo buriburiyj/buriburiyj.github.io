@@ -1,43 +1,60 @@
 {
  "schema": 1,
  "version": "1.0.0",
- "date_kst": "2026-11-28",
- "weekday_kr": "토",
- "seed_hex": "684f17013406a3df",
- "seed_int": 7516251597039903711,
- "tag": "B2F8",
- "generated_utc": "2026-11-27T15:13:30Z",
- "title": "NEON CORE — 2026-11-28",
+ "date_kst": "2026-11-29",
+ "weekday_kr": "일",
+ "seed_hex": "71f03097edb35973",
+ "seed_int": 8210115549782563187,
+ "tag": "ZENA",
+ "generated_utc": "2026-11-28T15:10:51Z",
+ "title": "NEON CORE — 2026-11-29",
  "theme": {
-  "id": "deep-pulse",
-  "name": "심해 맥동",
-  "primary": "#22b8ff",
-  "secondary": "#00ffd5",
-  "accent": "#ff4d7a",
-  "floor": "#04162a",
-  "fog": "#010a14",
-  "sky": "#00050b",
-  "boss": "#ff4d7a"
+  "id": "magenta-static",
+  "name": "마젠타 노이즈",
+  "primary": "#ff35d0",
+  "secondary": "#38f0ff",
+  "accent": "#fff04a",
+  "floor": "#210725",
+  "fog": "#0d0210",
+  "sky": "#07010a",
+  "boss": "#fff04a"
  },
  "arena": {
-  "id": "plateau",
-  "name": "고원",
-  "radius": 29.0,
-  "grid": 2.2,
-  "cover": 3
+  "id": "cross",
+  "name": "십자 회랑",
+  "radius": 25.0,
+  "grid": 2.5,
+  "cover": 4
  },
  "boss": {
-  "codename": "PULSE",
-  "name": "벙어리 PULSE",
-  "behavior": "radial",
-  "behaviorName": "방사 폭격",
-  "desc": "고리를 겹쳐 쏜다. 사이로 걸어 나가면 된다.",
-  "hp": 1330,
+  "codename": "RAZOR",
+  "name": "벙어리 RAZOR",
+  "behavior": "hunter",
+  "behaviorName": "추적 돌진",
+  "desc": "플레이어를 직선으로 파고든다. 대시로 흘려야 한다.",
+  "hp": 1410,
   "phases": 3,
-  "color": "#ff4d7a",
-  "scale": 1.05
+  "color": "#fff04a",
+  "scale": 1.1
  },
  "modifiers": [
+  {
+   "id": "ultrasound",
+   "name": "초음파",
+   "desc": "적 탄속 +30%.",
+   "effects": {
+    "enemy_fire": 1.3
+   }
+  },
+  {
+   "id": "swarm",
+   "name": "군체",
+   "desc": "잡몹 +30%, 엘리트 확률 +8%.",
+   "effects": {
+    "spawn_mul": 1.3,
+    "elite_add": 0.08
+   }
+  },
   {
    "id": "mirror",
    "name": "거울",
@@ -45,85 +62,69 @@
    "effects": {
     "bounce": 1
    }
-  },
-  {
-   "id": "regeneration",
-   "name": "재생",
-   "desc": "보스가 8초마다 최대 체력의 0.8%를 회복한다.",
-   "effects": {
-    "boss_regen": 0.008
-   }
-  },
-  {
-   "id": "dampener",
-   "name": "감쇠 장",
-   "desc": "대시 쿨다운 +35%.",
-   "effects": {
-    "dash_cd": 1.35
-   }
   }
  ],
  "waves": 6,
- "target_score": 14100,
- "boss_hp": 1330,
+ "target_score": 15000,
+ "boss_hp": 1410,
  "spawn": {
   "enemy_hp": 1.0,
   "enemy_speed": 1.0,
-  "enemy_fire": 1.0,
+  "enemy_fire": 1.3,
   "player_hp": 1.0,
   "player_bullet_speed": 1.0,
-  "dash_cd": 1.35,
+  "dash_cd": 1.0,
   "score_mul": 1.0,
-  "spawn_mul": 1.0,
-  "elite_add": 0.0,
+  "spawn_mul": 1.3,
+  "elite_add": 0.08,
   "gravity": 0.0,
   "meteor": 0.0,
   "bounce": 1,
-  "boss_regen": 0.008
+  "boss_regen": 0.0
  },
  "music": {
-  "scale": "dorian",
-  "scaleName": "도리안",
+  "scale": "minor",
+  "scaleName": "단조",
   "steps": [
    0,
    2,
    3,
    5,
    7,
-   9,
+   8,
    10
   ],
-  "root": 122,
-  "tempo": 117,
+  "root": 133,
+  "tempo": 124,
   "mode": "dark"
  },
- "quote": "새벽 4시에 한도는 초기화되고, 아레나는 남는다.",
+ "quote": "대시는 공격이 아니라 호흡이다.",
  "rules": {
   "control": "WASD/방향키 이동 · Space 대시 · 자동 사격",
   "touch": "왼쪽 드래그 이동 · 오른쪽 대시 버튼 · 자동 사격",
-  "goal": "웨이브를 버티고 벙어리 PULSE를 쓰러뜨린다"
+  "goal": "웨이브를 버티고 벙어리 RAZOR를 쓰러뜨린다"
  },
  "server": {
   "engine": "strawberry-runner",
   "collector": "strawberry-runner/scripts/daily_seed.py",
-  "task_id": "seed-20261128-20261127T151315Z",
-  "run_id": 46022933348,
-  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/46022933348",
+  "task_id": "seed-20261129-20261128T151036Z",
+  "run_id": 46158470009,
+  "run_url": "https://github.com/buriburiyj/strawberry-runner/actions/runs/46158470009",
   "conclusion": "success",
   "matched_local": true,
-  "stored_at": "2026-11-27T15:13:34Z",
+  "stored_at": "2026-11-28T15:10:54Z",
   "d1_key": "surprise:daily",
-  "published_utc": "2026-11-27T15:13:34Z",
-  "published_kst": "2026-11-28 00:13 KST"
+  "published_utc": "2026-11-28T15:10:54Z",
+  "published_kst": "2026-11-29 00:10 KST"
  },
  "history": [
-  "2026-11-22",
   "2026-11-23",
   "2026-11-24",
   "2026-11-25",
   "2026-11-26",
   "2026-11-27",
-  "2026-11-28"
+  "2026-11-28",
+  "2026-11-29"
  ],
  "next_rotation_kst": "매일 00:05 KST"
 }
